@@ -1,0 +1,81 @@
+ .incluirtom {
+        position: relative;
+}
+.incluirtom input {
+        -webkit-appearance: none;   
+        -moz-appearance: window;   
+        -ms-appearance: window;  
+        appearance: window; 
+        position: absolute;
+        top: 0;
+        width: 60px;
+        height: 60px;
+}
+.incluirtom input + label::before {
+        position absolute;
+        top: 0;
+        display: inline-block;
+        background-image: url('../imagenes/tomate-r.png');
+        display: block;
+        width: 60px;
+        height: 60px; 
+        content: '';
+        vertical-align: middle;
+}
+.incluirtom input:checked + label::before {
+        background-image: url('../imagenes/lechuga_2.png');
+}
+.incluirpi{
+        position: relative;
+}
+.incluirpi input {
+        -webkit-appearance: none;   
+        -moz-appearance: window;   
+        -ms-appearance: window;  
+        appearance: window; 
+        position: absolute;
+        top: 0;
+        width: 60px;
+        height: 60px;
+}
+.incluirpi input + label::before {
+        position absolute;
+        top: 0;
+        display: inline-block;
+        background-image: url('../imagenes/pimenton-r.png');
+        display: block;
+        width: 60px;
+        height: 60px; 
+        content: '';
+        vertical-align: middle;
+}
+.incluirpi input:checked + label::before {
+        background-image: url('../imagenes/pimenton_2.png');
+}
+ .incluirlec{
+        position: relative;
+}
+.incluirlec input {
+        -webkit-appearance: none;   
+        -moz-appearance: window;   
+        -ms-appearance: window;  
+        appearance: window; 
+        position: absolute;
+        top: 0;
+        width: 60px;
+        height: 60px;
+}
+.incluirlec input + label::before {
+        position absolute;
+        top: 0;
+        display: inline-block;
+        background-image: url('../imagenes/lechuga-r.png');
+        display: block;
+        width: 60px;
+        height: 60px; 
+        content: '';
+        vertical-align: middle;
+}
+.incluirlec input:checked + label::before {
+        background-image: url('../imagenes/tomate_2.png');
+}

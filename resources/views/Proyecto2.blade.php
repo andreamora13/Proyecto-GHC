@@ -29,7 +29,7 @@
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
-     <script type="text/javascript">
+    <script type="text/javascript">
     var inicio=0;
     var timeout=0;
    
@@ -155,7 +155,7 @@
 @if ($s==0) 
 <body class="main-layout" onload="empezar(this);">
 @else
-<body  class="main-layout">
+<body  class="main-layout" onload="funcionando(this);">
 @endif
 
 
@@ -450,7 +450,7 @@
                                                   <div class="control__indicator"></div>
                                                 </label>
                                             </th>
-                                            <td ><center>{{$it->tipo_planta}}</td>
+                                            <td ><center>{{$it->tipo_planta}}{{$it->id_cultivo}}</td>
                                             <td><center><?php $Altn=number_format($it->altura,2)   ?>{{$Altn}}</td>
                                             <td><center>{{$it->produccion}}</td>
                                             <td><center>{{$it->semana}}</td>

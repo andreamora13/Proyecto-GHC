@@ -513,7 +513,7 @@ class ProyectoController extends Controller
         
             foreach($plantas as $plan)
             {
-              $planta_cultivo[]=$plan->Tipo_planta;
+              $planta_cultivo[]=$plan->tipo_planta;
               $planta_cultivocount[]=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
                                                     ->select("*")
                                                     ->where("cultivos.id_planta", "=",$plan->id_planta)
@@ -1343,5 +1343,7 @@ class ProyectoController extends Controller
         $array=array($planta_cultivo,$planta_cultivocount,$planta_inventariocount,$precio_p,$semana_p,$agua,$semana_ag,$agua_Re1,$abono,$semana_ab,$abono_Re1);
         return  $array;
     }
+
+  
     
 }

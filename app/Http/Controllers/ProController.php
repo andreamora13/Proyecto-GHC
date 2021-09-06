@@ -197,7 +197,6 @@ class ProController extends Controller
        $tomate = $request->input('cbox1');
        $pimenton = $request->input('cbox2');
        $lechuga = $request->input('cbox3');
-
        $rew=$request->all();
 
 
@@ -230,7 +229,6 @@ class ProController extends Controller
             $cultivo->cosecha=0;
             $cultivo->estado=0;
             $cultivo->id_planta= $idplanta->id_planta;
-           
             $cultivo->save();
             $partidaDet=self::partidaDet();
             
@@ -257,15 +255,17 @@ class ProController extends Controller
        
        $principal = self::principal();
        
-      return $principal ;
+       
+      return $principal;
    }
 
    public function partidaDet()
    {
             $usuario= Auth::user()->id;
-            $id_Cultivo=App\Cultivo::select('id_cultivo')->get()->last();
+            $id_Cultivo=App\Cultivo::select("*")
+                                    ->get()
+                                    ->last();
             $id_Partida=App\Partida::select('id_partida')->get()->last();
-
             $PartidaDet= new App\PartidaDet;
             $PartidaDet->id_partida=$id_Partida->id_partida;
             $PartidaDet->id_cultivo=$id_Cultivo->id_cultivo;
@@ -273,8 +273,7 @@ class ProController extends Controller
             $PartidaDet->save();
 
             $principal = self::principal();
-
-        return $principal ;
+        return $principal;
     
    }
    public function Riego($cult)

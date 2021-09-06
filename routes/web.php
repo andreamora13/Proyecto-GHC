@@ -76,9 +76,13 @@ Route::get('/info', 'ProyectoController@Info');
 Route::post('/InformePartida', 'ProyectoController@InformeGlo');
 Route::post('/datosgra', 'ProyectoController@datos');
 
+
+
 Route::post('/InformeUsuario', 'ProyectoController@InformeInd');
 Route::post('/datosind', 'ProyectoController@datosInd');
 
 Route::get('/perdida', 'ProController@perdida');
 
 Route::get('/prod', 'ProController@produccion');
+
+Route::get('/parti', 'ProController@partidaDet');

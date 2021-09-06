@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Greenhouse</title>
+        <title>Greenhouse Crops</title>
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/styles.css') }}">
         <!-- Font Awesome icons (free version)-->
@@ -26,7 +26,7 @@
         
             <div class="masthead-content text-white">
                 <div class="container-fluid px-4 px-lg-0">
-                    ;<h1 class="fst-italic lh-1 mb-4" style="font-family:Freestyle Script; font-size:70px"  translate="no">Greenhouse Crops</h1>
+                    <h1 class="fst-italic lh-1 mb-4" style="font-family:Freestyle Script; font-size:70px"  translate="no">Greenhouse Crops</h1>
                     <center><p class="mb-5"><img src="{{ asset('imagenes/logo6.png') }}" style=" width: 80%; height: 80%" ></p></center>
                     <!-- * * * * * * * * * * * * * * *-->
                     <!-- * * SB Forms Contact Form * *-->

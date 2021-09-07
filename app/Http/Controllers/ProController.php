@@ -212,7 +212,6 @@ class ProController extends Controller
             $cultivo->cosecha=0;
             $cultivo->estado=0;
             $cultivo->id_planta= $idplanta->id_planta;
-            
             $cultivo->save();
             $partidaDet=self::partidaDet();
             
@@ -246,14 +245,15 @@ class ProController extends Controller
             $cultivo->cosecha=0;
             $cultivo->estado=0;
             $cultivo->id_planta= $idplanta->id_planta;
-            
             $cultivo->save();
             $partidaDet=self::partidaDet();
        }
            
-            
+       $id_Cultivo=App\Cultivo::select("*")
+                                    ->get()
+                                    ->last();    
        
-       $principal = self::principal();
+       $principal =  $id_Cultivo->id_cultivo;
        
        
       return $principal;
@@ -265,6 +265,8 @@ class ProController extends Controller
             $id_Cultivo=App\Cultivo::select("*")
                                     ->get()
                                     ->last();
+           
+
             $id_Partida=App\Partida::select('id_partida')->get()->last();
             $PartidaDet= new App\PartidaDet;
             $PartidaDet->id_partida=$id_Partida->id_partida;

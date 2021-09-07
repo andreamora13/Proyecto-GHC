@@ -12,6 +12,6 @@
     "\\resources\\views",
     "\\resources\\views\\auth"
   ],
-  "SelectedNode": "\\public\\index.php",
+  "SelectedNode": "\\resources\\views\\welcome.blade.php",
   "PreviewInSolutionExplorer": false
 }

@@ -22,7 +22,16 @@ class CreateCultivosTable extends Migration
             $table->boolean('cosecha');
             $table->boolean('estado');
             $table->unsignedInteger('id_planta');
-            
+            $table->unsignedInteger('id_partida');
+            $table->unsignedInteger('id_usuario');
+
+            $table->foreign('id_partida')->references('id_partida')->on('partidas')
+            ->onDelete("cascade")
+            ->onUpdate("cascade");
+           
+            $table->foreign('id_usuario')->references('id')->on('users')
+            ->onDelete("cascade")
+            ->onUpdate("cascade");
 
             
             $table->foreign('id_planta')->references('id_planta')->on('plantas')

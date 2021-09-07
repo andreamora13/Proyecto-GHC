@@ -29,7 +29,112 @@
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+    <script type="text/javascript">
+    var inicio=0;
+    var timeout=0;
+   
+    function empezar(elemento)
+    {
+        
+ 
+            // Obtenemos el valor actual
+            inicio=new Date().getTime();
+ 
+            // Guardamos el valor inicial en la base de datos del navegador
+            localStorage.setItem("inicio",inicio);
+            
+            // iniciamos el proceso
+            funcionando();
+        
+    }
     
+    function reinicio(elemento)
+    {
+       
+            // detener el cronometro
+ 
+            clearTimeout(timeout);
+ 
+            // Eliminamos el valor inicial guardado
+            localStorage.removeItem("inicio");
+            timeout=0;
+            
+            empezar();
+        
+    }
+     function Detener(elemento)
+    {
+       
+            // detener el cronometro
+ 
+            clearTimeout(timeout);
+ 
+            // Eliminamos el valor inicial guardado
+            localStorage.removeItem("inicio");
+            timeout=0;
+           
+        
+    }
+ 
+ 
+    function funcionando()
+    {
+        // obteneos la fecha actual
+        var actual = new Date().getTime();
+ 
+        // obtenemos la diferencia entre la fecha actual y la de inicio
+        var diff=new Date(actual-inicio);
+ 
+        // mostramos la diferencia entre la fecha actual y la inicial
+        var result=LeadingZero(diff.getUTCHours())+":"+LeadingZero(diff.getUTCMinutes())+":"+LeadingZero(diff.getUTCSeconds());
+        
+        var r= diff.getUTCSeconds();
+        document.getElementById('cro').innerHTML = r;
+        if(r == 59)
+        {
+           reinicio();
+            
+           $.ajax({
+                             url:'{{ action('ProController@semana')}}',
+                             
+                                 success: function(data) {
+                                     document.body.innerHTML=data;;
+                                     
+                                  },
+                                error: function() {
+                                    alert('There was some error performing the AJAX call!');
+                                 }
+                              }
+                        );
+            
+            
+        }
+        
+        // Indicamos que se ejecute esta función nuevamente dentro de 1 segundo
+        timeout=setTimeout("funcionando()",1000);
+    }
+ 
+    /* Funcion que pone un 0 delante de un valor si es necesario */
+    function LeadingZero(Time)
+    {
+        return (Time < 10) ? "0" + Time : + Time;
+    }
+
+ 
+    window.onload=function()
+    {
+        if(localStorage.getItem("inicio")!=null)
+        {
+            // Si al iniciar el navegador, la variable inicio que se guarda
+            // en la base de datos del navegador tiene valor, cargamos el valor
+            // y iniciamos el proceso.
+            inicio=localStorage.getItem("inicio");
+           
+            funcionando();
+        }
+    }
+
+    </script>
 <!-- body -->
     <style>
     html, body {
@@ -43,9 +148,9 @@
 
 </head>
    
-    <?php
-     $s=$semana;
-    ?>
+<?php
+$s=$semana;
+?>
 
 @if ($s==0) 
 <body class="main-layout" onload="empezar(this);">
@@ -67,7 +172,7 @@
                             <div class="center-desk">
                                 <div class="logo">
                                 
-                                     &nbsp;&nbsp; &nbsp;&nbsp;<a href=""><img src="{{ asset('imagenes/logo3.png') }}" style=" width: 70%; height: 70%"></a>
+                                     &nbsp;&nbsp; &nbsp;&nbsp;<a href="/principal"><img src="{{ asset('imagenes/logo3.png') }}" style=" width: 70%; height: 70%"></a>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +218,7 @@
                                     <?php
                                     foreach($precio as $it)
                                     {
-                                    $precio2[]=intval($it->precio);
+                                    $precio2[]=number_format($it->precio,2);
                                     }
                                     ?>
                                     @foreach($precio2 as $it)
@@ -327,17 +432,16 @@
                                     </thead>
                                     <tbody>
 
-                                        @foreach($detalle as $item)
+                                        @foreach($detalle as $it)
 
                                         <?php
                                             $user=Auth::user()->id;
                                             $partida=App\Partida::select('id_partida')->get()->last();
-                                            $cultivos=App\Cultivo::select('*')->where('id_cultivo', '=',  $item->id_cultivo )->where('cosecha', '=', 0)->get();
                                            
                                            
                                         ?>
        
-                                          @foreach($cultivos as $it)
+                                          @if($it->cosecha == 0)
                                             <tr>
                                             <th scope="row" style="width:40px">
                                                 <label class="control control--checkbox">
@@ -345,7 +449,7 @@
                                                   <div class="control__indicator"></div>
                                                 </label>
                                             </th>
-                                            <td ><center>{{$it->tipo_planta}}{{$it->id_cultivo}}</td>
+                                            <td ><center>{{$it->tipo_planta}}</td>
                                             <td><center><?php $Altn=number_format($it->altura,2)   ?>{{$Altn}}</td>
                                             <td><center>{{$it->produccion}}</td>
                                             <td><center>{{$it->semana}}</td>
@@ -397,7 +501,7 @@
                                             
                                            
                                              </td>
-                                          @endforeach()  
+                                          @endif
                                         @endforeach() 
                                           </tr>
                                     </tbody>
@@ -414,12 +518,7 @@
                                 $user=Auth::user()->id;
                                 $partida=App\Partida::select('id_partida')->get()->last();
                                 $plantas= App\Planta::select('*')->where('id_partida', '=',  $partida->id_partida )->get();
-                                $cultivos= App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                                        ->select("*")
-                                                        ->where("cultivos.cosecha", "=",0)
-                                                        ->where("partida_dets.id_usuario", "=", $user)
-                                                        ->where("partida_dets.id_partida", "=", $partida->id_partida)
-                                                        ->get();
+                                
                                            
                             ?>
                             <center>
@@ -443,12 +542,10 @@
                                         <td style="border:0">{{$planta->tipo_planta}}
                                             <?php
 
-                                            $cultivos=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                                        ->select("*")
-                                                        ->where("cultivos.cosecha", "=",0)
-                                                        ->where("cultivos.tipo_planta", "=",$planta->tipo_planta)
-                                                        ->where("partida_dets.id_usuario", "=", $item->id)
-                                                        ->where("partida_dets.id_partida", "=", $partida->id_partida)
+                                            $cultivos=App\Cultivo::select('*')->where('id_usuario', '=', $item->id)
+                                                        ->where('id_planta', '=',  $planta->id_planta)
+                                                         ->where('id_partida', '=',  $partida->id_partida)
+                                                        ->where('cosecha', '=',  0)
                                                         ->count();
                                                     
                                             ?>

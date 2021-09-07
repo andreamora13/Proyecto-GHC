@@ -20,11 +20,13 @@ class CreateAguasTable extends Migration
             $table->double('absor');
             $table->double('m_tc_a');
             $table->double('semana');
-            $table->unsignedInteger('id_partidaDet');
+            
+            $table->unsignedInteger('id_cultivo');
 
-            $table->foreign('id_partidaDet')->references('id_partidaDet')->on('partida_dets')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
+            $table->foreign('id_cultivo')->references('id_cultivo')->on('cultivos')
+            ->onDelete("cascade")
+            ->onUpdate("cascade");
+           
         });
     }
 

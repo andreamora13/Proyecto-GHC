@@ -18,11 +18,14 @@ class CreateAguaRiegosTable extends Migration
             $table->double('agua_riego');
             $table->double('semana');
             $table->boolean('crecimiento');
-            $table->unsignedInteger('id_partidaDet');
+            
+            $table->unsignedInteger('id_cultivo');
 
-            $table->foreign('id_partidaDet')->references('id_partidaDet')->on('partida_dets')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
+            $table->foreign('id_cultivo')->references('id_cultivo')->on('cultivos')
+            ->onDelete("cascade")
+            ->onUpdate("cascade");
+            
+            
         });
     }
 

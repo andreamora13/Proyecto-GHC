@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePartidaDetsTable extends Migration
+class CreateCapitalsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,13 @@ class CreatePartidaDetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('partida_dets', function (Blueprint $table) {
-            $table->increments('id_partidaDet');
+        Schema::create('capitals', function (Blueprint $table) {
+            $table->increments('id_capital');
+            $table->double('capital');
             $table->unsignedInteger('id_partida');
-            $table->unsignedInteger('id_cultivo');
-             $table->unsignedInteger('id_usuario');
+            $table->unsignedInteger('id_usuario');
 
             $table->foreign('id_partida')->references('id_partida')->on('partidas')
-            ->onDelete("cascade")
-            ->onUpdate("cascade");
-            $table->foreign('id_cultivo')->references('id_cultivo')->on('cultivos')
             ->onDelete("cascade")
             ->onUpdate("cascade");
            
@@ -39,6 +36,6 @@ class CreatePartidaDetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('partida_dets');
+        Schema::dropIfExists('capitals');
     }
 }

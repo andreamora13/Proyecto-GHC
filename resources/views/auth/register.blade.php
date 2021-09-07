@@ -90,7 +90,8 @@
             </div>
             <div class="card card2">
                  <div class="my-auto mx-md-5 " >
-                     <center> <img src="{{ asset('imagenes/logo4.png') }}" style="float: left; width: 100%; height: 100%"></center>
+                     <center> <img src="{{ asset('imagenes/logo6.png') }}" style="float: left; width: 100%; height: 100%"></center>
+                     <center> <p style="font-family:Freestyle Script; font-size:50px">Greenhouse Crops</p></center>
                 </div>
             </div>
         </div>

@@ -20,11 +20,13 @@ class CreateAbonosTable extends Migration
             $table->double('ab_abs');
             $table->double('m_tc_ab');
             $table->double('semana');
-            $table->unsignedInteger('id_partidaDet');
+         
+            $table->unsignedInteger('id_cultivo');
 
-            $table->foreign('id_partidaDet')->references('id_partidaDet')->on('partida_dets')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
+            $table->foreign('id_cultivo')->references('id_cultivo')->on('cultivos')
+            ->onDelete("cascade")
+            ->onUpdate("cascade");
+            
         });
     }
 

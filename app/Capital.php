@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PartidaDet extends Model
+class Capital extends Model
 {
     public $timestamps = false;
 }

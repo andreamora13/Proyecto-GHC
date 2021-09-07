@@ -38,12 +38,12 @@ class ProyectoController extends Controller
         foreach($plantas as $plan)
         {
                $planta_cultivo[]=$plan->tipo_planta;
-               $planta_cultivocount[]=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                        ->select("*")
-                                        ->where("cultivos.id_planta", "=",$plan->id_planta)
-                                        ->where("partida_dets.id_usuario", "=", $user)
-                                        ->where("partida_dets.id_partida", "=", $partida->id_partida)
+               $planta_cultivocount[]=App\Cultivo::select("*")
+                                        ->where("id_planta", "=",$plan->id_planta)
+                                        ->where("id_usuario", "=", $user)
+                                        ->where("id_partida", "=", $partida->id_partida)
                                         ->count();
+                                        
 
                                     
 
@@ -87,28 +87,28 @@ class ProyectoController extends Controller
                 }
          }
 
-         $consultaCultivocount = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_usuario", "=", $user)->where("partida_dets.id_partida", "=", $partida->id_partida)
+         $consultaCultivocount = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_usuario", "=", $user)
+                                    ->where("id_partida", "=", $partida->id_partida)
                                     ->count();
 
          if( $consultaCultivocount != 0)
          {
-                 $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                        ->select("*")
-                                        ->where("cultivos.id_planta", "=",$id_planta)
-                                        ->where("partida_dets.id_usuario", "=", $user)->where("partida_dets.id_partida", "=", $partida->id_partida)
-                                        ->get();
+                 $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_usuario", "=", $user)
+                                    ->where("id_partida", "=", $partida->id_partida)
+                                    ->get();
        
                  foreach($consultaCultivo as $culti)
                  {
-                           $id_partidaDet[]=$culti->id_partidaDet;
+                           $id_partidaDet[]=$culti->id_cultivo;
                  }
                  $aguascount = DB::table ('agua_riegos')
                                  -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  ->count();
 
@@ -123,7 +123,7 @@ class ProyectoController extends Controller
                            $aguas = DB::table ('agua_riegos')
                                      -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                                      -> groupBy('semana')
-                                     ->whereIn("id_partidaDet",$id_partidaDet)
+                                     ->whereIn("id_cultivo",$id_partidaDet)
                                      ->orderBy('semana')
                                      -> get();
 
@@ -140,7 +140,7 @@ class ProyectoController extends Controller
                  $abonoscount = DB::table ('abono_cants')
                                  -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  ->count();
                  if($abonoscount==0)
@@ -154,7 +154,7 @@ class ProyectoController extends Controller
                            $abonos = DB::table ('abono_cants')
                                      -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                                      -> groupBy('semana')
-                                     ->whereIn("id_partidaDet",$id_partidaDet)
+                                     ->whereIn("id_cultivo",$id_partidaDet)
                                      ->orderBy('semana')
                                      -> get();
 
@@ -204,37 +204,22 @@ class ProyectoController extends Controller
                                     ->get();
         foreach($usuarios as $item)
         {
-           $cultivosdd[]= App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("partida_dets.id_usuario", "=", $item->id)
-                                    ->where("partida_dets.id_partida", "=", $partida->id_partida)
+           $cultivosdd[]= App\Cultivo::select("*")
+                                    ->where("id_usuario", "=", $item->id)
+                                    ->where("id_partida", "=", $partida->id_partida)
                                     ->count();
 
-           $agua[] = App\PartidaDet::join("agua_riegos","agua_riegos.id_partidaDet", "=", "partida_dets.id_partidaDet")
+           $agua[] = App\Cultivo::join("agua_riegos","agua_riegos.id_cultivo", "=", "cultivos.id_cultivo")
                                     ->select("*")
-                                    ->where("partida_dets.id_usuario", "=", $item->id)
-                                    ->where("partida_dets.id_partida", "=", $partida->id_partida)
+                                    ->where("cultivos.id_usuario", "=", $item->id)
+                                    ->where("cultivos.id_partida", "=", $partida->id_partida)
                                     ->sum('agua_riego');
-           foreach($plantas as $plan)
-           {
 
-              $inventariocount=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$item->id)->count();
-              if($inventariocount==0)
-              {
-                  $produccion[]=0;
-                  
-              }
-              else
-              {   $inventario=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$item->id)->get();
-                  foreach( $inventario as $inv)
-                  {
-                    $inventariosum=App\Inventario::select('*')->where('id_planta',"=",$inv->id_planta)->where('semana',"=",$inv->semana)->sum('prod_planta');
-                    $mercado=App\Mercado::select('*')->where('id_planta',"=",$inv->id_planta)->where('semana',"=",$inv->semana)->get()->last();
-                    $produccion[]=$inv->prod_planta*$mercado->precio;
-                  }
-              }
-           }
-           $suma[]=array_sum($produccion);  
+           $suma[] = App\Capital::select("*")
+                                    ->where("id_usuario", "=", $item->id)
+                                    ->where("id_partida", "=", $partida->id_partida)
+                                    ->sum('capital');
+           
                                    
         }
         
@@ -256,196 +241,26 @@ class ProyectoController extends Controller
                                     ->get();
         foreach($usuarios as $item)
         {
-           $cultivosdd[]= App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("partida_dets.id_usuario", "=", $item->id)
-                                    ->where("partida_dets.id_partida", "=", $partida->id_partida)
+           $cultivosdd[]= App\Cultivo::select("*")
+                                    ->where("id_usuario", "=", $item->id)
+                                    ->where("id_partida", "=", $partida->id_partida)
                                     ->count();
-            $agua[] = App\PartidaDet::join("agua_riegos","agua_riegos.id_partidaDet", "=", "partida_dets.id_partidaDet")
-                                    ->select("*")
-                                    ->where("partida_dets.id_usuario", "=", $item->id)
-                                    ->where("partida_dets.id_partida", "=", $partida->id_partida)
-                                    ->sum('agua_riego');
-           foreach($plantas as $plan)
-           {
 
-              $inventariocount=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$item->id)->count();
-              if($inventariocount==0)
-              {
-                  $produccion[]=0;
-                  
-              }
-              else
-              {   $inventario=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$item->id)->get();
-                  foreach( $inventario as $inv)
-                  {
-                    $mercado=App\Mercado::select('*')->where('id_planta',"=",$inv->id_planta)->where('semana',"=",$inv->semana)->get()->last();
-                    $produccion[]=$inv->prod_planta*$mercado->precio;
-                    
-                  }
-              }
-           }
-           $suma[]=array_sum($produccion);  
+            $agua[] = App\Cultivo::join("agua_riegos","agua_riegos.id_cultivo", "=", "cultivos.id_cultivo")
+                                    ->select("*")
+                                    ->where("cultivos.id_usuario", "=", $item->id)
+                                    ->where("cultivos.id_partida", "=", $partida->id_partida)
+                                    ->sum('agua_riego');
+            $suma[] = App\Capital::select("*")
+                                    ->where("id_usuario", "=", $item->id)
+                                    ->where("id_partida", "=", $partida->id_partida)
+                                    ->sum('capital');
         }
         return view('InfoInd',compact('var','tipo_planta','usuarios','plantas','cultivosdd','agua','suma'));
 
     }
 
-    public function json()
-    {
-        $user=Auth::user()->id;
-        $partida=App\Partida::select('id_partida')->get()->last();
-
-        $id_planta=1;
-
-        $plantas=App\Planta::where('id_partida','=',$partida->id_partida)->get();
-        foreach($plantas as $plan)
-        {
-               $planta_cultivo[]=$plan->tipo_planta;
-               $planta_cultivocount[]=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                                    ->select("*")
-                                                    ->where("cultivos.id_planta", "=",$plan->id_planta)
-                                                    ->where("partida_dets.id_usuario", "=", $user)
-                                                    ->where("partida_dets.id_partida", "=", $partida->id_partida)
-                                                    ->count();
-                                    
-
-               $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('id_usuario',"=",$user)->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$partida->id_partida)->count();
-               if($plainv ==0)
-               {
-                   $planta_inventariocount[]=0;
-               }
-               else{
-                    $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('id_usuario',"=",$user)->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$partida->id_partida)->sum('prod_planta');
-               }
-               
-                  $inventariocount=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$user)->count();
-                  if($inventariocount==0)
-                  {
-                     $inventario[]=0;
-                  }
-                  else
-                  {   $inventario[]=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$user)->sum('prod_planta');
-                  
-                  }
-
-              
-         }
-         $mercado_count=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$partida->id_partida)->count();
-         if($mercado_count==0)
-         {
-              $precio_p[]=0;
-              $semana_p[]=0;
-         }
-         else{
-                $mercado=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$partida->id_partida)->get();
-                foreach($mercado as $pre)
-                {
-                     $precio_p[]=$pre->precio;
-                     $semana_p[]=$pre->semana;
-                }
-         }
-
-         $consultaCultivocount = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_usuario", "=", $user)->where("partida_dets.id_partida", "=", $partida->id_partida)
-                                    ->count();
-         if( $consultaCultivocount != 0)
-         {
-                 $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                        ->select("*")
-                                        ->where("cultivos.id_planta", "=",$id_planta)
-                                        ->where("partida_dets.id_usuario", "=", $user)->where("partida_dets.id_partida", "=", $partida->id_partida)
-                                        ->get();
-       
-                 foreach($consultaCultivo as $culti)
-                 {
-                           $id_partidaDet[]=$culti->id_partidaDet;
-                 }
-                 $aguascount = DB::table ('agua_riegos')
-                                 -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
-                                 -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
-                                 ->orderBy('semana')
-                                 ->count();
-                 if($aguascount == 0)
-                 {
-                           $agua[]=0;
-                           $semana_ag[]=0;
-                           $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $agua_Re1[]=$agua_Re->agua_re;
-                 }
-                 else{
-                           $aguas = DB::table ('agua_riegos')
-                                     -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
-                                     -> groupBy('semana')
-                                     ->whereIn("id_partidaDet",$id_partidaDet)
-                                     ->orderBy('semana')
-                                     -> get();
-
-                           foreach($aguas as $ag)
-                           {
-                               $agua[]=$ag->total_sales;
-                               $semana_ag[]=$ag->semana;
-                               $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                               $agua_Re1[]=$agua_Re->agua_re;
-            
-                           }
-                 }
-           
-                 $abonoscount = DB::table ('abono_cants')
-                                 -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
-                                 -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
-                                 ->orderBy('semana')
-                                 ->count();
-                 if($abonoscount==0)
-                 {
-                           $abono[]=0;
-                           $semana_ab[]=0;
-                           $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $abono_Re1[]=$abono_Re->ab_re;
-                 }
-                 else{
-                           $abonos = DB::table ('abono_cants')
-                                     -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
-                                     -> groupBy('semana')
-                                     ->whereIn("id_partidaDet",$id_partidaDet)
-                                     ->orderBy('semana')
-                                     -> get();
-
-                           foreach($abonos as $ab)
-                           {
-                               $abono[]=$ab->total_sal;
-                               $semana_ab[]=$ab->semana;
-                               $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                               $abono_Re1[]=$abono_Re->ab_re;
-                           }
-                 }
-         }
-         else{
-                $agua[]=0;
-                $semana_ag[]=0;
-                $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                $agua_Re1[]=$agua_Re->agua_re;
-                $abono[]=0;
-                $semana_ab[]=0;
-                $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                $abono_Re1[]=$abono_Re->ab_re;
-         }
-
-           
-          
-
-        $array=array($planta_cultivo,$planta_cultivocount,$semana_ag,$agua,$planta_inventariocount,$semana_ab,$abono,$agua_Re1,$abono_Re1,$precio_p,$semana_p);
-        return  $array;
-
-    }
+    
 
     public function InformeGlo(Request $request)
     {
@@ -463,36 +278,21 @@ class ProyectoController extends Controller
                                     ->get();
         foreach($usuarios as $item)
         {
-           $cultivosdd[]= App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("partida_dets.id_usuario", "=", $item->id)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+           $cultivosdd[]= App\Cultivo::select("*")
+                                    ->where("cultivos.id_usuario", "=", $item->id)
+                                    ->where("cultivos.id_partida", "=", $id_partida)
                                     ->count();
-            $agua[] = App\PartidaDet::join("agua_riegos","agua_riegos.id_partidaDet", "=", "partida_dets.id_partidaDet")
-                                    ->select("*")
-                                    ->where("partida_dets.id_usuario", "=", $item->id)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
-                                    ->sum('agua_riego');
-           foreach($plantas as $plan)
-           {
 
-              $inventariocount=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$item->id)->count();
-              if($inventariocount==0)
-              {
-                  $produccion[]=0;
-                  
-              }
-              else
-              {   $inventario=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$item->id)->get();
-                  foreach( $inventario as $inv)
-                  {
-                    $mercado=App\Mercado::select('*')->where('id_planta',"=",$inv->id_planta)->where('semana',"=",$inv->semana)->get()->last();
-                    $produccion[]=$inv->prod_planta*$mercado->precio;
-                    
-                  }
-              }
-           }
-           $suma[]=array_sum($produccion);  
+            $agua[] = App\Cultivo::join("agua_riegos","agua_riegos.id_cultivo", "=", "cultivos.id_cultivo")
+                                    ->select("*")
+                                    ->where("cultivos.id_usuario", "=", $item->id)
+                                    ->where("cultivos.id_partida", "=", $id_partida)
+                                    ->sum('agua_riego');
+            $suma[] = App\Capital::select("*")
+                                    ->where("id_usuario", "=", $item->id)
+                                    ->where("id_partida", "=", $id_partida)
+                                    ->sum('capital');
+            
         }
         return  view('InformeGlo', compact('tipo_planta','id_partida','user','var','suma','cultivosdd','agua'));
 
@@ -514,10 +314,9 @@ class ProyectoController extends Controller
             foreach($plantas as $plan)
             {
               $planta_cultivo[]=$plan->tipo_planta;
-              $planta_cultivocount[]=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                                    ->select("*")
-                                                    ->where("cultivos.id_planta", "=",$plan->id_planta)
-                                                    ->where("partida_dets.id_partida", "=", $id_partida)
+              $planta_cultivocount[]=App\Cultivo::select("*")
+                                                    ->where("id_planta", "=",$plan->id_planta)
+                                                    ->where("id_partida", "=", $id_partida)
                                                     ->count();
 
                                     
@@ -535,10 +334,9 @@ class ProyectoController extends Controller
                                                     ->where('id_partida','=',$id_partida)->sum('prod_planta');
                }
             }
-            $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+            $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->count();
             if( $consultaCultivo ==0)
             {
@@ -553,20 +351,19 @@ class ProyectoController extends Controller
 
             }else
             {
-                $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+                $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)
                 {
-                       $id_partidaDet[]=$culti->id_partidaDet;
+                       $id_partidaDet[]=$culti->id_cultivo;
                 }
                 $aguascount = DB::table ('agua_riegos')
                              -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($aguascount == 0)
@@ -580,7 +377,7 @@ class ProyectoController extends Controller
                        $aguas = DB::table ('agua_riegos')
                                  -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -595,7 +392,7 @@ class ProyectoController extends Controller
                 $abonoscount = DB::table ('abono_cants')
                              -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($abonoscount==0)
@@ -609,7 +406,7 @@ class ProyectoController extends Controller
                        $abonos = DB::table ('abono_cants')
                                  -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -628,11 +425,10 @@ class ProyectoController extends Controller
             foreach($plantas as $plan)
             {
               $planta_cultivo[]=$plan->tipo_planta;
-              $planta_cultivocount[]=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                        ->select("*")
-                                        ->where("cultivos.id_planta", "=",$plan->id_planta)
-                                        ->where("partida_dets.id_usuario", "=", $user)
-                                        ->where("partida_dets.id_partida", "=",  $id_partida)
+              $planta_cultivocount[]=App\Cultivo::select("*")
+                                        ->where("id_planta", "=",$plan->id_planta)
+                                        ->where("id_usuario", "=", $user)
+                                        ->where("id_partida", "=",  $id_partida)
                                         ->count();
                                     
               $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
@@ -650,11 +446,10 @@ class ProyectoController extends Controller
                                                     ->where('id_partida','=',$id_partida)->sum('prod_planta');
                }
             }
-            $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_usuario", "=", $user)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+            $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_usuario", "=", $user)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->count();
             if( $consultaCultivo ==0)
             {
@@ -669,11 +464,10 @@ class ProyectoController extends Controller
 
             }
             else{
-                $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_usuario", "=", $user)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+                $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_usuario", "=", $user)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)
@@ -683,7 +477,7 @@ class ProyectoController extends Controller
                 $aguascount = DB::table ('agua_riegos')
                              -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($aguascount == 0)
@@ -697,7 +491,7 @@ class ProyectoController extends Controller
                        $aguas = DB::table ('agua_riegos')
                                  -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -712,7 +506,7 @@ class ProyectoController extends Controller
                 $abonoscount = DB::table ('abono_cants')
                              -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($abonoscount==0)
@@ -726,7 +520,7 @@ class ProyectoController extends Controller
                        $abonos = DB::table ('abono_cants')
                                  -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -770,20 +564,18 @@ class ProyectoController extends Controller
         $id_partida=1;
         $user= 'todos';
 
-        $plantas=App\Planta::where('id_partida','=',$id_partida)->get();
+       $plantas=App\Planta::where('id_partida','=',$id_partida)->get();
 
         if($user =="todos")
         {
         
             foreach($plantas as $plan)
             {
-              $planta_cultivo[]=$plan->Tipo_planta;
-              $planta_cultivocount[]=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                        ->select("*")
-                                        ->where("cultivos.id_planta", "=",$plan->id_planta)
-                                        ->where("partida_dets.id_usuario", "=", $user)
-                                        ->where("partida_dets.id_partida", "=", $id_partida)
-                                        ->count();
+              $planta_cultivo[]=$plan->tipo_planta;
+              $planta_cultivocount[]=App\Cultivo::select("*")
+                                                    ->where("id_planta", "=",$plan->id_planta)
+                                                    ->where("id_partida", "=", $id_partida)
+                                                    ->count();
 
                                     
                
@@ -800,10 +592,9 @@ class ProyectoController extends Controller
                                                     ->where('id_partida','=',$id_partida)->sum('prod_planta');
                }
             }
-            $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+            $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->count();
             if( $consultaCultivo ==0)
             {
@@ -818,20 +609,19 @@ class ProyectoController extends Controller
 
             }else
             {
-                $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+                $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)
                 {
-                       $id_partidaDet[]=$culti->id_partidaDet;
+                       $id_partidaDet[]=$culti->id_cultivo;
                 }
                 $aguascount = DB::table ('agua_riegos')
                              -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($aguascount == 0)
@@ -845,7 +635,7 @@ class ProyectoController extends Controller
                        $aguas = DB::table ('agua_riegos')
                                  -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -860,7 +650,7 @@ class ProyectoController extends Controller
                 $abonoscount = DB::table ('abono_cants')
                              -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($abonoscount==0)
@@ -874,7 +664,7 @@ class ProyectoController extends Controller
                        $abonos = DB::table ('abono_cants')
                                  -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -893,15 +683,12 @@ class ProyectoController extends Controller
             foreach($plantas as $plan)
             {
               $planta_cultivo[]=$plan->tipo_planta;
-              $planta_cultivocount[]=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                        ->select("*")
-                                        ->where("cultivos.id_planta", "=",$plan->id_planta)
-                                        ->where("partida_dets.id_usuario", "=", $user)
-                                        ->where("partida_dets.id_partida", "=", $id_partida)
+              $planta_cultivocount[]=App\Cultivo::select("*")
+                                        ->where("id_planta", "=",$plan->id_planta)
+                                        ->where("id_usuario", "=", $user)
+                                        ->where("id_partida", "=",  $id_partida)
                                         ->count();
-
                                     
-
               $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
                                                     ->where('id_usuario',"=",$user)
                                                     ->where('vendido',"=",1)
@@ -917,11 +704,10 @@ class ProyectoController extends Controller
                                                     ->where('id_partida','=',$id_partida)->sum('prod_planta');
                }
             }
-            $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_usuario", "=", $user)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+            $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_usuario", "=", $user)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->count();
             if( $consultaCultivo ==0)
             {
@@ -936,11 +722,10 @@ class ProyectoController extends Controller
 
             }
             else{
-                $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_usuario", "=", $user)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+                $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_usuario", "=", $user)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)
@@ -950,7 +735,7 @@ class ProyectoController extends Controller
                 $aguascount = DB::table ('agua_riegos')
                              -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($aguascount == 0)
@@ -964,7 +749,7 @@ class ProyectoController extends Controller
                        $aguas = DB::table ('agua_riegos')
                                  -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -979,7 +764,7 @@ class ProyectoController extends Controller
                 $abonoscount = DB::table ('abono_cants')
                              -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($abonoscount==0)
@@ -993,7 +778,7 @@ class ProyectoController extends Controller
                        $abonos = DB::table ('abono_cants')
                                  -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -1027,8 +812,8 @@ class ProyectoController extends Controller
 
         $array=array($planta_cultivo,$planta_cultivocount,$planta_inventariocount,$precio_p,$semana_p,$agua,$semana_ag,$agua_Re1,$abono,$semana_ab,$abono_Re1);
         return  $array;
+       }
 
-    }
     public function InformeInd(Request $request)
     {
         $id_partida = $request->input('partida');
@@ -1043,36 +828,20 @@ class ProyectoController extends Controller
                                     ->get();
         foreach($usuarios as $item)
         {
-           $cultivosdd[]= App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("partida_dets.id_usuario", "=", $item->id)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+           $cultivosdd[]= App\Cultivo::select("*")
+                                    ->where("id_usuario", "=", $item->id)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->count();
-            $agua[] = App\PartidaDet::join("agua_riegos","agua_riegos.id_partidaDet", "=", "partida_dets.id_partidaDet")
+            $agua[] = App\Cultivo::join("agua_riegos","agua_riegos.id_cultivo", "=", "cultivos.id_cultivo")
                                     ->select("*")
-                                    ->where("partida_dets.id_usuario", "=", $item->id)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+                                    ->where("cultivos.id_usuario", "=", $item->id)
+                                    ->where("cultivos.id_partida", "=", $id_partida)
                                     ->sum('agua_riego');
-           foreach($plantas as $plan)
-           {
-
-              $inventariocount=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$item->id)->count();
-              if($inventariocount==0)
-              {
-                  $produccion[]=0;
-                  
-              }
-              else
-              {   $inventario=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$item->id)->get();
-                  foreach( $inventario as $inv)
-                  {
-                    $mercado=App\Mercado::select('*')->where('id_planta',"=",$inv->id_planta)->where('semana',"=",$inv->semana)->get()->last();
-                    $produccion[]=$inv->prod_planta*$mercado->precio;
-                    
-                  }
-              }
-           }
-            $suma[]=array_sum($produccion);  
+           $suma[] = App\Capital::select("*")
+                                    ->where("id_usuario", "=", $item->id)
+                                    ->where("id_partida", "=", $id_partida)
+                                    ->sum('capital');
+            
         }
         return   view('InformeInd', compact('tipo_planta','id_partida','user','var','suma','cultivosdd','agua'));
 
@@ -1094,10 +863,9 @@ class ProyectoController extends Controller
             foreach($plantas as $plan)
             {
               $planta_cultivo[]=$plan->tipo_planta;
-              $planta_cultivocount[]= App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                        ->select("*")
-                                        ->where("cultivos.id_planta", "=",$plan->id_planta)
-                                        ->where("partida_dets.id_partida", "=", $id_partida)
+              $planta_cultivocount[]= App\Cultivo::select("*")
+                                        ->where("id_planta", "=",$plan->id_planta)
+                                        ->where("id_partida", "=", $id_partida)
                                         ->count();
 
                                    
@@ -1115,10 +883,9 @@ class ProyectoController extends Controller
                                                     ->where('id_partida','=',$id_partida)->sum('prod_planta');
                }
             }
-            $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+            $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->count();
             if( $consultaCultivo ==0)
             {
@@ -1133,20 +900,19 @@ class ProyectoController extends Controller
 
             }else
             {
-                $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+                $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)
                 {
-                       $id_partidaDet[]=$culti->id_partidaDet;
+                       $id_partidaDet[]=$culti->id_cultivo;
                 }
                 $aguascount = DB::table ('agua_riegos')
                              -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($aguascount == 0)
@@ -1160,7 +926,7 @@ class ProyectoController extends Controller
                        $aguas = DB::table ('agua_riegos')
                                  -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -1175,7 +941,7 @@ class ProyectoController extends Controller
                 $abonoscount = DB::table ('abono_cants')
                              -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($abonoscount==0)
@@ -1189,7 +955,7 @@ class ProyectoController extends Controller
                        $abonos = DB::table ('abono_cants')
                                  -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -1208,18 +974,16 @@ class ProyectoController extends Controller
             foreach($plantas as $plan)
             {
               $planta_cultivo[]=$plan->tipo_planta;
-              $planta_cultivocount[]=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                        ->select("*")
-                                        ->where("cultivos.id_planta", "=",$plan->id_planta)
-                                        ->where("partida_dets.id_usuario", "=", $user)
-                                        ->where("partida_dets.id_partida", "=", $id_partida)
+              $planta_cultivocount[]=App\Cultivo::select("*")
+                                        ->where("id_planta", "=",$plan->id_planta)
+                                        ->where("id_usuario", "=", $user)
+                                        ->where("id_partida", "=", $id_partida)
                                         ->count();
                                      
                                     
 
               $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
                                                     ->where('id_usuario',"=",$user)
-                                                    ->where('vendido',"=",1)
                                                     ->where('id_partida','=',$id_partida)->count();
                if($plainv ==0)
                {
@@ -1228,15 +992,13 @@ class ProyectoController extends Controller
                else{
                     $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
                                                     ->where('id_usuario',"=",$user)
-                                                    ->where('vendido',"=",1)
                                                     ->where('id_partida','=',$id_partida)->sum('Prod_planta');
                }
             }
-            $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_usuario", "=", $user)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+            $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_usuario", "=", $user)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->count();
             if( $consultaCultivo ==0)
             {
@@ -1251,21 +1013,20 @@ class ProyectoController extends Controller
 
             }
             else{
-                $consultaCultivo = App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=",$id_planta)
-                                    ->where("partida_dets.id_usuario", "=", $user)
-                                    ->where("partida_dets.id_partida", "=", $id_partida)
+                $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_usuario", "=", $user)
+                                    ->where("id_partida", "=", $id_partida)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)
                 {
-                       $id_partidaDet[]=$culti->id_partidaDet;
+                       $id_partidaDet[]=$culti->id_cultivo;
                 }
                 $aguascount = DB::table ('agua_riegos')
                              -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($aguascount == 0)
@@ -1279,7 +1040,7 @@ class ProyectoController extends Controller
                        $aguas = DB::table ('agua_riegos')
                                  -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -1294,7 +1055,7 @@ class ProyectoController extends Controller
                 $abonoscount = DB::table ('abono_cants')
                              -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                              -> groupBy('semana')
-                             ->whereIn("id_partidaDet",$id_partidaDet)
+                             ->whereIn("id_cultivo",$id_partidaDet)
                              ->orderBy('semana')
                              ->count();
                 if($abonoscount==0)
@@ -1308,7 +1069,7 @@ class ProyectoController extends Controller
                        $abonos = DB::table ('abono_cants')
                                  -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
                                  -> groupBy('semana')
-                                 ->whereIn("id_partidaDet",$id_partidaDet)
+                                 ->whereIn("id_cultivo",$id_partidaDet)
                                  ->orderBy('semana')
                                  -> get();
 
@@ -1343,7 +1104,4 @@ class ProyectoController extends Controller
         $array=array($planta_cultivo,$planta_cultivocount,$planta_inventariocount,$precio_p,$semana_p,$agua,$semana_ag,$agua_Re1,$abono,$semana_ab,$abono_Re1);
         return  $array;
     }
-
-  
-    
 }

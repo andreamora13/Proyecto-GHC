@@ -213,7 +213,7 @@ class ProController extends Controller
             $cultivo->estado=0;
             $cultivo->id_planta= $idplanta->id_planta;
             $cultivo->save();
-            $partidaDet=self::partidaDet();
+          
             
        }
        if($pimenton=="Pimenton")
@@ -229,7 +229,7 @@ class ProController extends Controller
             $cultivo->estado=0;
             $cultivo->id_planta= $idplanta->id_planta;
             $cultivo->save();
-            $partidaDet=self::partidaDet();
+           
             
             
        }
@@ -246,7 +246,7 @@ class ProController extends Controller
             $cultivo->estado=0;
             $cultivo->id_planta= $idplanta->id_planta;
             $cultivo->save();
-            $partidaDet=self::partidaDet();
+            
        }
            
        $id_Cultivo=App\Cultivo::select("*")

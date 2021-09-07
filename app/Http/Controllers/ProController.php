@@ -306,7 +306,7 @@ class ProController extends Controller
         }
         
         $principal = self::principal();
-        return  $AguaTotal->aguaTotal;
+        return $principal;
    }
    
     public function Abono($cult)
@@ -881,16 +881,14 @@ class ProController extends Controller
            $semanadb->id_partida=$partida->id_partida;
            $semanadb->save();
 
-        $cultivoscount=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                        ->select("*")
-                                        ->where("partida_dets.id_partida", "=", $partida->id_partida)
-                                        ->count();
+        $cultivoscount=App\Cultivo::select("*")
+                                   ->where("id_partida", "=", $partida->id_partida)
+                                   ->count();
         if($cultivoscount != 0)
         {
-            $cultivos=App\Cultivo::join("partida_dets","partida_dets.id_cultivo", "=", "cultivos.id_cultivo")
-                                        ->select("*")
-                                        ->where("partida_dets.id_partida", "=", $partida->id_partida)
-                                        ->get();
+            $cultivos=App\Cultivo::select("*")
+                                   ->where("id_partida", "=", $partida->id_partida)
+                                   ->get();
             foreach($cultivos as $culti)
             {
                $semana= App\Cultivo::select('semana')->where('id_cultivo',"=",$culti->id_cultivo)->get()->last();

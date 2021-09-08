@@ -26,7 +26,7 @@
         
             <div class="masthead-content text-white">
                 <div class="container-fluid px-4 px-lg-0">
-                actual
+                
                     <h1 class="fst-italic lh-1 mb-4" style="font-family:Freestyle Script; font-size:70px"  translate="no">Greenhouse Crops</h1>
                     <center><p class="mb-5"><img src="{{ asset('imagenes/logo6.png') }}" style=" width: 80%; height: 80%" ></p></center>
                     <!-- * * * * * * * * * * * * * * *-->

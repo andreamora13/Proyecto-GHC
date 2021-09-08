@@ -246,9 +246,9 @@ class ProController extends Controller
    }
 
   
-   public function Riego()
+   public function Riego($cult)
    {
-        $cult=1;
+        $cult;
         $usuario= Auth::user()->id;
         $partida = DB::table('partidas')->select('id_partida')->get()->last();
 

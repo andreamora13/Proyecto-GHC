@@ -129,13 +129,31 @@
                               
                              @endforeach()
                          </tr>
-                         <tr>
-                            <td> <center>Agua</center></td>
-                             @foreach($agua as $item3)
+                          <tr>
+                            <td> <center>Vendidos</center></td>
+                                     @foreach($cultivosv as $item2)
                                 
-                              <td> <center>{{$item3}}</center></td>
+                            <td> <center>{{$item2}}</center></td>
                               
-                             @endforeach()
+                                     @endforeach()
+                          </tr>
+                          <tr>
+                            <td> <center>Fallidos</center></td>
+                                     @foreach($cultivosf as $item2)
+                                
+                            <td> <center>{{$item2}}</center></td>
+                              
+                                     @endforeach()
+                          </tr>
+                          <tr>
+                            <td> <center>Agua</center></td>
+                                     @foreach($agua as $item3)
+                                
+                            <td> <center><?php
+                                        $agua=number_format($item3,2)
+                            ?>{{$agua}}</center></td>
+                              
+                                     @endforeach()
                          </tr>
                          <tr>
                             <td> <center>Capital</center></td>

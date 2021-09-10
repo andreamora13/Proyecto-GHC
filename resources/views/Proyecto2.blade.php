@@ -8,6 +8,7 @@
     <!-- mobile metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- site metas -->
     <title>Partida</title>
     <meta name="keywords" content="">
@@ -29,7 +30,11 @@
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
-    <script type="text/javascript">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<!-- body -->
+ <script type="text/javascript">
     var inicio=0;
     var timeout=0;
    
@@ -140,9 +145,16 @@
     html, body {
      background-color: #fff;
      font-family: sans-serif;
-     
-    }
    
+    }
+    #circulo{
+       height:10px;
+       width:10px;
+      
+       -moz-border-radius:50px;
+       -webkit-border-radius:50px;
+       border-radius:50px;
+    }
   
     </style>
 
@@ -201,8 +213,8 @@ $s=$semana;
          
                                    <tr >
                                    <?php
-             
-                                    $sema=App\Semana::select('*')->count();
+                                    $partida=App\Partida::select('id_partida')->get()->last();
+                                    $sema=App\Semana::select('*')->where('id_partida','=',$partida->id_partida)->count();
                                     if($sema!=0)
                                     {
                                    $sem=App\Semana::select('*')->get()->last();
@@ -250,8 +262,8 @@ $s=$semana;
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6" style="color:white; vertical-align: middle; border: 1px solid white">
                         
                           
-                          &nbsp;<p >Usuario:<input class="sinborde" type="text" readonly="readonly" name="number" style="width: auto;background: transparent" value="{{ Auth::user()->name }}">
-                          Cultivos:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$Total}}">
+                          &nbsp;<p >Usuario:<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 90px;background: transparent" value="{{ Auth::user()->name }}">
+                          &nbspCultivos:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$Total}}">
                           Agua utilizada:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$agua}}">
                           Abono utilizado:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$abono}}">
                           
@@ -304,7 +316,7 @@ $s=$semana;
                             <center>
                             <br>
                             <h6>Selecciona el tipo de planta del cultivo a sembrar</h6>
-                               <form action="{{action('ProController@CrearCultivo')}}" method="POST" >
+                               <form action="/cultivo" method="POST" >
                                 @csrf
                                   <div class="table-responsive" style=" ">
                                     <br>
@@ -336,11 +348,11 @@ $s=$semana;
                                      </tbody>
                                     </table>
                                   </div>
-                                 
+                                 </form>
                                   <br>
-                                <button type="submit" style="background-color:#d8fca4; border: black 1px solid; height:30px; width: 70px; font-size:15px; color:black;border-radius:10%">Sembrar</button>
+                                <button onclick="crea()" style="background-color:#d8fca4; border: black 1px solid; height:30px; width: 70px; font-size:15px; color:black;border-radius:10%">Sembrar</button>
                                 <br>    <br>
-                               </form>
+                               
                             </center>
                             
                         </div>
@@ -368,6 +380,7 @@ $s=$semana;
                                            <tr >
                                              <td style="border:0">
                                                 <center>
+                                                
                                                 <button  id="cbox1" name="cbox1" value="Regar" style="background:transparent" >
                                                     <img src="{{ asset('imagenes/Regar.png') }}" style="width: 55px; height: 55px">
                                                 </button>
@@ -404,9 +417,13 @@ $s=$semana;
 
 
                             <center>
-
-                            <h4>Cultivos</h4>
-    
+                            <?php
+                            $user=Auth::user()->id;
+                            $partida=App\Partida::select('id_partida')->get()->last();
+                            $fallidos=App\Cultivo::select('*')->where('id_usuario','=',$user)->where('id_partida','=',$partida->id_partida)->where('estado','=',1)->count();
+                            ?>
+                            <h4>Cultivos <h6 style="float:right;color:black">Fallidos: {{$fallidos}} </h6></h4>
+                           
                              <center>
                                  <input type="checkbox"  id="tomate" name="tomate" value="tomate"/>&nbsp;Tomate&nbsp;&nbsp
                                  <input type="checkbox"  id="pimenton" name="pimenton" value="pimenton"/>&nbsp;Pimenton&nbsp;&nbsp
@@ -437,11 +454,9 @@ $s=$semana;
                                         <?php
                                             $user=Auth::user()->id;
                                             $partida=App\Partida::select('id_partida')->get()->last();
-                                           
-                                           
                                         ?>
        
-                                          @if($it->cosecha == 0)
+                                          @if($it->cosecha == 0 and $it->estado==0)
                                             <tr>
                                             <th scope="row" style="width:40px">
                                                 <label class="control control--checkbox">
@@ -498,8 +513,13 @@ $s=$semana;
                                             @else
                                                 <img src="{{ asset('imagenes/murio.jpeg') }}" style="width: 60px; height: 60px">
                                             @endif
-                                            
-                                           
+                                            <?php
+                                                $aguar=App\AguaRiego::select('*')->where('id_cultivo', '=',  $it->id_cultivo)->where('semana', '=', $it->semana)->count();
+                                                $abonoc=App\AbonoCant::select('*')->where('id_cultivo', '=',  $it->id_cultivo)->where('semana', '=', $it->semana)->count();
+                                            ?>
+                                              <div style="float:right;width:15px; height:15px;background:#51D1F6;font-size:12px"><center><b>{{$aguar}}</b></div><br>
+                                              <div style="float:right;width:15px; height:15px;background:#a67b5b;font-size:12px"><center><b>{{$abonoc}}</b></div>
+                                               
                                              </td>
                                           @endif
                                         @endforeach() 
@@ -564,7 +584,39 @@ $s=$semana;
      
 
     <!-- end offer -->
+        <script >
+       
+         function crea(){
+             if ($('#cbox1').prop('checked') )
+             {
+                var cbox1f="Tomate";
+             }
+             if ($('#cbox2').prop('checked') )
+             {
+                var cbox2f="Pimenton";
+             }
+             if ($('#cbox3').prop('checked') )
+             {
+                var cbox3f="Lechuga";
+             }
 
+               $.ajax({
+
+                    url:'/cultivo',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    method: 'POST',
+                    data:{
+                        cbox1:cbox1f,
+                        cbox2:cbox2f,
+                        cbox3:cbox3f,
+                        _token:$('input[name="_token"]').val()
+                    }
+                }).done(function(res){
+                    document.body.innerHTML=res;
+                });
+         }
+
+  </script>
 
     <!-- end footer -->
      <script src="{{ asset('moon/js/jquery.min.js') }}"></script>

@@ -17,7 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
+Route::get('/progress', function () {
+    return view('welcome2');
+});
 
 
 
@@ -86,3 +88,11 @@ Route::get('/perdida', 'ProController@perdida');
 Route::get('/prod', 'ProController@produccion');
 
 Route::get('/parti', 'ProController@partidaDet');
+
+
+
+Route::get('/proyect', 'GraController@principal');
+Route::post('/crea', 'GraController@CrearCultivo');
+Route::post('/sele', 'GraController@Seleccion');
+Route::post('/mer', 'GraController@Mercado');
+Route::get('/dat', 'ProyectoController@datd');

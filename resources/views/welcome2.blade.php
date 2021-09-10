@@ -9,57 +9,61 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-            <style>
+        <style>
+          .circulo {
+        border: 3px solid #ddd;
+        width: 30rem;
+        height: 30rem;
+        border-radius: 50%;
+        /*background: red;*/
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin:0px auto;
+        padding:3%
+      }
 
-                table {
-                 width: 100%;
-                border: 1px solid #000;
-                }
-                th, td {
-                width: 25%;
-                text-align: left;
-                vertical-align: top;
-                    border: 1px solid #000;
-                        }
+      .circulo > h2 {
+        font-family: sans-serif;
+        color: white;
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
 
-           
-        
-                </style>
 
+      .container .row {
+        /*margin: 20px;*/
+        text-align: center;
+      }
+
+      .container .row a {
+        /*margin: 0 20px;*/
+      }
+       </style>
 
     </head>
     <body>
-         <form action="{{action('ProyectoController@index')}} " method="POST">
-       @csrf
-       <br>
-       <br>
-       
-                <table >
-                <thead>
-                
-                 <tr>
-                  <th scope="col">Cultivo</th>
-                  <th scope="col">Cultivo</th>
-                 <th scope="col">Abonar</th>
-                 <th scope="col">Cosechar</th>
-                 <th scope="col">Regar</th>
-                 </tr>
-                 </thead>
-                 <tbody>
-                
-                 <tr>
-                <td ><input type="checkbox" id="1" name="1" value="1"></td >
-                <td ><input type="checkbox" id="2" name="1" value="2"></td >
-                 <td ><button  id="cbox2" name="cbox2" value="Abonar" ><img src="{{ asset('imagenes/abonar.jpg') }}" style="width: 80px; height: 80px"></button></td>
-                  <td ><button  id="cbox3" name="cbox2" value="Cosechar" ><img src="{{ asset('imagenes/cosechar.jpg') }}" style="width: 80px; height: 80px"></button></td>
-                   <td ><button  id="cbox1" name="cbox1" value="Regar" ><img src="{{ asset('imagenes/regar.jpg') }}" style="width: 80px; height: 80px"></button></td>
-                  </tr>
-                 </tbody>
-                  </table>
-                  <br>
-                  <br>
-                 
-                    
-         
+        <?php
+
+        $cult=1;
+        $cultivo= App\Cultivo::select("*")
+                                    ->where('id_cultivo', '=', $cult)
+                                    ->get()->last();
+         $planta=App\Planta::select("*")
+                                    ->where('id_planta', '=', $cultivo->id_planta)
+                                    ->get()->last();
+        ?>
+        
+        
+        <label for="file">File</label>
+        <progress id="file" max="{{$planta->alt_max}}" value="{{$cultivo->altura}}">70%</progress>
+       <div style="width:800px; height:100px;">
+            <div style="float:left;width:15px; height:15px;background:#E76AFA;font-size:12px"><center>2</div>
+            <div style="float:left;;margin-left:10px;width:10px; height:10px; font-size:15px">2</div>
+            <img src="imagenes/logo4.PNG" style="float:left;width:100px; height:100px"/> 
+            <img src="imagenes/logo5.png" style="float:left;margin-left:100px;width:100px; height:100px" />
+            <img src="imagenes/logo6.png" style="float:right;width:100px; height:100px" />
+       </div>
     </body>
 </html>

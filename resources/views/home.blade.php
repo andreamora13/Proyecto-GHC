@@ -227,8 +227,12 @@
                  
                                         <td><center><h6>{{$ite->id_partida}} <input name="partida" type="hidden" readonly value="{{$it->id_partida}}" ></td>
                                         <td><center><h6>{{$ite->created_at}} <input name="usuario" type="hidden" readonly value="{{$it->id_usuario}}" ></td>
+                                        <?php
+                                
+                                         $planta=App\Planta::select('*')->where('id_partida','=',$it->id_partida)->get()->first();
+                                        ?>
                                         <select name="eso" hidden>
-                                            <option  value="1" ></option>
+                                            <option  value="{{$planta->id_planta}}" ></option>
                                         </select>
                                         <td><center> <a href="{{ action('ProyectoController@InformeInd') }}"  style="background-color: transparent;border:0;">
                                         <button type="submit" style="background-color: transparent;border:0;width: 33px; height: 35px"><img src="{{ asset('imagenes/pluma.png') }}" style=""></button>

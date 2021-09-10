@@ -320,6 +320,7 @@
                     <tbody>
                        <?php
                          $partida = App\Partida::all();
+                         
                         ?>
                         @foreach($partida as $it)
                         <form action="{{action('ProyectoController@InformeGlo')}}" method="POST" >
@@ -331,8 +332,12 @@
                                 <select name="select" hidden>
                                  <b><option name="id_usuario" id="id_usuario" value="todos" ></option>
                                 </select>
-                                <select name="eso" hidden>
-                                 <b><option  value="1" ></option>
+                                <?php
+                                
+                                 $planta=App\Planta::select('*')->where('id_partida','=',$it->id_partida)->get()->first();
+                                ?>
+                                <select name="eso" hidden >
+                                 <b><option  value="{{$planta->id_planta}}" ></option>
                                 </select>
                            
                             <td><center><p style="color:black"><b>{{$it->created_at}}</td>

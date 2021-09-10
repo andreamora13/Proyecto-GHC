@@ -10,8 +10,9 @@
     "\\public\\imagenes",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\auth"
+    "\\resources\\views\\auth",
+    "\\resources\\views\\layouts"
   ],
-  "SelectedNode": "\\resources\\views\\auth\\register.blade.php",
+  "SelectedNode": "\\resources\\views\\InformeGlo.blade.php",
   "PreviewInSolutionExplorer": false
 }

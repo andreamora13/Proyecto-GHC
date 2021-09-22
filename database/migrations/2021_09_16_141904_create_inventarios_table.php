@@ -16,24 +16,19 @@ class CreateInventariosTable extends Migration
         Schema::create('inventarios', function (Blueprint $table) {
             $table->increments('id_inventario');
             $table->double('prod_planta');
-            $table->double('semana');
             $table->boolean('vendido');
+            $table->integer('semana');
             $table->unsignedInteger('id_planta');
-            $table->unsignedInteger('id_usuario');
-            $table->unsignedInteger('id_partida');
+            $table->unsignedInteger('id_partidausu');
             
-
             $table->foreign('id_planta')->references('id_planta')->on('plantas')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
-            $table->foreign('id_usuario')->references('id')->on('users')
+            $table->foreign('id_partidausu')->references('id_partidausu')->on('partida_usuarios')
             ->onDelete('cascade')
             ->onUpdate('cascade');
 
-            $table->foreign('id_partida')->references('id_partida')->on('partidas')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
         });
     }
 

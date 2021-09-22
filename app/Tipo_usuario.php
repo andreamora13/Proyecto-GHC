@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AbonoCant extends Model
+class Tipo_usuario extends Model
 {
     public $timestamps = false;
 }

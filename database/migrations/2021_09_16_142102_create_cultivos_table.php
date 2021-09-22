@@ -17,28 +17,22 @@ class CreateCultivosTable extends Migration
             $table->increments('id_cultivo');
             $table->double('altura');
             $table->double('produccion');
-            $table->double('semana');
             $table->string('tipo_planta');
             $table->boolean('cosecha');
             $table->boolean('estado');
+            $table->integer('semana');
             $table->unsignedInteger('id_planta');
-            $table->unsignedInteger('id_partida');
-            $table->unsignedInteger('id_usuario');
-
-            $table->foreign('id_partida')->references('id_partida')->on('partidas')
-            ->onDelete("cascade")
-            ->onUpdate("cascade");
-           
-            $table->foreign('id_usuario')->references('id')->on('users')
-            ->onDelete("cascade")
-            ->onUpdate("cascade");
+            $table->unsignedInteger('id_partidausu');
+            
 
             
             $table->foreign('id_planta')->references('id_planta')->on('plantas')
             ->onDelete("cascade")
             ->onUpdate("cascade");
-           
-            
+
+            $table->foreign('id_partidausu')->references('id_partidausu')->on('partida_usuarios')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
         });
     }
 

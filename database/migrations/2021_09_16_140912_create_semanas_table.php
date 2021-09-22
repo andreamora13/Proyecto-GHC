@@ -15,7 +15,7 @@ class CreateSemanasTable extends Migration
     {
         Schema::create('semanas', function (Blueprint $table) {
             $table->increments('id_semana');
-            $table->double('semana');
+            $table->integer('semana');
             $table->unsignedInteger('id_partida');
             
 

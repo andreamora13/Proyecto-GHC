@@ -47,6 +47,7 @@ Route::post('/seleccion', 'ProController@Seleccion');
 Route::get('/evento', 'ProController@evento');
 Route::get('/principal', 'ProController@principal');
 Route::get('/partida', 'ProController@Partida');
+Route::get('/informe', 'ProController@info');
 
 Route::get('/merca', 'ProController@merca');
 Route::get('/Admin', 'AdmiController@Admin');

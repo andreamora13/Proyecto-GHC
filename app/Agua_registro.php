@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PartidaUsuario extends Model
+class Agua_registro extends Model
 {
     public $timestamps = false;
 }

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AguaRiego extends Model
+class Abono_cant extends Model
 {
-     public $timestamps = false;
+    public $timestamps = false;
 }

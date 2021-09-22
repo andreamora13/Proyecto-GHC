@@ -27,10 +27,10 @@ class HomeController extends Controller
         $user=Auth::user()->id;
         $error='Para inicializar datos, Todos los campos deben de ser completados';
         
-        $tipocount=App\TipoUsuario::select('id_tipo')->where('id_usuario','=',$user)->count();
+        $tipocount=App\Tipo_usuario::select('id_tipo')->where('id_usuario','=',$user)->count();
         if($tipocount != 0)
         {
-            $tipo=App\TipoUsuario::select('id_tipo')->where('id_usuario','=',$user)->get()->last();
+            $tipo=App\Tipo_usuario::select('id_tipo')->where('id_usuario','=',$user)->get()->last();
         
               if($tipo->id_tipo==1)
               {

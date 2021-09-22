@@ -6,13 +6,10 @@
     "\\app\\Http\\Controllers",
     "\\database",
     "\\database\\migrations",
-    "\\public",
-    "\\public\\imagenes",
     "\\resources",
     "\\resources\\views",
     "\\resources\\views\\auth",
     "\\resources\\views\\layouts"
   ],
-  "SelectedNode": "\\resources\\views\\InformeGlo.blade.php",
   "PreviewInSolutionExplorer": false
 }

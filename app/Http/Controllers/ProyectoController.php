@@ -31,7 +31,7 @@ class ProyectoController extends Controller
     {
         $user=Auth::user()->id;
         $partida=App\Partida::select('id_partida')->get()->last();
-
+        $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
         $id_planta=$request->input('id');
 
         $plantas=App\Planta::where('id_partida','=',$partida->id_partida)->get();
@@ -40,33 +40,39 @@ class ProyectoController extends Controller
                $planta_cultivo[]=$plan->tipo_planta;
                $planta_cultivocount[]=App\Cultivo::select("*")
                                         ->where("id_planta", "=",$plan->id_planta)
-                                        ->where("id_usuario", "=", $user)
-                                        ->where("id_partida", "=", $partida->id_partida)
+                                        ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                         ->count();
-                                        
-
-                                    
 
                $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('id_usuario',"=",$user)->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$partida->id_partida)->count();
+                                       ->where('vendido',"=",1)
+                                       ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                       ->count();
                if($plainv ==0)
                {
                    $planta_inventariocount[]=0;
                }
                else{
                     $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('id_usuario',"=",$user)->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$partida->id_partida)->sum('prod_planta');
+                                                    ->where('vendido',"=",1)
+                                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                                    ->sum('prod_planta');
                }
                
-                  $inventariocount=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$user)->count();
+                  $inventariocount=App\Inventario::select('*')
+                                                   ->where('id_planta',"=",$plan->id_planta)
+                                                   ->where('vendido',"=",1)
+                                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                                   ->count();
                   if($inventariocount==0)
                   {
                      $inventario[]=0;
                   }
                   else
-                  {   $inventario[]=App\Inventario::select('*')->where('id_planta',"=",$plan->id_planta)->where('vendido',"=",1)->where('id_usuario',"=",$user)->sum('prod_planta');
+                  {   $inventario[]=App\Inventario::select('*')
+                                                    ->where('id_planta',"=",$plan->id_planta)
+                                                    ->where('vendido',"=",1)
+                                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                                    ->sum('prod_planta');
                   
                   }
 
@@ -89,16 +95,14 @@ class ProyectoController extends Controller
 
          $consultaCultivocount = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
-                                    ->where("id_usuario", "=", $user)
-                                    ->where("id_partida", "=", $partida->id_partida)
+                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->count();
 
          if( $consultaCultivocount != 0)
          {
                  $consultaCultivo = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
-                                    ->where("id_usuario", "=", $user)
-                                    ->where("id_partida", "=", $partida->id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->get();
        
                  foreach($consultaCultivo as $culti)
@@ -200,36 +204,33 @@ class ProyectoController extends Controller
         $plantas=App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get();
         $planta=App\Planta::select('*')->where('id_planta','=',$var)->get()->last();
         $tipo_planta=$planta->tipo_planta;
-        $usuarios= App\PartidaUsuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
+        $usuarios= App\Partida_usuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
                                     ->select("*")
                                     ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
                                     ->get();
         foreach($usuarios as $item)
         {
+           $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $item->id)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+
            $cultivosdd[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
+                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->count();
            $cultivosf[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->where("estado", "=", 1)
                                     ->count();
             $cultivosv[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->where("cosecha", "=", 1)
                                     ->count();
 
            $agua[] = App\Cultivo::join("agua_riegos","agua_riegos.id_cultivo", "=", "cultivos.id_cultivo")
                                     ->select("*")
-                                    ->where("cultivos.id_usuario", "=", $item->id)
-                                    ->where("cultivos.id_partida", "=", $partida->id_partida)
+                                    ->where("cultivos.id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->sum('agua_riego');
 
            $suma[] = App\Capital::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->sum('capital');
            
                                    
@@ -247,34 +248,30 @@ class ProyectoController extends Controller
         $plantas=App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get();
         $planta=App\Planta::select('*')->where('id_planta','=',$var)->get()->last();
         $tipo_planta=$planta->tipo_planta;
-        $usuarios= App\PartidaUsuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
+        $usuarios= App\Partida_usuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
                                     ->select("*")
                                     ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
                                     ->get();
         foreach($usuarios as $item)
         {
-           $cultivosdd[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
+            $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $item->id)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+            $cultivosdd[]= App\Cultivo::select("*")
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->count();
             $cultivosf[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=",$partida->id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->where("estado", "=", 1)
                                     ->count();
             $cultivosv[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->where("cosecha", "=", 1)
                                     ->count();
             $agua[] = App\Cultivo::join("agua_riegos","agua_riegos.id_cultivo", "=", "cultivos.id_cultivo")
                                     ->select("*")
-                                    ->where("cultivos.id_usuario", "=", $item->id)
-                                    ->where("cultivos.id_partida", "=", $partida->id_partida)
+                                    ->where("cultivos.id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->sum('agua_riego');
             $suma[] = App\Capital::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->sum('capital');
         }
         return view('InfoInd',compact('var','tipo_planta','usuarios','plantas','cultivosdd','agua','suma','cultivosf','cultivosv'));
@@ -290,38 +287,38 @@ class ProyectoController extends Controller
         $usu= $request->input('id_usuario');
         $user=$request->select;
         $var=$request->eso;
+        
+
         $plantas=App\Planta::select('*')->where('id_partida','=',$id_partida)->get();
         $planta=App\Planta::select('*')->where('id_planta','=',$var)->get()->last();
         $tipo_planta=$planta->tipo_planta;
-        $usuarios= App\PartidaUsuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
+
+        $usuarios= App\Partida_usuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
                                     ->select("*")
                                     ->where("partida_usuarios.id_partida", "=",$id_partida)
                                     ->get();
         foreach($usuarios as $item)
         {
+           $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $item->id)->where('id_partida', '=',  $id_partida)->get()->last();
            $cultivosdd[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->count();
             $cultivosf[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->where("estado", "=", 1)
                                     ->count();
             $cultivosv[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->where("cosecha", "=", 1)
                                     ->count();
 
             $agua[] = App\Cultivo::join("agua_riegos","agua_riegos.id_cultivo", "=", "cultivos.id_cultivo")
                                     ->select("*")
-                                    ->where("cultivos.id_usuario", "=", $item->id)
-                                    ->where("cultivos.id_partida", "=", $id_partida)
+                                    ->where("cultivos.id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->sum('agua_riego');
+
             $suma[] = App\Capital::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->sum('capital');
             
         }
@@ -345,30 +342,40 @@ class ProyectoController extends Controller
             foreach($plantas as $plan)
             {
               $planta_cultivo[]=$plan->tipo_planta;
-              $planta_cultivocount[]=App\Cultivo::select("*")
-                                                    ->where("id_planta", "=",$plan->id_planta)
-                                                    ->where("id_partida", "=", $id_partida)
-                                                    ->count();
+              $planta_cultivocount[]=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
+                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
+                                    ->count();
 
                                     
                
-              $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$id_partida)->count();
+              $plainv=App\Inventario::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "inventarios.id_partidausu")
+                                    ->select("*")
+                                    ->where("inventarios.id_planta", "=", $plan->id_planta)
+                                    ->where("inventarios.vendido", "=", 1)
+                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
+                                    ->count();
+                    
                if($plainv ==0)
                {
                    $planta_inventariocount[]=0;
                }
                else{
-                    $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$id_partida)->sum('prod_planta');
+                    $planta_inventariocount[]=App\Inventario::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "inventarios.id_partidausu")
+                                                    ->select("*")
+                                                    ->where("inventarios.id_planta", "=", $plan->id_planta)
+                                                    ->where("inventarios.vendido", "=", 1)
+                                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
+                                                    ->sum('prod_planta');
                }
             }
-            $consultaCultivocount = App\Cultivo::select("*")
-                                    ->where("id_planta", "=",$id_planta)
-                                    ->where("id_partida", "=", $id_partida)
+            $consultaCultivocount = App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
+                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
                                     ->count();
+
             if( $consultaCultivocount ==0)
             {
                  $agua[]=0;
@@ -382,9 +389,10 @@ class ProyectoController extends Controller
 
             }else
             {
-                $consultaCultivo = App\Cultivo::select("*")
-                                    ->where("id_planta", "=",$id_planta)
-                                    ->where("id_partida", "=", $id_partida)
+                $consultaCultivo = App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
+                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)
@@ -455,32 +463,32 @@ class ProyectoController extends Controller
         {
             foreach($plantas as $plan)
             {
+              $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $id_partida)->get()->last();
               $planta_cultivo[]=$plan->tipo_planta;
               $planta_cultivocount[]=App\Cultivo::select("*")
                                         ->where("id_planta", "=",$plan->id_planta)
-                                        ->where("id_usuario", "=", $user)
-                                        ->where("id_partida", "=",  $id_partida)
+                                        ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                         ->count();
+
                                     
               $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('id_usuario',"=",$user)
-                                                    ->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$id_partida)->count();
+                                      ->where('vendido',"=",1)
+                                      ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
+                                      ->count();
                if($plainv ==0)
                {
                    $planta_inventariocount[]=0;
                }
                else{
                     $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('id_usuario',"=",$user)
                                                     ->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$id_partida)->sum('prod_planta');
+                                                    ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
+                                                    ->sum('prod_planta');
                }
             }
             $consultaCultivocount = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
-                                    ->where("id_usuario", "=", $user)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                     ->count();
             if( $consultaCultivocount ==0)
             {
@@ -497,13 +505,12 @@ class ProyectoController extends Controller
             else{
                 $consultaCultivo = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
-                                    ->where("id_usuario", "=", $user)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)
                 {
-                       $id_partidaDet[]=$culti->id_partidaDet;
+                       $id_partidaDet[]=$culti->id_cultivo;
                 }
                 $aguascount = DB::table ('agua_riegos')
                              -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
@@ -594,8 +601,7 @@ class ProyectoController extends Controller
         $id_planta=1;
         $id_partida=1;
         $user= 'todos';
-
-       $plantas=App\Planta::where('id_partida','=',$id_partida)->get();
+        $plantas=App\Planta::where('id_partida','=',$id_partida)->get();
 
         if($user =="todos")
         {
@@ -603,30 +609,40 @@ class ProyectoController extends Controller
             foreach($plantas as $plan)
             {
               $planta_cultivo[]=$plan->tipo_planta;
-              $planta_cultivocount[]=App\Cultivo::select("*")
-                                                    ->where("id_planta", "=",$plan->id_planta)
-                                                    ->where("id_partida", "=", $id_partida)
-                                                    ->count();
+              $planta_cultivocount[]=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
+                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
+                                    ->count();
 
                                     
                
-              $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$id_partida)->count();
+              $plainv=App\Inventario::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "inventarios.id_partidausu")
+                                    ->select("*")
+                                    ->where("inventarios.id_planta", "=", $plan->id_planta)
+                                    ->where("inventarios.vendido", "=", 1)
+                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
+                                    ->count();
+                    
                if($plainv ==0)
                {
                    $planta_inventariocount[]=0;
                }
                else{
-                    $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$id_partida)->sum('prod_planta');
+                    $planta_inventariocount[]=App\Inventario::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "inventarios.id_partidausu")
+                                                    ->select("*")
+                                                    ->where("inventarios.id_planta", "=", $plan->id_planta)
+                                                    ->where("inventarios.vendido", "=", 1)
+                                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
+                                                    ->sum('prod_planta');
                }
             }
-            $consultaCultivocount = App\Cultivo::select("*")
-                                    ->where("id_planta", "=",$id_planta)
-                                    ->where("id_partida", "=", $id_partida)
+            $consultaCultivocount = App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
+                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
                                     ->count();
+
             if( $consultaCultivocount ==0)
             {
                  $agua[]=0;
@@ -640,9 +656,10 @@ class ProyectoController extends Controller
 
             }else
             {
-                $consultaCultivo = App\Cultivo::select("*")
-                                    ->where("id_planta", "=",$id_planta)
-                                    ->where("id_partida", "=", $id_partida)
+                $consultaCultivo = App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
+                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)
@@ -660,7 +677,7 @@ class ProyectoController extends Controller
                        $agua[]=0;
                        $semana_ag[]=0;
                        $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->where('id_partida',"=",$id_partida)->get()->last();
-                       $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                       $agua_Re1[]=$agua_Re->agua_re;
                 }
                 else{
                        $aguas = DB::table ('agua_riegos')
@@ -713,32 +730,32 @@ class ProyectoController extends Controller
         {
             foreach($plantas as $plan)
             {
+              $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $id_partida)->get()->last();
               $planta_cultivo[]=$plan->tipo_planta;
               $planta_cultivocount[]=App\Cultivo::select("*")
                                         ->where("id_planta", "=",$plan->id_planta)
-                                        ->where("id_usuario", "=", $user)
-                                        ->where("id_partida", "=",  $id_partida)
+                                        ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                         ->count();
+
                                     
               $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('id_usuario',"=",$user)
-                                                    ->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$id_partida)->count();
+                                      ->where('vendido',"=",1)
+                                      ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
+                                      ->count();
                if($plainv ==0)
                {
                    $planta_inventariocount[]=0;
                }
                else{
                     $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('id_usuario',"=",$user)
                                                     ->where('vendido',"=",1)
-                                                    ->where('id_partida','=',$id_partida)->sum('prod_planta');
+                                                    ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
+                                                    ->sum('prod_planta');
                }
             }
             $consultaCultivocount = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
-                                    ->where("id_usuario", "=", $user)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                     ->count();
             if( $consultaCultivocount ==0)
             {
@@ -755,8 +772,7 @@ class ProyectoController extends Controller
             else{
                 $consultaCultivo = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
-                                    ->where("id_usuario", "=", $user)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)
@@ -853,34 +869,31 @@ class ProyectoController extends Controller
         $plantas=App\Planta::select('*')->where('id_partida','=',$id_partida)->get();
         $planta=App\Planta::select('*')->where('id_planta','=',$var)->get()->last();
         $tipo_planta=$planta->tipo_planta;
-        $usuarios= App\PartidaUsuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
+        $usuarios= App\Partida_usuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
                                     ->select("*")
                                     ->where("partida_usuarios.id_partida", "=",$id_partida)
                                     ->get();
         foreach($usuarios as $item)
         {
-           $cultivosdd[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $id_partida)
+            $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $item->id)->where('id_partida', '=',  $id_partida)->get()->last();
+
+            $cultivosdd[]= App\Cultivo::select("*")
+                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->count();
             $cultivosf[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=",$id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->where("estado", "=", 1)
                                     ->count();
             $cultivosv[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->where("cosecha", "=", 1)
                                     ->count();
             $agua[] = App\Cultivo::join("agua_riegos","agua_riegos.id_cultivo", "=", "cultivos.id_cultivo")
                                     ->select("*")
-                                    ->where("cultivos.id_usuario", "=", $item->id)
-                                    ->where("cultivos.id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->sum('agua_riego');
            $suma[] = App\Capital::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->sum('capital');
             
         }
@@ -891,10 +904,11 @@ class ProyectoController extends Controller
     {
        
         
-
+      
         $id_planta=$request->input('id');
         $id_partida=$request->input('partida');
         $user= $request->input('user');
+        $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $id_partida)->get()->last();
 
         $plantas=App\Planta::where('id_partida','=',$id_partida)->get();
         foreach($plantas as $plan)
@@ -902,29 +916,27 @@ class ProyectoController extends Controller
               $planta_cultivo[]=$plan->tipo_planta;
               $planta_cultivocount[]=App\Cultivo::select("*")
                                         ->where("id_planta", "=",$plan->id_planta)
-                                        ->where("id_usuario", "=", $user)
-                                        ->where("id_partida", "=", $id_partida)
+                                        ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                         ->count();
                                      
                                     
 
               $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('id_usuario',"=",$user)
-                                                    ->where('id_partida','=',$id_partida)->count();
+                                      ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                      ->count();
                if($plainv ==0)
                {
                    $planta_inventariocount[]=0;
                }
                else{
                     $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('id_usuario',"=",$user)
-                                                    ->where('id_partida','=',$id_partida)->sum('prod_planta');
+                                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                                    ->sum('prod_planta');
                }
         }
         $consultaCultivocount = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
-                                    ->where("id_usuario", "=", $user)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->count();
         if( $consultaCultivocount ==0)
         {
@@ -940,8 +952,7 @@ class ProyectoController extends Controller
         else{
                 $consultaCultivo = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
-                                    ->where("id_usuario", "=", $user)
-                                    ->where("id_partida", "=", $id_partida)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->get();
        
                 foreach($consultaCultivo as $culti)

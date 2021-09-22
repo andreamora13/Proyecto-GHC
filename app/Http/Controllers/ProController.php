@@ -38,28 +38,29 @@ class ProController extends Controller
        }
        if($semana < 60)
        {
-            $partidacount=App\Cultivo::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->where('cosecha', '=',  0)->count();
-            if($partidacount !=0)
+            $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+            $total=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->where('cosecha', '=',  0)->count();
+            if($total !=0)
             {
-               $detalle=App\Cultivo::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->where('cosecha', '=',  0)->get();
-               $Total=App\Cultivo::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->where('cosecha', '=',  0)->count();
+               $detalle=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->where('cosecha', '=',  0)->get();
+               
 
               
                foreach($detalle as $item)
                {
-                 $aguacount[]=App\AguaRiego::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
+                 $aguacount[]=App\Agua_riego::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
                  if($aguacount !=0)
                  {
-                    $aguasum[]=App\AguaRiego::where('id_cultivo', '=',  $item->id_cultivo)->get()->sum("agua_riego");
+                    $aguasum[]=App\Agua_riego::where('id_cultivo', '=',  $item->id_cultivo)->get()->sum("agua_riego");
                  }
                  else{
                    $aguasum[]=0;
                  }
 
-                 $abonocount[]=App\AbonoCant::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
+                 $abonocount[]=App\Abono_cant::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
                  if($abonocount !=0)
                  {
-                     $abonosum[]=App\AbonoCant::where('id_cultivo', '=',  $item->id_cultivo)->get()->sum("abono_cant");
+                     $abonosum[]=App\Abono_cant::where('id_cultivo', '=',  $item->id_cultivo)->get()->sum("abono_cant");
                  }
                  else{
                   $abonosum[]=0;
@@ -73,21 +74,25 @@ class ProController extends Controller
             }
          
             else{
-                $Total= 0;
-                $detalle=App\Cultivo::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get();
+                $total= 0;
+                $detalle=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->get();
                 $agua=0;
                 $abono=0;
                 $visible=0;
             }
-            $AguaTota=App\TotalAgua::select('aguaTotal')->get()->last();
-            $AguaTotal=intval($AguaTota->aguaTotal);
-            $Semana=0;
+            $aguaTota=App\Historico_agua::select('agua_total')->get()->last();
+            $aguaTotal=intval($aguaTota->agua_total);
+            $semana=0;
             /**/
         
 
-            $usuarios=App\User::where('id', '!=',  $user)->get();
-            $inv=App\Cultivo::where('id_usuario', '!=',  $user)->where('id_partida', '=',  $partida->id_partida)->get();
-            $invUser=App\Inventario::where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->where('vendido', '=',  0)->get();
+            $usuarios=App\Partida_usuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
+                                    ->select("*")
+                                    ->where("users.id", '!=',  $user)
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->get();
+
+            $invUser=App\Inventario::where('id_partidausu', '=',  $id_partidausu->id_partidausu)->where('vendido', '=',  0)->get();
             $plantas=App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get();
 
             foreach($plantas as $item)
@@ -107,54 +112,20 @@ class ProController extends Controller
 
            
 
-            $semana=App\PartidaUsuario::select('*')->where('id_partida', '=',  $partida->id_partida)->count();
+            $semana=App\Partida_usuario::select('*')->where('id_partida', '=',  $partida->id_partida)->count();
         
-            return view('Proyecto2',compact('detalle','AguaTotal','Semana','Total','inv','usuarios','invUser','plantas','precio','agua','abono','merca','visible','semana'));
+            return view('Proyecto2',compact('detalle','aguaTotal','semana','total','usuarios','invUser','plantas','agua','abono','merca','visible','semana'));
+       
        }
        else
        {
+            $info = self::info();
+
+            return $info;
            
-        $partida=App\Partida::select('id_partida')->get()->last();
-        $plan = App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get()->first();
-        $var=$plan->id_planta;
-        $plantas=App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get();
-        $planta=App\Planta::select('*')->where('id_planta','=',$var)->get()->last();
-        $tipo_planta=$planta->tipo_planta;
-        $usuarios= App\PartidaUsuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
-                                    ->select("*")
-                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
-                                    ->get();
-        foreach($usuarios as $item)
-        {
-           $cultivosdd[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
-                                    ->count();
-           $cultivosf[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
-                                    ->where("estado", "=", 1)
-                                    ->count();
-            $cultivosv[]= App\Cultivo::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
-                                    ->where("cosecha", "=", 1)
-                                    ->count();
-
-           $agua[] = App\Cultivo::join("agua_riegos","agua_riegos.id_cultivo", "=", "cultivos.id_cultivo")
-                                    ->select("*")
-                                    ->where("cultivos.id_usuario", "=", $item->id)
-                                    ->where("cultivos.id_partida", "=", $partida->id_partida)
-                                    ->sum('agua_riego');
-
-           $suma[] = App\Capital::select("*")
-                                    ->where("id_usuario", "=", $item->id)
-                                    ->where("id_partida", "=", $partida->id_partida)
-                                    ->sum('capital');
-        }
-            $partidaact = App\Partida::where('id_partida',"=",$partida->id_partida)->update(array('activa' => 0));
-        return view('InfoInd',compact('var','tipo_planta','usuarios','plantas','cultivosdd','agua','suma','cultivosf','cultivosv'));
        }
+            
+       
        
    }
 
@@ -162,15 +133,15 @@ class ProController extends Controller
    {
         $user= Auth::user()->id;
         $partida=App\Partida::select('id_partida')->where('activa',"=",1)->get()->last();
-        $partidacount=App\PartidaUsuario::select('*')->where('id_partida',"=",$partida->id_partida)->where('id_usuario',"=",$user)->count();
+        $partidacount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->where('id_usuario',"=",$user)->count();
         if( $partidacount == 0)
         {
-            $partidausu= new App\PartidaUsuario;
+            $partidausu= new App\Partida_usuario;
             $partidausu->id_partida=$partida->id_partida;
             $partidausu->id_usuario=$user;
             $partidausu->save();
         }
-        $partidausuariocount=App\PartidaUsuario::select('*')->where('id_partida',"=",$partida->id_partida)->count();
+        $partidausuariocount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->count();
         if($partidausuariocount<2)
         {
             return view('espera');
@@ -186,15 +157,12 @@ class ProController extends Controller
    public function CrearCultivo(Request $request)
    {
 
-       $usuario= Auth::user()->id;
+       $user= Auth::user()->id;
        $partida=App\Partida::select('id_partida')->get()->last();
-
+       $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
        $tomate = $request->input('cbox1');
        $pimenton = $request->input('cbox2');
        $lechuga = $request->input('cbox3');
-       $rew=$request->all();
-
-
        if($tomate=="Tomate")
        {
             $idplanta=App\Planta::select('id_planta')->where('tipo_planta', '=',  $tomate)->get()->last();
@@ -202,13 +170,12 @@ class ProController extends Controller
             $cultivo= new App\Cultivo;
             $cultivo->altura=0;
             $cultivo->produccion=0;
-            $cultivo->semana=1;
             $cultivo->tipo_planta=$tomate;
             $cultivo->cosecha=0;
             $cultivo->estado=0;
+            $cultivo->semana=1;
             $cultivo->id_planta= $idplanta->id_planta;
-            $cultivo->id_partida=$partida->id_partida;
-            $cultivo->id_usuario=$usuario;
+            $cultivo->id_partidausu=$id_partidausu->id_partidausu;
             $cultivo->save();
           
             
@@ -220,13 +187,12 @@ class ProController extends Controller
             $cultivo= new App\Cultivo;
             $cultivo->altura=0;
             $cultivo->produccion=0;
-            $cultivo->semana=1;
             $cultivo->tipo_planta=$pimenton;
             $cultivo->cosecha=0;
             $cultivo->estado=0;
+            $cultivo->semana=1;
             $cultivo->id_planta= $idplanta->id_planta;
-            $cultivo->id_partida=$partida->id_partida;
-            $cultivo->id_usuario=$usuario;
+            $cultivo->id_partidausu=$id_partidausu->id_partidausu;
             $cultivo->save();
            
             
@@ -239,13 +205,12 @@ class ProController extends Controller
             $cultivo= new App\Cultivo;
             $cultivo->altura=0;
             $cultivo->produccion=0;
-            $cultivo->semana=1;
             $cultivo->tipo_planta=$lechuga;
             $cultivo->cosecha=0;
             $cultivo->estado=0;
+            $cultivo->semana=1;
             $cultivo->id_planta= $idplanta->id_planta;
-            $cultivo->id_partida=$partida->id_partida;
-            $cultivo->id_usuario=$usuario;
+            $cultivo->id_partidausu=$id_partidausu->id_partidausu;
             $cultivo->save();
            
        }
@@ -254,7 +219,6 @@ class ProController extends Controller
        
        $principal = self::principal();
        
-       
       return $principal;
    }
 
@@ -262,7 +226,7 @@ class ProController extends Controller
    public function Riego($cult)
    {
         $cult;
-        $usuario= Auth::user()->id;
+        $user= Auth::user()->id;
         $partida = DB::table('partidas')->select('id_partida')->get()->last();
 
         $id_partidaDetcount=App\Cultivo::select("*")
@@ -274,48 +238,31 @@ class ProController extends Controller
             $id_partidaDet=App\Cultivo::select("*")
                                     ->where("id_cultivo", "=",$cult)
                                     ->where("cosecha", "=",0)
+                                    ->where("estado", "=",0)
                                     ->get()->last();
 
-            if($id_partidaDet->estado != 1)
+            $agua_re = App\Planta::select('*')->where('id_planta',"=",$id_partidaDet->id_planta)->get()->last();
+            $agua_riego =  $agua_re->agua_re/ $agua_re->cant_riegos;
+            
+            
+            $aguaTotal = App\Historico_agua::select('agua_total')->where('id_partida','=',$partida->id_partida)->get()->last();
+            if($aguaTotal->agua_total>$agua_riego)
             {
-                $agua_re = DB::table('plantas')->select('agua_re')->where('id_planta',"=",$id_partidaDet->id_planta)->get()->last();
-                $culti=$id_partidaDet->tipo_planta;
-
-                if($culti=='Tomate')
-                {
-                    
-                        $agua_riego=$agua_re->agua_re/3;
-                }
-                elseif ($culti=='Pimenton')
-                {
-                    
-                       $agua_riego=$agua_re->agua_re/2;
-                }
-                else {
-	                
-                       $agua_riego=$agua_re->agua_re/1;
-                }
-                $AguaTotal = DB::table('total_aguas')->select('aguaTotal')->where('id_partida','=',$partida->id_partida)->get()->last();
-                if($AguaTotal->aguaTotal>$agua_riego)
-                {
-                   $aguat = $AguaTotal->aguaTotal - $agua_riego;
-                   $totaldb= new App\TotalAgua;
-                   $totaldb->aguaTotal=$aguat;
+                   $aguat = $aguaTotal->agua_total - $agua_riego;
+                   $totaldb= new App\Historico_agua;
+                   $totaldb->agua_total=$aguat;
                    $totaldb->id_partida=$partida->id_partida;
                    $totaldb->save();
-         
-                }
-                else{
-                    $agua_riego=0;
-                }
-                $aguad= new App\AguaRiego;
-                $aguad->agua_riego=$agua_riego;
-                $aguad->semana=$id_partidaDet->semana;
-                $aguad->crecimiento=0;
-               
-                $aguad->id_cultivo=$cult;
-                $aguad->save();
             }
+            else{
+                    $agua_riego=0;
+            }
+            $aguad= new App\Agua_riego;
+            $aguad->agua_riego=$agua_riego;
+            $aguad->semana=$id_partidaDet->semana;
+            $aguad->crecimiento=0;
+            $aguad->id_cultivo=$cult;
+            $aguad->save();
         }
         
         $principal = self::principal();
@@ -336,35 +283,19 @@ class ProController extends Controller
             $id_partidaDet=App\Cultivo::select("*")
                                     ->where("id_cultivo", "=",$cult)
                                     ->where("cosecha", "=",0)
+                                    ->where("estado", "=",0)
                                     ->get()->last();
-            if($id_partidaDet->estado != 1)
-            {
-                    $abono_re = DB::table('plantas')->select('ab_re')->where('id_planta',"=",$id_partidaDet->id_planta)->get()->last();
-                    $culti=$id_partidaDet->tipo_planta;
+            
+            $abono_re = App\Planta::select('*')->where('id_planta',"=",$id_partidaDet->id_planta)->get()->last();
+            $cant_abono =  $abono_re->ab_re/ $abono_re->cant_abonos;
 
-                    if($culti=='Tomate')
-                    {
-                    
-                            $cant_abono=$abono_re->ab_re;
-                    }
-                    elseif ($culti=='Pimenton')
-                    {
-                    
-                          $cant_abono=$abono_re->ab_re;
-                    }
-                    else {
-	                
-                           $cant_abono=$abono_re->ab_re;
-                    }
-
-                    $aguad= new App\AbonoCant;
-                    $aguad->abono_cant=$cant_abono;
-                    $aguad->semana=$id_partidaDet->semana;
-                    $aguad->crecimiento=0;
-                   
-                    $aguad->id_cultivo=$cult;
-                    $aguad->save();
-            }
+            $aguad= new App\Abono_cant;
+            $aguad->abono_cant=$cant_abono;
+            $aguad->semana=$id_partidaDet->semana;
+            $aguad->crecimiento=0;
+            $aguad->id_cultivo=$cult;
+            $aguad->save();
+            
         }
         
          $principal = self::principal();
@@ -374,17 +305,21 @@ class ProController extends Controller
    {
        $perdida=self::perdida();
        $partida=App\Partida::select('id_partida')->get()->last();
-       $cultivoscount=  App\Cultivo::select("*")
-                                    ->where("cosecha", "=",0)
-                                    ->where("estado", "=", 0)
-                                    ->where("id_partida", "=", $partida->id_partida)
+       $id_partidausu=App\Partida_usuario::select('*')->where('id_partida', '=',  $partida->id_partida)->get()->last();
+
+       $cultivocount=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.cosecha", "=",0)
+                                    ->where("cultivos.estado", "=", 0)
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
                                     ->count();
-       if( $cultivoscount != 0)
+       if( $cultivocount != 0)
        {
-           $cultivos= App\Cultivo::select("*")
-                                    ->where("cosecha", "=",0)
-                                    ->where("estado", "=", 0)
-                                    ->where("id_partida", "=", $partida->id_partida)
+           $cultivos= App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.cosecha", "=",0)
+                                    ->where("cultivos.estado", "=", 0)
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
                                     ->get();
        
            foreach($cultivos as $item)
@@ -400,21 +335,21 @@ class ProController extends Controller
                $alt_max=$plantabd->alt_max;
                if($semanaTotal!=1)
                {
-                    $aguariego_count=App\AguaRiego::select('*')->where('id_cultivo', '=',  $item->id_cultivo)
+                    $aguariego_count=App\Agua_riego::select('*')->where('id_cultivo', '=',  $item->id_cultivo)
                                                                 ->where('crecimiento', '=',  0)->count();
                     if( $aguariego_count != 0)
                     {
-                     $agua_riego=App\AguaRiego::select('*')->where('id_cultivo', '=',  $item->id_cultivo)
+                     $agua_riego=App\Agua_riego::select('*')->where('id_cultivo', '=',  $item->id_cultivo)
                                                            ->where('crecimiento', '=',  0)->get()->sum('agua_riego');
                   
                     }else
                     {
                      $agua_riego=0;
                     }
-                    $agua_count=App\Agua::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
+                    $agua_count=App\Agua_registro::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
                     if( $agua_count != 0)
                     {
-                     $aguab=App\Agua::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->get()->last();
+                     $aguab=App\Agua_registro::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->get()->last();
                      $aguabd=$aguab->agua;
                      $cob_abd=$aguab->cob_a;
                      $absorbd=$aguab->absor;
@@ -426,6 +361,7 @@ class ProController extends Controller
                        $absorbd=0;
                        $m_tc_abd=0;
                     }
+
                     $cob_a=$agua_riego/$agua_re;
                     $absor=$aguabd*$tab_ag;
                     $agua=$aguabd+$agua_riego-$absor;
@@ -445,7 +381,7 @@ class ProController extends Controller
                     else if($cob_a>3)
                     {$M_tc_a=0.001;}
 
-                    $aguad= new App\Agua;
+                    $aguad= new App\Agua_registro;
                     $aguad->agua=$agua;
                     $aguad->cob_a=$cob_a;
                     $aguad->absor=$absor;
@@ -455,22 +391,22 @@ class ProController extends Controller
                     $aguad->id_cultivo=$item->id_cultivo;
                     $aguad->save();
 
-                    $ag = App\AguaRiego::where('id_cultivo', '=',  $item->id_cultivo)->update(array('crecimiento' => 1));
+                    $ag = App\Agua_riego::where('id_cultivo', '=',  $item->id_cultivo)->update(array('crecimiento' => 1));
 
-                    $abonocant_count=App\AbonoCant::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
+                    $abonocant_count=App\Abono_cant::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
                     if( $abonocant_count != 0)
                     {
-                     $abono_cant=App\AbonoCant::select('*')->where('id_cultivo', '=',  $item->id_cultivo)
+                     $abono_cant=App\Abono_cant::select('*')->where('id_cultivo', '=',  $item->id_cultivo)
                                                             ->where('crecimiento', '=',  0)->get()->sum('abono_cant');
                   
                     }else
                     {
                       $abono_cant=0;
                     }
-                    $abono_count=App\Abono::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
+                    $abono_count=App\Abono_registro::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
                     if( $abono_count != 0)
                     {
-                     $abonob=App\Abono::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->get()->last();
+                     $abonob=App\Abono_registro::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->get()->last();
                      $abonobd=$abonob->abono;
                      $cabd=$abonob->ca;
                      $ab_absbd=$abonob->ab_abs;
@@ -501,7 +437,7 @@ class ProController extends Controller
                     else if($ca>3)
                     {$M_tc_ab=0.001;}
 
-                    $abonod= new App\Abono;
+                    $abonod= new App\Abono_registro;
                     $abonod->abono=$abono;
                     $abonod->ca=$ca;
                     $abonod->ab_abs= $ab_abs;
@@ -510,9 +446,11 @@ class ProController extends Controller
                    
                     $abonod->id_cultivo=$item->id_cultivo;
                     $abonod->save();
-                    $ab = App\AbonoCant::where('id_cultivo', '=',  $item->id_cultivo)->update(array('crecimiento' => 1));
+                    $ab = App\Abono_cant::where('id_cultivo', '=',  $item->id_cultivo)->update(array('crecimiento' => 1));
 
                     $tcm=0.2;
+
+
                     $tasa_cre=$tcm*$M_tc_a*$M_tc_ab;
                     $cre_fal=$alt_max-$item->altura;
                     $cre=$tasa_cre*$cre_fal;
@@ -534,49 +472,49 @@ class ProController extends Controller
             }
        }               
                    
-        $produccion=self::produccion();
+       $produccion=self::produccion();
        
-        $principal = self::principal();
-        return   $principal;
+       $principal = self::principal();
+       
+       return   $principal;
    }
    public function Inventario($cult)
    {
        $cult;
+       $user= Auth::user()->id;
        $partida=App\Partida::select('id_partida')->get()->last();
        $sema=App\Semana::select('*')->where('id_partida','=',$partida->id_partida)->get()->last();
        $id_partidaDet=App\Cultivo::select("*")
                                   ->where("id_cultivo", "=",$cult)
                                   ->get()->last();
                     
+       $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
 
-        if($id_partidaDet->estado != 1)
-        {
-           $produccionbd = DB::table('cultivos')->select('produccion')->where('id_cultivo',"=",$cult)->get()->last();
-           $semana= DB::table('cultivos')->select('semana')->where('id_cultivo',"=",$cult)->get()->last();
-           $tipo_planta= DB::table('cultivos')->select('id_planta')->where('id_cultivo',"=",$cult)->get()->last();
+       if($id_partidaDet->estado != 1)
+       {
+           $produccionbd = App\Cultivo::select('produccion')->where('id_cultivo',"=",$cult)->get()->last();
+           $semana= App\Cultivo::select('semana')->where('id_cultivo',"=",$cult)->get()->last();
+           $tipo_planta= App\Cultivo::select('id_planta')->where('id_cultivo',"=",$cult)->get()->last();
 
-           $usuario= Auth::user()->id;
+           
            $tipo=$tipo_planta->id_planta;
-          
-       
-           $planta = DB::table('inventarios')->select('*')->where('id_planta',"=",$tipo)
-                                                          ->where('id_partida',"=",$partida->id_partida)
-                                                          ->count();
+           $planta = App\Inventario::select('*')->where('id_planta',"=",$tipo)
+                                                ->where('id_partidausu',"=",$id_partidausu->id_partidausu)
+                                                ->count();
 
         
            $prod=$produccionbd->produccion;
 
            $inv=new App\Inventario;
            $inv->prod_planta=$prod;
-           $inv->Semana=$sema->semana+1;
-           $inv->id_planta=$tipo_planta->id_planta;
-           $inv->id_usuario=$usuario;
-           $inv->id_partida=$partida->id_partida;
            $inv->vendido=0;
+           $inv->semana=$sema->semana+1;
+           $inv->id_planta=$tipo_planta->id_planta;
+           $inv->id_partidausu=$id_partidausu->id_partidausu;
            $inv->save();
 
            $cultivo = App\Cultivo::where('id_cultivo', '=',$cult)->update(array('cosecha' => 1));                  
-        }
+       }
        $principal = self::principal();
        
        
@@ -586,139 +524,182 @@ class ProController extends Controller
    public function Mercado(Request $request)
    {
 
-        $id_planta= $request->input('planta');
-        $plantas = DB::table('plantas')->select('*')->where('id_planta', '=',$id_planta)->get();
-        $cover_des=4;
+        $plantasel= $request->all();
+        $token = $request->input('_token');
         $user=Auth::user()->id;
         $partida=App\Partida::select('id_partida')->get()->last();
+        $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+        $plantas= App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get();
+        $cover_des=4;
         $sema=App\Semana::select('*')->where('id_partida','=',$partida->id_partida)->get()->last();
-
-        foreach($plantas as $item )
-
+       
+        if( count($plantasel)> 1)
         {
+            foreach($plantasel as $item)
+            {
+                if($item != $token)
+                {
+                    $id_plantasel[]=$item;
+                
+                }
+            }
+            foreach($plantas as $item)
+            {
             
-            $Precio_Inibd= DB::table('plantas')->select('precio')->where('id_planta',"=",$item->id_planta)->get()->last();
-            $mercado_count= DB::table('mercados')->select('*')->where('id_planta',"=",$item->id_planta)->count();
-            $Preciobd= DB::table('mercados')->select('precio')->where('id_planta',"=",$item->id_planta)->get()->last();
-            $InvAcumu_bd= DB::table('mercados')->select('inv_acumulado')->where('id_planta',"=",$item->id_planta)->get()->last();
-            $alcance_cam_precio= $Precio_Inibd->precio;
+                $id_planta= $item->id_planta;
+                $vende=in_array ( $id_planta,  $id_plantasel);
+                $invcount=App\Inventario::select('*')->where('id_planta','=',$id_planta)->where('vendido','=',0)->where('id_partidausu','=',$id_partidausu->id_partidausu)->count();
+            
+                if($vende==true)
+                {
+                    $sum_Prod=App\Inventario::where('id_planta',"=",$id_planta)->where('vendido',"=",0)->where('id_partidausu','=',$id_partidausu->id_partidausu)->sum('prod_planta');
+                }
+                else
+                {
+                     $sum_Prod=0;
+                }
+                $precioplanta=App\Planta::select('*')->where('id_planta',"=",$id_planta)->get()->last();
+                $precio_ini=$precioplanta->precio;
+                $precio_Inibd=$precio_ini/100;
+                $alcance_cam_precio= $precio_Inibd;
+                $mercado_count=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->count();
 
-            if( $mercado_count==0)
-
-            {
-               $Precio=$Precio_Inibd->precio;
-               $inv_acum=220;
-            }
-             else{
-                  $Precio= $Preciobd->precio;
-                  $inv_acum=$InvAcumu_bd->inv_acumulado;
+                if( $mercado_count==0)
+                {
+                       $precio=$precio_Inibd;
+                       $inv_acum=$precioplanta->inv_acumulado;
+                }
+                else
+                {
                   
+                     $preciobdini= App\Mercado::select('precio')->where('id_planta',"=",$id_planta)->get()->last();
+                     $invAcumu_bd= App\Mercado::select('inv_acumulado')->where('id_planta',"=",$id_planta)->get()->last();
+                     $precio= $preciobdini->precio/100;
+                     $inv_acum=$invAcumu_bd->inv_acumulado;
+                }
+                    
+                if($precio<=$precio_Inibd-2 )
+                {
+                        $demanda=100;
+                }
+                else if($precio>$precio_Inibd-2  and $precio<=$precio_Inibd-1 )
+                {
+                        $demanda=73;
+                }
+                else if($precio>$precio_Inibd-1  and $precio<=$precio_Inibd)
+                {
+                        $demanda=57;
+                }
+                else if($precio>$precio_Inibd and $precio<=$precio_Inibd+1)
+                {
+                        $demanda=35;
+                }
+                else if($precio>$precio_Inibd+1 and $precio<=$precio_Inibd+2 )
+                {
+                        $demanda=28;
+                }
+                else if($precio>$precio_Inibd+2 and $precio<=$precio_Inibd+3)
+                {
+                        $demanda=22;
+                }
+                else if($precio>$precio_Inibd+4)
+                {
+                        $demanda=15;
+                }
 
-             }
+                $inv_deseado=$demanda*$cover_des;
+                $inventarios=$inv_acum+$sum_Prod-$demanda;
 
-            if($Precio<=5)
-             {
-             $demanda=100;
-            }else if($Precio>5 and $Precio<=15)
-            {
-              $demanda=73;
-             }
-             else if($Precio>15 and $Precio<=20)
-            {
-               $demanda=45;
-             }
-             else if($Precio>20 and $Precio<=25)
-            {
-               $demanda=35;
+                if($inventarios < 0)
+                {
+                        $inventario= $inv_acum+$sum_Prod;
+                }else{
+                        $inventario=$inventarios;
+                }
+
+                $radio_inv=$inv_acum/$inv_deseado;
+
+                if($radio_inv<=0.5)
+                {
+                      $efecto_precio=2;
+                }
+                else if($radio_inv>0.5 and $radio_inv<=0.7)
+                {
+                      $efecto_precio=1.55;
+                }
+                else if($radio_inv>0.7 and $radio_inv<1)
+                {
+                      $efecto_precio=1.12;
+                }
+                else if($radio_inv==1)
+                {
+                      $efecto_precio=1;
+                }
+                else if($radio_inv>1 and $radio_inv<=1.3)
+                {
+                       $efecto_precio=0.75;
+                }
+                else if($radio_inv>1.3 and $radio_inv<=1.5)
+                {
+                      $efecto_precio=0.5;
+                }
+                else
+                {
+                      $efecto_precio=0.3;
+                }
+
+                $precio_deseado=$efecto_precio*$precio;
+                $cambio_precio=($precio_deseado-$precio)/$alcance_cam_precio;
+                $new_precio=$precio+$cambio_precio;
+
+                
+                     $mercado=new App\Mercado;
+                     $mercado->precio=$new_precio*100;
+                     $mercado->ventas=$demanda;
+                     $mercado->inv_deseado=$inv_deseado;
+                     $mercado->inv_acumulado= $inventario;
+                     $mercado->radio_inv= $radio_inv;
+                     $mercado->efecto_precio=$efecto_precio;
+                     $mercado->precio_deseado=$precio_deseado*100;
+                     $mercado->cambio_precio=$cambio_precio;
+                     $mercado->semana=$sema->semana;
+                     $mercado->id_planta=$id_planta;
+                     $mercado->id_partida=$partida->id_partida;
+                     $mercado->save();
+
+                     
             }
-              else if($Precio>25 and $Precio<=30)
-             {
-                 $demanda=28;
-            }
-             else if($Precio>30 and $Precio<=35)
+            foreach($plantasel as $item)
             {
-               $demanda=22;
+                if($item != $token)
+                {
+                     $cap= $sum_Prod*$precio;
+
+                     $capital=new App\Capital;
+                     $capital->capital=$cap;
+                     $capital->id_partidausu=$id_partidausu->id_partidausu;
+                     $capital->save();
+               
+                     $vendido= App\Inventario::where('id_planta',"=",$item)->update(array('vendido' => 1));
+                
+                }
             }
-             else if($Precio>35)
-             {
-            $demanda=15;
-            }
 
-            $inv_deseado=$demanda*$cover_des;
-            $sum_Prod= DB::table('inventarios')->where('id_planta',"=",$item->id_planta)->where('id_usuario',"=",$user)->where('vendido',"=",0)->where('id_partida','=',$partida->id_partida)->sum('prod_planta');
-            $cap= $sum_Prod*$Precio;
-            $inventario=$inv_acum+$sum_Prod-$demanda;
-            $radio_inv=$inv_acum/$inv_deseado;
-
-            if($radio_inv<=0.5)
-            {
-              $efecto_precio=2;
-              }
-             else if($radio_inv>0.5 and $radio_inv<=0.7)
-             {
-              $efecto_precio=1.55;
-              }
-             else if($radio_inv>0.7 and $radio_inv<1)
-             {
-              $efecto_precio=1.35;
-              }
-             else if($radio_inv==1)
-             {
-              $efecto_precio=1;
-              }
-             else if($radio_inv>1 and $radio_inv<=1.3)
-             {
-              $efecto_precio=0.75;
-              }
-             else if($radio_inv>1.3 and $radio_inv<=1.5)
-             {
-              $efecto_precio=0.5;
-              }
-              else
-             {
-              $efecto_precio=0.3;
-              }
-
-             $precio_deseado=$efecto_precio*$Precio;
-             $cambio_precio=($precio_deseado-$Precio)/$alcance_cam_precio;
-             $New_precio=$Precio+$cambio_precio;
-
-             $mercado=new App\Mercado;
-             $mercado->precio=$New_precio;
-             $mercado->ventas=$demanda;
-             $mercado->inv_deseado=$inv_deseado;
-             $mercado->inv_acumulado= $inventario;
-             $mercado->radio_inv= $radio_inv;
-             $mercado->efecto_precio=$efecto_precio;
-             $mercado->precio_deseado=$precio_deseado;
-             $mercado->cambio_precio=$cambio_precio;
-             $mercado->semana=$sema->semana+1;
-             $mercado->id_planta=$item->id_planta;
-             $mercado->id_partida=$partida->id_partida;
-             $mercado->save();
-
-             $capital=new App\Capital;
-             $capital->capital=$cap;
-             $capital->id_partida=$partida->id_partida;
-             $capital->id_usuario=$user;
-             $capital->save();
-
-             $vendido= App\Inventario::where('id_planta',"=",$item->id_planta)->update(array('vendido' => 1));
         }
-
-        $principal = self::principal();
-        return $principal;
         
+        $principal = self::principal();
+        return   $principal;
    }
+
    public function Seleccion(Request $request)
    {
 
         $user=Auth::user()->id;
         $partida=App\Partida::select('id_partida')->get()->last();
-
+         $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last(); 
           
-        $Cultivos=array();
-        $Cultivos=$request->all();
+        $cultivosselect=array();
+        $cultivosselect=$request->all();
         $token = $request->input('_token');
         $regar = $request->input('cbox1');
         $abonar = $request->input('cbox2');
@@ -731,11 +712,11 @@ class ProController extends Controller
         $array=array();
         $arrayItem=array();
         $array_unique=array();
-        $a=array();
+        $cultivos=array();
           
        
 
-        foreach( $Cultivos as $item)
+        foreach( $cultivosselect as $item)
         {
              $arrayItem[]=$item;
              foreach($arrayItem as $item2)
@@ -750,9 +731,12 @@ class ProController extends Controller
          
         foreach($array_unique as $item3)
         {
-              $a[]=$item3;
+            if($item3 != 0)
+            {
+                $cultivos[]=$item3;
+            }
         }
-        foreach($a as $item5)
+        foreach($cultivos as $item5)
         {
               if($regar=="Regar")
               {
@@ -777,8 +761,7 @@ class ProController extends Controller
         {
            $cultivo1= App\Cultivo::select("*")
                                  ->where("tipo_planta", "=",$tomate)
-                                 ->where("id_usuario", "=", $user)
-                                 ->where("id_partida", "=", $partida->id_partida)
+                                  ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                   ->get();
                     
 
@@ -809,8 +792,7 @@ class ProController extends Controller
         {
            $cultivo2= App\Cultivo::select("*")
                                  ->where("tipo_planta", "=",$pimenton)
-                                 ->where("id_usuario", "=", $user)
-                                 ->where("id_partida", "=", $partida->id_partida)
+                                  ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                   ->get();
                       
            foreach($cultivo2 as $item4)
@@ -838,8 +820,7 @@ class ProController extends Controller
         {
            $cultivo3= App\Cultivo::select("*")
                                  ->where("tipo_planta", "=",$lechuga)
-                                 ->where("id_usuario", "=", $user)
-                                 ->where("id_partida", "=", $partida->id_partida)
+                                 ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                   ->get();
 
            foreach($cultivo3 as $item4)
@@ -863,11 +844,10 @@ class ProController extends Controller
            }
 
         }
-        
+        $principal = self::principal();
 
 
-         $principal = self::principal();
-        return $principal;
+        return  $principal;
    }
    public function  semana()
    {
@@ -875,7 +855,7 @@ class ProController extends Controller
     
         $partida=App\Partida::select('id_partida')->get()->last();
         $semana=App\Semana::select('*')->where('id_partida','=',$partida->id_partida)->count();
-
+       
 
         if($semana!=0)
         {
@@ -889,18 +869,22 @@ class ProController extends Controller
            $semanadb->id_partida=$partida->id_partida;
            $semanadb->save();
 
-        $cultivoscount=App\Cultivo::select("*")
-                                   ->where("id_partida", "=", $partida->id_partida)
-                                   ->where("estado", "=", 0)
-                                   ->where("cosecha", "=", 0)
-                                   ->count();
+        $cultivoscount=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.cosecha", "=",0)
+                                    ->where("cultivos.estado", "=", 0)
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->count();
+                       
         if($cultivoscount != 0)
         {
-            $cultivos=App\Cultivo::select("*")
-                                   ->where("id_partida", "=", $partida->id_partida)
-                                   ->where("estado", "=", 0)
-                                   ->where("cosecha", "=", 0)
-                                   ->get();
+            $cultivos=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.cosecha", "=",0)
+                                    ->where("cultivos.estado", "=", 0)
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->get();
+
             foreach($cultivos as $culti)
             {
                $semana= App\Cultivo::select('semana')->where('id_cultivo',"=",$culti->id_cultivo)->get()->last();
@@ -918,35 +902,38 @@ class ProController extends Controller
    public function perdida()
    {
         $partida=App\Partida::select('id_partida')->get()->last();
-        $cultivoscount= App\Cultivo::select("*")
-                                    ->where('cosecha', '=',  0)
-                                    ->where("id_partida", "=", $partida->id_partida)
+        $cultivoscount= App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.cosecha", "=",0)
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
                                     ->count();
+                        
                        
         if( $cultivoscount != 0)
         {
-             $cultivos=App\Cultivo::select("*")
-                                    ->where('cosecha', '=',  0)
-                                    ->where("id_partida", "=", $partida->id_partida)
+             $cultivos=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.cosecha", "=",0)
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
                                     ->get();
 
              foreach($cultivos as $cult)
              {
-                $aguacount = App\Agua::select("*")->where("id_cultivo", "=", $cult->id_cultivo)->count();
+                $aguacount = App\Agua_registro::select("*")->where("id_cultivo", "=", $cult->id_cultivo)->count();
                
                 if( $aguacount !=0)
                 {
-                   $agua = App\Agua::select("*")->where("id_cultivo", "=", $cult->id_cultivo)->get()->last();
+                   $agua = App\Agua_registro::select("*")->where("id_cultivo", "=", $cult->id_cultivo)->get()->last();
                    
                     if($agua->cob_a ==0 or $agua->cob_a > 1.5 )
                     {
                     $act= App\Cultivo::where('id_cultivo',"=",$cult->id_cultivo)->update(array('estado' => 1));
                     }
                 }
-                $abonocount = App\Abono::select("*")->where("id_cultivo", "=", $cult->id_cultivo)->count();
+                $abonocount = App\Abono_registro::select("*")->where("id_cultivo", "=", $cult->id_cultivo)->count();
                 if( $abonocount  !=0)
                 {
-                   $abono = App\Abono::select("*")->where("id_cultivo", "=", $cult->id_cultivo)->get()->last();
+                   $abono = App\Abono_registro::select("*")->where("id_cultivo", "=", $cult->id_cultivo)->get()->last();
                    
                     if($abono->ca ==0 or $abono->ca > 1.5 )
                     {
@@ -969,19 +956,20 @@ class ProController extends Controller
    public function produccion()
    {
         $partida=App\Partida::select('id_partida')->get()->last();
-        $cultivoscount= App\Cultivo::select("*")
-                                    ->where('estado', '=',  0)
-                                    ->where('cosecha', '=',  0)
-                                    ->where("id_partida", "=", $partida->id_partida)
-                                    ->count();
-                        
-        if( $cultivoscount != 0)
+        $cultivocount=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.cosecha", "=",0)
+                                    ->where("cultivos.estado", "=", 0)
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->count();               
+        if( $cultivocount != 0)
         {
-             $cultivos= App\Cultivo::select("*")
-                                    ->where('estado', '=',  0)
-                                    ->where('cosecha', '=',  0)
-                                    ->where("id_partida", "=", $partida->id_partida)
-                                    ->get();
+             $cultivos= App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                    ->select("*")
+                                    ->where("cultivos.cosecha", "=",0)
+                                    ->where("cultivos.estado", "=", 0)
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->get(); 
 
              foreach($cultivos as $cult)
              {
@@ -1013,7 +1001,51 @@ class ProController extends Controller
 
         return    $principal;
    }
-  
+   public function info()
+   {
+       
+        $partida=App\Partida::select('id_partida')->get()->last();
+        $plan = App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get()->first();
+        $var=$plan->id_planta;
+        $plantas=App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get();
+        $planta=App\Planta::select('*')->where('id_planta','=',$var)->get()->last();
+        $tipo_planta=$planta->tipo_planta;
+        $usuarios= App\Partida_usuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
+                                    ->select("*")
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->get();
+        foreach($usuarios as $item)
+        {
+           $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $item->id)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+
+           $cultivosdd[]= App\Cultivo::select("*")
+                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                    ->count();
+           $cultivosf[]= App\Cultivo::select("*")
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                    ->where("estado", "=", 1)
+                                    ->count();
+            $cultivosv[]= App\Cultivo::select("*")
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                    ->where("cosecha", "=", 1)
+                                    ->count();
+
+           $agua[] = App\Cultivo::join("agua_riegos","agua_riegos.id_cultivo", "=", "cultivos.id_cultivo")
+                                    ->select("*")
+                                    ->where("cultivos.id_partidausu", "=", $id_partidausu->id_partidausu)
+                                    ->sum('agua_riego');
+
+           $suma[] = App\Capital::select("*")
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                    ->sum('capital');
+           
+                                   
+        }
+        
+         
+       
+        return  view('InfoInd',compact('var','tipo_planta','usuarios','plantas','cultivosdd','agua','suma','cultivosf','cultivosv'));
+    }
  }
 
 

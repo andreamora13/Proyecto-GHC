@@ -24,6 +24,8 @@ class CreatePlantasTable extends Migration
             $table->double('prod');
             $table->double('precio');
             $table->double('inv_acumulado');
+            $table->double('cant_riegos');
+            $table->double('cant_abonos');
             $table->unsignedInteger('id_partida');
 
             $table->foreign('id_partida')->references('id_partida')->on('partidas')

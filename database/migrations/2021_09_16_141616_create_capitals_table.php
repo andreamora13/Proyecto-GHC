@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTotalAguasTable extends Migration
+class CreateCapitalsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateTotalAguasTable extends Migration
      */
     public function up()
     {
-        Schema::create('total_aguas', function (Blueprint $table) {
-            $table->increments('id_Total');
-            $table->double('aguaTotal');
-            $table->unsignedInteger('id_partida');
+        Schema::create('capitals', function (Blueprint $table) {
+            $table->increments('id_capital');
+            $table->double('capital');
+            $table->unsignedInteger('id_partidausu');
 
-            $table->foreign('id_partida')->references('id_partida')->on('partidas')
+             $table->foreign('id_partidausu')->references('id_partidausu')->on('partida_usuarios')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });
@@ -31,6 +31,6 @@ class CreateTotalAguasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('total_aguas');
+        Schema::dropIfExists('capitals');
     }
 }

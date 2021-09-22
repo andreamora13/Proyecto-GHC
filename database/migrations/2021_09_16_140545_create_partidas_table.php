@@ -13,10 +13,10 @@ class CreatePartidasTable extends Migration
      */
     public function up()
     {
-
         Schema::create('partidas', function (Blueprint $table) {
             $table->increments('id_partida');
             $table->double('activa');
+            $table->integer('max_usuarios');
             $table->timestamps();
             
         });

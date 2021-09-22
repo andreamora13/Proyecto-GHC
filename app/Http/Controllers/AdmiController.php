@@ -53,19 +53,30 @@ class AdmiController extends Controller
         $this->validate($request, ['preciop'=>'required']);
         $this->validate($request, ['preciol'=>'required']);
 
-         $this->validate($request, ['agua_total'=>'required']);
+        $this->validate($request, ['cant_riegot'=>'required']);
+        $this->validate($request, ['cant_riegop'=>'required']);
+        $this->validate($request, ['cant_riegol'=>'required']);
+        $this->validate($request, ['cant_abonot'=>'required']);
+        $this->validate($request, ['cant_abonop'=>'required']);
+        $this->validate($request, ['cant_abonol'=>'required']);
+
+        $this->validate($request, ['agua_total'=>'required']);
+        $this->validate($request, ['cant_max'=>'required']);
 
 
          if($request->alt_mxt==null or $request->alt_mxp==null or $request->alt_mxl==null or $request->agua_ret==null or $request->agua_rep==null
         or $request->agua_rel==null or $request->ab_ret==null or $request->ab_rep==null or $request->ab_rel==null 
-        or $request->prodt==null or $request->prodp==null or $request->prodl==null or $request->preciot==null or $request->preciop==null or $request->preciol==null or $request->agua_total==null)
+        or $request->prodt==null or $request->prodp==null or $request->prodl==null or $request->preciot==null or $request->preciop==null
+        or $request->preciol==null or $request->agua_total==null or $request->cant_max==null or $request->cant_riegot==null or $request->cant_riegop==null
+        or $request->cant_riegol==null or  $request->cant_abonot==null or $request->cant_abonop==null or $request->cant_abonol==null)
         {
           $error='Los datos no se han podido guardar, Se deben completar todos los campos';
         }
         else {
 	      $error='Datos guardados';
           $partida= new App\Partida;
-          $partida->Activa=1;
+          $partida->activa=1;
+          $partida->max_usuarios=$request->cant_max-1;
           $partida->save();
           $id_partida=App\Partida::select('id_partida')->get()->last();
           
@@ -80,6 +91,8 @@ class AdmiController extends Controller
         $planta->prod=$request->prodt;
         $planta->precio=$request->preciot;
         $planta->inv_acumulado=220;
+        $planta->cant_riegos=$request->cant_riegot;
+        $planta->cant_abonos=$request->cant_abonot;
         $planta->id_partida=$id_partida->id_partida;
         $planta->save();
 
@@ -93,6 +106,8 @@ class AdmiController extends Controller
         $planta->prod=$request->prodp;
         $planta->precio=$request->preciop;
         $planta->inv_acumulado=220;
+        $planta->cant_riegos=$request->cant_riegop;
+        $planta->cant_abonos=$request->cant_abonop;
         $planta->id_partida=$id_partida->id_partida;
         $planta->save();
 
@@ -106,11 +121,13 @@ class AdmiController extends Controller
         $planta->prod=$request->prodl;
         $planta->precio=$request->preciol;
         $planta->inv_acumulado=220;
+        $planta->cant_riegos=$request->cant_riegol;
+        $planta->cant_abonos=$request->cant_abonol;
         $planta->id_partida=$id_partida->id_partida;
         $planta->save();
 
-        $agua= new App\TotalAgua;
-        $agua->aguaTotal=$request->agua_total;
+        $agua= new App\Historico_agua;
+        $agua->agua_total=$request->agua_total;
         $agua->id_partida=$id_partida->id_partida;
         $agua->save();
 
@@ -157,7 +174,7 @@ class AdmiController extends Controller
         $usu=$request->usu;
         $user=$request->input('id');
 
-        $tipousu= new App\TipoUsuario;
+        $tipousu= new App\Tipo_usuario;
         $tipousu->id_usuario=$user;
         $tipousu->id_tipo=$usu;
         $tipousu->save();
@@ -178,7 +195,8 @@ class AdmiController extends Controller
         
 	    
         $partida= new App\Partida;
-        $partida->Activa=1;
+        $partida->activa=1;
+        $partida->max_usuarios=10;
         $partida->save();
 
         $id_partida=App\Partida::select('id_partida')->get()->last();
@@ -191,7 +209,9 @@ class AdmiController extends Controller
         $planta->tab_ag=0.02;
         $planta->tab_ab=0.08;
         $planta->prod=120;
-        $planta->precio=15;
+        $planta->precio=2500;
+        $planta->cant_riegos=3;
+        $planta->cant_abonos=1;
         $planta->inv_acumulado=220;
         $planta->id_partida=$id_partida->id_partida;
         $planta->save();
@@ -204,8 +224,10 @@ class AdmiController extends Controller
         $planta->tab_ag=0.02;
         $planta->tab_ab=0.08;
         $planta->prod=110;
-        $planta->precio=10;
+        $planta->precio=1500;
         $planta->inv_acumulado=220;
+        $planta->cant_riegos=3;
+        $planta->cant_abonos=1;
         $planta->id_partida=$id_partida->id_partida;
         $planta->save();
 
@@ -217,13 +239,15 @@ class AdmiController extends Controller
         $planta->tab_ag=0.02;
         $planta->tab_ab=0.08;
         $planta->prod=95;
-        $planta->precio=5;
+        $planta->precio=1200;
         $planta->inv_acumulado=220;
+        $planta->cant_riegos=3;
+        $planta->cant_abonos=1;
         $planta->id_partida=$id_partida->id_partida;
         $planta->save();
 
-        $agua= new App\TotalAgua;
-        $agua->aguaTotal=4500;
+        $agua= new App\Historico_agua;
+        $agua->agua_total=4500;
         $agua->id_partida=$id_partida->id_partida;
         $agua->save();
 

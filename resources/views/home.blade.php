@@ -42,6 +42,13 @@
                 objeto2.style.display="none";
                 
         }
+        function salir(){
+            document.getElementById('logout-form').submit();
+    
+        }
+        //Función para actualizar cada 20 segundos(20000 milisegundos)
+   
+        setInterval("salir()",180000);
     </script>
 
     <style>
@@ -72,6 +79,7 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     Inicio
                 </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -156,15 +164,16 @@
                      
                        @if($partidacount!=0)
                            <?php
-                           $partida=App\Partida::select('id_partida')->get()->last();
-                           $partidausu=App\PartidaUsuario::select('*')->where('id_partida', '=',  $partida->id_partida)->count();
+                           $user= Auth::user()->id;
+                           $partida=App\Partida::select('*')->get()->last();
+                           $partidausu=App\Partida_usuario::select('*')->where('id_partida', '=',  $partida->id_partida)->where('id_usuario', '!=',  $user)->count();
                            ?>
-                           @if($partidausu>5)
+                           @if($partidausu>$partida->max_usuarios)
                            <a href="{{ action('ProController@Partida') }}" class="not-active" >
 
                                <h5 style="color:white; height:20px">Iniciar</h5>
                             </a>
-                            <p> &nbsp &nbsp   Partida con jugadores completos
+                            <p style="color:white"> &nbsp &nbsp   Partida con jugadores completos
                             @else
                             <a href="{{ action('ProController@Partida') }}">
 
@@ -173,7 +182,7 @@
                             @endif()
                              
                             @else
-                             <p> &nbsp Espera a que el admin inicie la partida
+                             <p style="color:white"> &nbsp Espera a que el admin inicie la partida
                             
                         @endif()
                         <br><br>
@@ -196,7 +205,7 @@
                             <?php
                             $partidas=array();
                             $user=Auth::user()->id;
-                            $partidausu=App\PartidaUsuario::select('*')->where('id_usuario', '=',  $user)->get();
+                            $partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->get();
                         
                             ?>
                             <table class="table custom-table" >

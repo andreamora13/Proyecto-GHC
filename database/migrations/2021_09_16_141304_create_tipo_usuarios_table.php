@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePartidaUsuariosTable extends Migration
+class CreateTipoUsuariosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreatePartidaUsuariosTable extends Migration
      */
     public function up()
     {
-        Schema::create('partida_usuarios', function (Blueprint $table) {
-            $table->increments('id_partidaUsu');
-            $table->unsignedInteger('id_partida');
+        Schema::create('tipo_usuarios', function (Blueprint $table) {
+            $table->increments('id_tipousu');
             $table->unsignedInteger('id_usuario');
+            $table->unsignedInteger('id_tipo');
 
-            $table->foreign('id_partida')->references('id_partida')->on('partidas')
+            $table->foreign('id_usuario')->references('id')->on('users')
             ->onDelete("cascade")
             ->onUpdate("cascade");
-            
-            $table->foreign('id_usuario')->references('id')->on('users')
+
+            $table->foreign('id_tipo')->references('id_tipo')->on('tipos')
             ->onDelete("cascade")
             ->onUpdate("cascade");
         });
@@ -35,6 +35,6 @@ class CreatePartidaUsuariosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('partida_usuarios');
+        Schema::dropIfExists('tipo_usuarios');
     }
 }

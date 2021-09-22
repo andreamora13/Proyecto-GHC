@@ -42,6 +42,10 @@
                 objeto2.style.display="none";
                 objeto3.style.display="none";
         }
+         
+        
+        //Función para actualizar cada 20 segundos(20000 milisegundos)
+         
      </script>
 
      <style>
@@ -64,6 +68,7 @@
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     Inicio
+                    
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -138,7 +143,7 @@
                                         <nav class="main-menu">
                                             <ul class="menu-area-main">
                                               
-                                                <li> <a href="{{ action('AdmiController@home') }}" ><p  style="font-family:poppins;font-size:15px">Inicio</p></a></li>
+                                                <li> <a href="{{ action('AdmiController@home') }}" ><p  style="font-family:poppins;font-size:15px">Iniciar</p></a></li>
                                                 <li> <button   onclick="mostrar('contenido1','contenido2','contenido3')" ><p  style="font-family:poppins">Inicializar datos</p></button> </li>
                                                 <li> <button  onclick="mostrar('contenido2','contenido1','contenido3')" ><p  style="font-family:poppins">Usuarios Registrados</p></button></li>
                                                 <li><button  onclick="mostrar('contenido3','contenido1','contenido2')"><p  style="font-family:poppins;font-size:15px">Informes</p></button></li>
@@ -198,12 +203,23 @@
                         <td ><center><input type="number" name="agua_rel" step="any" > </td>
                        </tr>
                        <tr>
+                        <td ><center><p>Cantidad Requerida</td>
+                        <td ><center><input type="number" name="cant_riegot" step="any" > </td>
+                        <td ><center><input type="number" name="cant_riegop" step="any" > </td>
+                        <td ><center><input type="number" name="cant_riegol" step="any" > </td>
+                       </tr>
+                       <tr>
                         <td ><center><p>Abono Requerido</td>
                         <td ><center><input type="number" name="ab_ret" step="any" > </td>
                         <td ><center><input type="number" name="ab_rep" step="any" > </td>
                         <td ><center><input type="number" name="ab_rel" step="any" > </td>
                        </tr>
-                       
+                        <tr>
+                        <td ><center><p>Cantidad Requerida</td>
+                        <td ><center><input type="number" name="cant_abonot" step="any" > </td>
+                        <td ><center><input type="number" name="cant_abonop" step="any" > </td>
+                        <td ><center><input type="number" name="cant_abonol" step="any" > </td>
+                       </tr>
                        <tr>
                         <td ><center><p>Producción</td>
                         <td ><center><input type="number" name="prodt" step="any" ></td>
@@ -230,6 +246,8 @@
                        <tr>
                         <td ><center><p>Agua Total</center> </td>
                         <td ><input type="number" name="agua_total" step="any" > </td>
+                        <td ><center><p>Cantidad máxima jugadores</center> </td>
+                        <td ><input type="number" name="cant_max" step="any" > </td>
                 
                        </tr>
             
@@ -267,7 +285,7 @@
                         ?>
                         @foreach($users as $ite)
                         <?php
-                         $tipo=App\TipoUsuario::select('*')->where('id_usuario','=',$ite->id)->count();
+                         $tipo=App\Tipo_usuario::select('*')->where('id_usuario','=',$ite->id)->count();
                         ?>
                         <tr>
                             <td ><center><p style="color:black"><b>{{$ite->id}}</td>
@@ -275,7 +293,7 @@
                             <td ><center><p style="color:black"><b>{{$ite->email}}</td>
                             @if($tipo != 0)
                                 <?php
-                                 $tipo=App\TipoUsuario::select('*')->where('id_usuario','=',$ite->id)->get()->last();
+                                 $tipo=App\Tipo_usuario::select('*')->where('id_usuario','=',$ite->id)->get()->last();
                                  $tipousu=App\Tipo::select('*')->where('id_tipo','=',$tipo->id_tipo)->get()->last();
                                  $tiposusu=App\Tipo::select('*')->get();
                                 ?>

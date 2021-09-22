@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAbonoCantsTable extends Migration
+class CreateAguaRiegosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,17 @@ class CreateAbonoCantsTable extends Migration
      */
     public function up()
     {
-        Schema::create('abono_cants', function (Blueprint $table) {
-            $table->increments('id_abonocant');
-            $table->double('abono_cant');
-            $table->double('semana');
+        Schema::create('agua_riegos', function (Blueprint $table) {
+            $table->increments('id_aguariego');
+            $table->double('agua_riego');
+            $table->integer('semana');
             $table->boolean('crecimiento');
-           
+            
             $table->unsignedInteger('id_cultivo');
 
             $table->foreign('id_cultivo')->references('id_cultivo')->on('cultivos')
             ->onDelete("cascade")
             ->onUpdate("cascade");
-           
         });
     }
 
@@ -35,6 +34,6 @@ class CreateAbonoCantsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('abono_cants');
+        Schema::dropIfExists('agua_riegos');
     }
 }

@@ -23,7 +23,7 @@ class CreateMercadosTable extends Migration
             $table->double('efecto_precio');
             $table->double('precio_deseado');
             $table->double('cambio_precio');
-            $table->double('semana');
+            $table->integer('semana');
             $table->unsignedInteger('id_planta');
             $table->unsignedInteger('id_partida');
 
@@ -31,9 +31,7 @@ class CreateMercadosTable extends Migration
             ->onDelete("cascade")
             ->onUpdate("cascade");
 
-           
-
-            $table->foreign('id_partida')->references('id_partida')->on('partidas')
+           $table->foreign('id_partida')->references('id_partida')->on('partidas')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });

@@ -171,7 +171,7 @@ $s=$semana;
 @if ($s==0) 
 <body class="main-layout" onload="empezar(this);">
 @else
-<body  class="main-layout" onload="funcionando(this);">
+<body  class="main-layout">
 @endif
 
 

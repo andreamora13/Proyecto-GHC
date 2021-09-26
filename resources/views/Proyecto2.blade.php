@@ -39,7 +39,7 @@
      <script src="{{ asset('tabla/js/jquery-3.3.1.min.js') }}"></script>
      <script src="{{ asset('tabla/js/main.js') }}"></script>
 <!-- body -->
-<script type="text/javascript">
+    <script type="text/javascript">
     var inicio=0;
     var timeout=0;
    
@@ -108,7 +108,8 @@
                              url:'{{ action('ProController@semana')}}',
                              
                                  success: function(data) {
-                                     document.body.innerHTML=data;;
+                                    window.location.href = "/principal";
+                                    
                                      
                                   },
                                 error: function() {
@@ -156,6 +157,7 @@
        width:10px;
       
        -moz-border-radius:50px;
+
        -webkit-border-radius:50px;
        border-radius:50px;
     }
@@ -164,14 +166,12 @@
     
 </head>
    
-<?php
-$s=$semana;
-?>
 
-@if ($s==0) 
+
+@if ($semanacount==0) 
 <body class="main-layout" onload="empezar(this);">
 @else
-<body  class="main-layout">
+<body  class="main-layout"  onload="funcionando();">
 @endif
 
 
@@ -211,20 +211,23 @@ $s=$semana;
                                     @endforeach()
                                     
                                    </tr>
-                                 
                                  </thead>
                                  <tbody>
          
                                    <tr >
                                    <?php
+                                    $user=Auth::user()->id;
                                     $partida=App\Partida::select('id_partida')->get()->last();
-                                    $sema=App\Semana::select('*')->where('id_partida','=',$partida->id_partida)->count();
+                                    $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+                                    $sema=App\Semana::select('*')->where('id_partidausu','=',$id_partidausu->id_partidausu)->count();
                                     if($sema!=0)
                                     {
-                                   $sem=App\Semana::select('*')->get()->last();
-                                   $s=$sem->semana+1;
-                                    }else{
-                                    $s=1;
+                                     $sem=App\Semana::select('*')->where('id_partidausu','=',$id_partidausu->id_partidausu)->get()->last();
+                                     $s=$sem->semana+1;
+                                    }
+                                    else
+                                    {
+                                      $s=1;
                                     }
                                     ?>
              
@@ -266,8 +269,8 @@ $s=$semana;
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6" style="color:white; vertical-align: middle; border: 1px solid white">
                         
                           
-                          &nbsp;<p >Usuario:<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 90px;background: transparent" value="{{ Auth::user()->name }}">
-                          &nbspCultivos:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$total}}">
+                          &nbsp;&nbsp;<p >&nbsp;&nbsp;&nbsp;Usuario:<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 90px;background: transparent" value="{{ Auth::user()->name }}">
+                          &nbsp;&nbsp;&nbspCultivos:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$total}}">
                           Agua utilizada:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$agua}}">
                           Abono utilizado:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$abono}}">
                           

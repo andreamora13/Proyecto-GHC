@@ -64,7 +64,7 @@
         // mostramos la diferencia entre la fecha actual y la inicial
         var result=LeadingZero(diff.getUTCHours())+":"+LeadingZero(diff.getUTCMinutes())+":"+LeadingZero(diff.getUTCSeconds());
         document.getElementById('crono').innerHTML = result;
- 
+        
         // Indicamos que se ejecute esta función nuevamente dentro de 1 segundo
         timeout=setTimeout("funcionando()",1000);
     }

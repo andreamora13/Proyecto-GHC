@@ -45,15 +45,15 @@
                             @if (Route::has('login'))
                                
                              @auth
-                               <center><div class="col-auto"><a href="{{ url('/home') }}"><button class="btn btn-primary disabled">Home</button></a></div>
+                               <center><div class="col-auto"><a href="{{ url('/home') }}"><button class="btn btn-primary disabled" translate="no">Inicio</button></a></div>
                                 @else
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <div class="col-auto"><a href="{{ route('login') }}"><button class="btn btn-primary disabled">Login</button></a></div>
+                                <div class="col-auto"><a href="{{ route('login') }}"><button class="btn btn-primary disabled" translate="no">Ingreso</button></a></div>
 
                                @if (Route::has('register'))
                                 <div class="col-auto">
                                 <a href="{{ route('register') }}">
-                                <button class="btn btn-primary disabled">Register</button>
+                                <button class="btn btn-primary disabled" translate="no">Registro</button>
                                 </a>
                                 </div>
 
@@ -63,8 +63,8 @@
                                       @endif
                         </div>
                         </center>
-                        <div class="invalid-feedback mt-2" data-sb-feedback="email:required">An email is required.</div>
-                        <div class="invalid-feedback mt-2" data-sb-feedback="email:email">Email is not valid.</div>
+                        <div class="invalid-feedback mt-2" data-sb-feedback="email:required" translate="no">Email requerido.</div>
+                        <div class="invalid-feedback mt-2" data-sb-feedback="email:email" translate="no">Email no valido</div>
                         <!-- Submit success message-->
                         <!---->
                         <!-- This is what your users will see when the form-->

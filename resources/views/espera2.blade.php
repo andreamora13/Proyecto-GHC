@@ -43,13 +43,115 @@
                 
         }
     
-    function salir(){
-    document.getElementById('logout-form').submit();
-    
-    }
-    //Función para actualizar cada 20 segundos(20000 milisegundos)
+  
+    </script>
+    <script type="text/javascript">
+    var inicio=0;
+    var timeout=0;
    
-    setInterval("salir()",180000);
+    function empezar(elemento)
+    {
+        
+ 
+            // Obtenemos el valor actual
+            inicio=new Date().getTime();
+ 
+            // Guardamos el valor inicial en la base de datos del navegador
+            localStorage.setItem("inicio",inicio);
+            
+            // iniciamos el proceso
+            funcionando();
+        
+    }
+    
+    function reinicio(elemento)
+    {
+       
+            // detener el cronometro
+ 
+            clearTimeout(timeout);
+ 
+            // Eliminamos el valor inicial guardado
+            localStorage.removeItem("inicio");
+            timeout=0;
+            
+            empezar();
+        
+    }
+     function Detener(elemento)
+    {
+       
+            // detener el cronometro
+ 
+            clearTimeout(timeout);
+ 
+            // Eliminamos el valor inicial guardado
+            localStorage.removeItem("inicio");
+            timeout=0;
+           
+        
+    }
+ 
+ 
+    function funcionando()
+    {
+        // obteneos la fecha actual
+        var actual = new Date().getTime();
+ 
+        // obtenemos la diferencia entre la fecha actual y la de inicio
+        var diff=new Date(actual-inicio);
+ 
+        // mostramos la diferencia entre la fecha actual y la inicial
+        var result=LeadingZero(diff.getUTCMinutes())+":"+LeadingZero(diff.getUTCSeconds());
+        document.getElementById('crono').innerHTML = result;
+        var m= diff.getUTCMinutes();
+        var r= diff.getUTCSeconds();
+        
+        if(m == 2)
+        {
+           
+            
+            $.ajax({
+                             url:'{{ action('ProController@terminar')}}',
+                             
+                                 success: function(data) {
+                                    window.location.href = "/terminar";
+                                     
+                                  },
+                                error: function() {
+                                    alert('There was some error performing the AJAX call!');
+                                 }
+                              }
+            );
+        }
+        
+       
+        
+        
+        // Indicamos que se ejecute esta función nuevamente dentro de 1 segundo
+        timeout=setTimeout("funcionando()",1000);
+    }
+ 
+    /* Funcion que pone un 0 delante de un valor si es necesario */
+    function LeadingZero(Time)
+    {
+        return (Time < 10) ? "0" + Time : + Time;
+    }
+
+ 
+    window.onload=function()
+    {
+        if(localStorage.getItem("inicio")!=null)
+        {
+            // Si al iniciar el navegador, la variable inicio que se guarda
+            // en la base de datos del navegador tiene valor, cargamos el valor
+            // y iniciamos el proceso.
+            inicio=localStorage.getItem("inicio");
+           
+            funcionando();
+        }
+    }
+
     </script>
 
     <style>
@@ -72,9 +174,15 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
 </head>
 <!-- body -->
+<?php
+        $user=Auth::user()->id;
+        $partida=App\Partida::select('id_partida')->get()->last();
+        $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+        $partidausu_des = App\Partida_usuario::where('id_partidausu', '=', $id_partidausu->id_partidausu)->where('activa', '=', 1)->count();
+?>
 
-<body class="main-layout "  style="  background-image: linear-gradient(to right,#006341, #a7f25e)">
-    <!-- loader  -->
+<body class="main-layout "  style="  background-image: linear-gradient(to right,#006341, #a7f25e)" onload="empezar(this)">
+
   <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -96,7 +204,7 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">Login</a>
+                                <a class="nav-link" href="{{ route('login') }}">Ingreso</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
@@ -110,7 +218,7 @@
                                 <a class="navbar-brand" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                       Cerrar sesión
+                                        Cerrar sesión
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -151,97 +259,19 @@
         </div>
         <!-- end header inner -->
     </header>
-<div id="about" class="about">
-        <div class="container"  >
-            <div class="row" >
-
-                <div class="col-xl-5 col-lg-5 col-md-5 co-sm-l2">
-                    <div class="about_box">
-                       <br>
-                        <?php
-                            $partidacount=App\Partida::select('*')->where('activa', '=', 1)->count();
-                       
-                        ?>
-                        <center><p style="color:white">Espera por otros usuarios</p>
-                       
-                       <button class="boton" onclick="mostrar('contenido1','contenido2')" ><h5 style="color:white; height:20px">Ver Tutorial</h5></button>
-                       <br><br>
-                       <button class="boton" onclick="mostrar('contenido2','contenido1')" ><h5 style="color:white; height:20px">Ver Partidas</h5></button>
-                       
-                    </div>
-                </div>
-                <div class="col-xl-7 col-lg-7 col-md-7 co-sm-l2"  id="contenido1">
-                    <div class="about_box">
+        <div id="about" class="about">
+                <div class="container"  >
+            
                         <center>
-                        <video src="{{ asset('videos/prueba.mp4') }}" controls width="640" height="360"  ></video>
-                    </div>
-                </div>
-                <div class="col-xl-7 col-lg-7 col-md-7 co-sm-l2" style="display:none" id="contenido2">
-                    <div class="about_box">
-                        <center>
-                        <div class="table-responsive"  >
-                            <?php
-                            $partidas=array();
-                            $user=Auth::user()->id;
-                            $partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('activa', '=',  0)->get();
-                        
-                            ?>
-                            <table class="table custom-table" >
-                                <thead>
-                                    <br>
-                                    <tr>
-                                    <center>
-                 
-                                        <th scope="col" style="width:33px"><center>Partida</center></th>
-                                        <th scope="col" style="width:33px"><center>Fecha</center></th>
-                                        <th scope="col" style="width:33px"><center>Ver</center></th>
-                 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                        
-                                    @foreach( $partidausu as $it)
-                                    <?php
+                            <h2 id='crono' style="font-weight: bold; color:white">00:00</h2>
+                           
+                            <p style="font-weight: bold; color:white">Espera a que los demás usuarios terminen la partida para observar tus resultados</p>
+                           
                             
-                                    $partidas=App\Partida::select('*')->where('id_partida', '=',  $it->id_partida)->where('activa', '=',  0)->get();
-                        
-                                    ?>
-                                        @foreach($partidas as $ite)
-
-                                        <form action="{{action('ProyectoController@InformeInd')}}" method="POST" >
-                                        @csrf
-                                    <tr>
-                 
-                                        <td><center><h6>{{$ite->id_partida}} <input name="partida" type="hidden" readonly value="{{$it->id_partida}}" ></td>
-                                        <td><center><h6>{{$ite->created_at}} <input name="usuario" type="hidden" readonly value="{{$it->id_usuario}}" ></td>
-                                        <?php
-                                
-                                         $planta=App\Planta::select('*')->where('id_partida','=',$it->id_partida)->get()->first();
-                                        ?>
-                                        <select name="eso" hidden>
-                                            <option  value="{{$planta->id_planta}}" ></option>
-                                        </select>
-                                        <td><center> <a href="{{ action('ProyectoController@InformeInd') }}"  style="background-color: transparent;border:0;">
-                                        <button type="submit" style="background-color: transparent;border:0;width: 33px; height: 35px"><img src="{{ asset('imagenes/pluma.png') }}" style=""></button>
-                                        </a>
-                                        </td>
-                                    </tr>
-                                        </form>
-                                        @endforeach()
-
-
-                                    @endforeach()
-                                </tbody>
-                  
-                            </table>
-                        </div>
-                         </center>
-                        <br><br>
-                     </div>
+                        </center>
+            
                 </div>
-            </div>
         </div>
-</div>
 
     <!-- end header -->
    

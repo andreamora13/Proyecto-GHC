@@ -13,7 +13,7 @@ class CreateInventariosTable extends Migration
      */
     public function up()
     {
-        Schema::create('inventarios', function (Blueprint $table) {
+       Schema::create('inventarios', function (Blueprint $table) {
             $table->increments('id_inventario');
             $table->double('prod_planta');
             $table->boolean('vendido');

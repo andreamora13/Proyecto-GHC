@@ -32,6 +32,7 @@ class CreatePlantasTable extends Migration
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });
+
     }
 
     /**

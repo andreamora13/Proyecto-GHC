@@ -95,11 +95,11 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">Ingreso</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">Registro</a>
                                 </li>
                             @endif
                  </div>
@@ -109,7 +109,7 @@
                                 <a class="navbar-brand" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        Cerrar sesión
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -205,7 +205,7 @@
                             <?php
                             $partidas=array();
                             $user=Auth::user()->id;
-                            $partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->get();
+                            $partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('activa', '=',  0)->get();
                         
                             ?>
                             <table class="table custom-table" >
@@ -225,7 +225,7 @@
                                     @foreach( $partidausu as $it)
                                     <?php
                             
-                                    $partidas=App\Partida::select('*')->where('id_partida', '=',  $it->id_partida)->get();
+                                    $partidas=App\Partida::select('*')->where('id_partida', '=',  $it->id_partida)->where('activa', '=',  0)->get();
                         
                                     ?>
                                         @foreach($partidas as $ite)

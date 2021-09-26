@@ -16,10 +16,10 @@ class CreateSemanasTable extends Migration
         Schema::create('semanas', function (Blueprint $table) {
             $table->increments('id_semana');
             $table->integer('semana');
-            $table->unsignedInteger('id_partida');
+            $table->unsignedInteger('id_partidausu');
             
 
-            $table->foreign('id_partida')->references('id_partida')->on('partidas')
+            $table->foreign('id_partidausu')->references('id_partidausu')->on('partida_usuarios')
             ->onDelete("cascade")
             ->onUpdate("cascade");
         });

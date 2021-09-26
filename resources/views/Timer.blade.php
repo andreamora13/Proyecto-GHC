@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link href="{{asset('css/stylesPrueba.css')}}" rel="stylesheet" text="text/css">
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-     <script type="text/javascript">
+<script type="text/javascript">
     var inicio=0;
     var timeout=0;
    
@@ -68,22 +68,10 @@
         
         var r= diff.getUTCSeconds();
         document.getElementById('cro').innerHTML = r;
-        if(r == 15)
+        if(r == 59)
         {
            reinicio();
-            
-           $.ajax({
-                             url:'{{ action('ProController@semana')}}',
-                             
-                                 success: function(data) {
-                                     document.body.innerHTML=data;;
-                                     
-                                  },
-                                error: function() {
-                                    alert('There was some error performing the AJAX call!');
-                                 }
-                              }
-                        );
+           
             
             
         }
@@ -113,10 +101,12 @@
     }
 
     </script>
+
+  
  
 
 </head>
-<body onload="empezar(this);">
+<body >
   <td align="center"><p id='cro'>0</p></td>
 </body>
 </html>

@@ -20,7 +20,12 @@ Route::get('/', function () {
 Route::get('/progress', function () {
     return view('welcome2');
 });
-
+Route::get('/timer', function () {
+    return view('home1');
+});
+Route::get('/tim', function () {
+    return view('espera2');
+});
 
 
 /*Route::post('form', 'ProController@store');*/
@@ -48,10 +53,13 @@ Route::get('/evento', 'ProController@evento');
 Route::get('/principal', 'ProController@principal');
 Route::get('/partida', 'ProController@Partida');
 Route::get('/informe', 'ProController@info');
+Route::get('/espera', 'ProController@espera');
+Route::get('/terminar', 'ProController@terminar');
+
 
 Route::get('/merca', 'ProController@merca');
 Route::get('/Admin', 'AdmiController@Admin');
-Route::post('/Admin', 'AdmiController@Datos');
+Route::post('/AdminDatos', 'AdmiController@Datos');
 
 
 Route::get('/Admi', 'AdmiController@defecto');

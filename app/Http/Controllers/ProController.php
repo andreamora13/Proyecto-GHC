@@ -27,18 +27,19 @@ class ProController extends Controller
    {
        
        $user=Auth::user()->id;
-       $partida=App\Partida::select('id_partida')->get()->last();
-       $semanacount=App\Semana::select('*')->where('id_partida', '=',  $partida->id_partida)->count();
+       $partida=App\Partida::select('*')->get()->last();
+       $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+       $semanacount=App\Semana::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->count();
        if($semanacount!=0)
        {
-            $sema=App\Semana::select('*')->where('id_partida', '=',  $partida->id_partida)->get()->last();
+            $sema=App\Semana::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->get()->last();
             $semana=$sema->semana;
        }else{
             $semana=1;
        }
-       if($semana < 60)
+       if($semana < 60 and $partida->activa == 1)
        {
-            $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+           
             $total=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->where('cosecha', '=',  0)->count();
             if($total !=0)
             {
@@ -112,16 +113,15 @@ class ProController extends Controller
 
            
 
-            $semana=App\Partida_usuario::select('*')->where('id_partida', '=',  $partida->id_partida)->count();
+            $partusu=App\Partida_usuario::select('*')->where('id_partida', '=',  $partida->id_partida)->count();
         
-            return view('Proyecto2',compact('detalle','aguaTotal','semana','total','usuarios','invUser','plantas','agua','abono','merca','visible','semana'));
+            return view('Proyecto2',compact('detalle','aguaTotal','semanacount','total','usuarios','invUser','plantas','agua','abono','merca','visible','partusu'));
        
        }
        else
-       {
-            $info = self::info();
+       {    $espera = self::espera();
 
-            return $info;
+            return $espera; 
            
        }
             
@@ -132,26 +132,36 @@ class ProController extends Controller
    public function Partida()
    {
         $user= Auth::user()->id;
-        $partida=App\Partida::select('id_partida')->where('activa',"=",1)->get()->last();
-        $partidacount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->where('id_usuario',"=",$user)->count();
-        if( $partidacount == 0)
+        $partida=App\Partida::select('*')->get()->last();
+        if($partida->activa == 1)
         {
-            $partidausu= new App\Partida_usuario;
-            $partidausu->id_partida=$partida->id_partida;
-            $partidausu->id_usuario=$user;
-            $partidausu->save();
-        }
-        $partidausuariocount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->count();
-        if($partidausuariocount<2)
-        {
-            return view('espera');
+            $partidacount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->where('id_usuario',"=",$user)->count();
+            if( $partidacount == 0)
+            {
+                $partidausu= new App\Partida_usuario;
+                $partidausu->activa=1;
+                $partidausu->id_partida=$partida->id_partida;
+                $partidausu->id_usuario=$user;
+                $partidausu->save();
+            }
+            $partidausuariocount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->count();
+            if($partidausuariocount<2)
+            {
+                return view('espera');
+            }
+            else{
+
+                $principal = self::principal();
+
+                return  $principal;
+            }
         }
         else{
+                $principal = self::principal();
 
-            $principal = self::principal();
-
-            return  $principal;
+                return  $principal;
         }
+        
    }
     
    public function CrearCultivo(Request $request)
@@ -483,7 +493,8 @@ class ProController extends Controller
        $cult;
        $user= Auth::user()->id;
        $partida=App\Partida::select('id_partida')->get()->last();
-       $sema=App\Semana::select('*')->where('id_partida','=',$partida->id_partida)->get()->last();
+       $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+       $sema=App\Semana::select('*')->where('id_partidausu','=',$id_partida->id_partidausu)->get()->last();
        $id_partidaDet=App\Cultivo::select("*")
                                   ->where("id_cultivo", "=",$cult)
                                   ->get()->last();
@@ -531,7 +542,7 @@ class ProController extends Controller
         $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
         $plantas= App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get();
         $cover_des=4;
-        $sema=App\Semana::select('*')->where('id_partida','=',$partida->id_partida)->get()->last();
+        $sema=App\Semana::select('*')->where('id_partidausu','=',$id_partidausu->id_partidausu)->get()->last();
        
         if( count($plantasel)> 1)
         {
@@ -852,45 +863,49 @@ class ProController extends Controller
    public function  semana()
    {
 
-    
+        $user=Auth::user()->id;
         $partida=App\Partida::select('id_partida')->get()->last();
-        $semana=App\Semana::select('*')->where('id_partida','=',$partida->id_partida)->count();
-       
+        $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+        $semana=App\Semana::select('*')->where('id_partidausu','=',$id_partidausu->id_partidausu)->count();
 
         if($semana!=0)
         {
-            $sema=App\Semana::select('*')->get()->last();
+            $sema=App\Semana::select('*')->where('id_partidausu','=',$id_partidausu->id_partidausu)->get()->last();
             $sem=$sema->semana+1;
         }else{
             $sem=1;
         }
+        if($sema->semana<60)
+        {
            $semanadb= new App\Semana;
            $semanadb->semana=$sem;
-           $semanadb->id_partida=$partida->id_partida;
+           $semanadb->id_partidausu=$id_partidausu->id_partidausu;
            $semanadb->save();
 
-        $cultivoscount=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
-                                    ->select("*")
-                                    ->where("cultivos.cosecha", "=",0)
-                                    ->where("cultivos.estado", "=", 0)
-                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
-                                    ->count();
+           $cultivoscount=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                        ->select("*")
+                                        ->where("cultivos.cosecha", "=",0)
+                                        ->where("cultivos.estado", "=", 0)
+                                        ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                        ->count();
                        
-        if($cultivoscount != 0)
-        {
-            $cultivos=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
-                                    ->select("*")
-                                    ->where("cultivos.cosecha", "=",0)
-                                    ->where("cultivos.estado", "=", 0)
-                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
-                                    ->get();
+           if($cultivoscount != 0)
+           {
+                $cultivos=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+                                        ->select("*")
+                                        ->where("cultivos.cosecha", "=",0)
+                                        ->where("cultivos.estado", "=", 0)
+                                        ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                        ->get();
 
-            foreach($cultivos as $culti)
-            {
-               $semana= App\Cultivo::select('semana')->where('id_cultivo',"=",$culti->id_cultivo)->get()->last();
-               $act= App\Cultivo::where('id_cultivo',"=",$culti->id_cultivo)->update(array('semana' => $semana->semana+1));
-            }
+                foreach($cultivos as $culti)
+                {
+                   $semana= App\Cultivo::select('semana')->where('id_cultivo',"=",$culti->id_cultivo)->get()->last();
+                   $act= App\Cultivo::where('id_cultivo',"=",$culti->id_cultivo)->update(array('semana' => $semana->semana+1));
+                }
+           }
         }
+        
                     
    
         $principal=self::Crecimiento();
@@ -1046,6 +1061,50 @@ class ProController extends Controller
        
         return  view('InfoInd',compact('var','tipo_planta','usuarios','plantas','cultivosdd','agua','suma','cultivosf','cultivosv'));
     }
+      
+   public function espera()
+   {
+       
+        $partida=App\Partida::select('*')->get()->last();
+        $users_partida= App\Partida_usuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
+                                    ->select("*")
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->count();
+        $users_fin= App\Partida_usuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
+                                    ->select("*")
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->where("partida_usuarios.activa", "=",0)
+                                    ->count();
+        
+         if($users_partida==$users_fin or $partida->activa==0)
+         {
+            $info = self::info();
+
+            return $info;
+         }
+         else{
+            
+
+            return  view('espera2');
+         }
+   }
+   public function terminar()
+   {
+       $partida=App\Partida::select('id_partida')->get()->last();
+       $users_partida= App\Partida_usuario::join("users","users.id", "=", "partida_usuarios.id_usuario")
+                                    ->select("*")
+                                    ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->get();
+       foreach($users_partida as $item)
+       {
+          $partidausu_des = App\Partida_usuario::where('id_partidausu', '=', $item->id_partidausu)->update(array('activa' => 0));
+       }
+       $partida_des = App\Partida::where('id_partida', '=', $partida->id_partida)->update(array('activa' => 0));
+       $espera = self::espera();
+
+       return $espera;                    
+   }
+
  }
 
 

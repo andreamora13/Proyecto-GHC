@@ -13,8 +13,9 @@ class CreatePartidaUsuariosTable extends Migration
      */
     public function up()
     {
-        Schema::create('partida_usuarios', function (Blueprint $table) {
+         Schema::create('partida_usuarios', function (Blueprint $table) {
             $table->increments('id_partidausu');
+            $table->integer('activa');
             $table->unsignedInteger('id_partida');
             $table->unsignedInteger('id_usuario');
 

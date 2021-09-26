@@ -13,6 +13,7 @@ class CreateTipoUsuariosTable extends Migration
      */
     public function up()
     {
+        
         Schema::create('tipo_usuarios', function (Blueprint $table) {
             $table->increments('id_tipousu');
             $table->unsignedInteger('id_usuario');

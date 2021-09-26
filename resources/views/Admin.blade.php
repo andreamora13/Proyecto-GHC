@@ -27,9 +27,8 @@
     
     <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/style.css') }}">
     <!-- style css -->
-
-    <!-- Responsive-->
-     <script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
         function mostrar(id, id2, id3)
         {
             var objeto=document.getElementById(id);
@@ -85,11 +84,11 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">Ingreso</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">Registro</a>
                                 </li>
                             @endif
                  </div>
@@ -99,7 +98,7 @@
                                 <a class="navbar-brand" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        Cerrar sesión
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -171,20 +170,24 @@
            
             <center>
             <div class="table-responsive" style="display:none" id="contenido1" value="contenido1">
-            <a href="{{ action('AdmiController@defecto') }}"  style="text-align: right"><p  style="font-family:poppins;font-size:15px;border:1px solid black;width:150px; ">Datos por defecto</p></a>
+            <a href="{{ action('AdmiController@defecto') }}"  style="text-align: right">
+                <p  style="font-family:poppins;font-size:15px;border:1px solid black;width:160px; ">
+                   Datos por defecto&nbsp;&nbsp;&nbsp
+                </p>
+            </a>
                 <form action="{{action('AdmiController@Datos')}}" method="POST" style="border: #082404 3px solid;" >
                 <center>
                  @csrf
-                 <h5>Ingrese los datos iniciales de las plantas 
+                 <h5 style="color:white">Ingrese los datos iniciales de las plantas 
                 <br>
-                    <table class="table custom-table">
+                    <table class="table custom-table" style="color:white">
                      <thead>
                        <tr>
               
-                        <th scope="col"><center>Datos</center></th>
-                        <th scope="col"><center>Tomate</center></th>
-                        <th scope="col"><center>Pimentón</center></th>
-                        <th scope="col"><center>Lechuga</center></th>
+                        <th scope="col" style="color:white"><center>Datos</center></th>
+                        <th scope="col" style="color:white"><center>Tomate</center></th>
+                        <th scope="col" style="color:white"><center>Pimentón</center></th>
+                        <th scope="col" style="color:white"><center>Lechuga</center></th>
                        </tr>
                      </thead>
                      <tbody>
@@ -263,7 +266,7 @@
             </div>
             </center>
             
-              <center><b> {{$error}}</b></center>
+             
             <div class="table-responsive" style="display:none" id="contenido2">
 
                  <table class="table custom-table">
@@ -374,6 +377,7 @@
 
             </div>
             </center>
+         <center><b > {{$error}}</b></center>
         </div>
     </div>
     <!-- end about -->

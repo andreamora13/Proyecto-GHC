@@ -13,7 +13,7 @@ class CreateHistoricoAguasTable extends Migration
      */
     public function up()
     {
-        Schema::create('historico_aguas', function (Blueprint $table) {
+       Schema::create('historico_aguas', function (Blueprint $table) {
             $table->increments('id_histagua');
             $table->double('agua_total');
             $table->unsignedInteger('id_partida');

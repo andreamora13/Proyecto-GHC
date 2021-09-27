@@ -195,45 +195,45 @@
                        <tr>
              
                         <td ><center><p>Altura Máxima</p></center> </td>
-                        <td ><center><input class="entrada" type="number" name="alt_mxt" step="any"  ></td>
-                        <td ><center><input type="number" name="alt_mxp" step="any"  > </td>
-                        <td ><center><input type="number" name="alt_mxl"step="any"  > </td>
+                        <td ><center><input class="entrada" type="number" name="alt_mxt" step="any" placeholder="80" ></td>
+                        <td ><center><input type="number" name="alt_mxp" step="any" placeholder="100" > </td>
+                        <td ><center><input type="number" name="alt_mxl"step="any"  placeholder="25"> </td>
                        </tr>
                        <tr>
                         <td ><center><p>Agua Requerida</td>
-                        <td ><center><input type="number" name="agua_ret" step="any" > </td>
-                        <td ><center><input type="number" name="agua_rep" step="any" > </td>
-                        <td ><center><input type="number" name="agua_rel" step="any" > </td>
+                        <td ><center><input type="number" name="agua_ret" step="any" placeholder="4.2"> </td>
+                        <td ><center><input type="number" name="agua_rep" step="any" placeholder="4.2"> </td>
+                        <td ><center><input type="number" name="agua_rel" step="any" placeholder="2.1"> </td>
                        </tr>
                        <tr>
                         <td ><center><p>Cantidad Requerida</td>
-                        <td ><center><input type="number" name="cant_riegot" step="any" > </td>
-                        <td ><center><input type="number" name="cant_riegop" step="any" > </td>
-                        <td ><center><input type="number" name="cant_riegol" step="any" > </td>
+                        <td ><center><input type="number" name="cant_riegot" step="any" placeholder="2"> </td>
+                        <td ><center><input type="number" name="cant_riegop" step="any" placeholder="3"> </td>
+                        <td ><center><input type="number" name="cant_riegol" step="any" placeholder="3"> </td>
                        </tr>
                        <tr>
                         <td ><center><p>Abono Requerido</td>
-                        <td ><center><input type="number" name="ab_ret" step="any" > </td>
-                        <td ><center><input type="number" name="ab_rep" step="any" > </td>
-                        <td ><center><input type="number" name="ab_rel" step="any" > </td>
+                        <td ><center><input type="number" name="ab_ret" step="any" placeholder="70"> </td>
+                        <td ><center><input type="number" name="ab_rep" step="any" placeholder="40"> </td>
+                        <td ><center><input type="number" name="ab_rel" step="any" placeholder="1.5"> </td>
                        </tr>
                         <tr>
                         <td ><center><p>Cantidad Requerida</td>
-                        <td ><center><input type="number" name="cant_abonot" step="any" > </td>
-                        <td ><center><input type="number" name="cant_abonop" step="any" > </td>
-                        <td ><center><input type="number" name="cant_abonol" step="any" > </td>
+                        <td ><center><input type="number" name="cant_abonot" step="any" placeholder="1"> </td>
+                        <td ><center><input type="number" name="cant_abonop" step="any" placeholder="1"> </td>
+                        <td ><center><input type="number" name="cant_abonol" step="any" placeholder="1"> </td>
                        </tr>
                        <tr>
                         <td ><center><p>Producción</td>
-                        <td ><center><input type="number" name="prodt" step="any" ></td>
-                        <td ><center><input type="number" name="prodp" step="any" ></td>
-                        <td ><center><input type="number" name="prodl" step="any" > </td>
+                        <td ><center><input type="number" name="prodt" step="any" placeholder="100"></td>
+                        <td ><center><input type="number" name="prodp" step="any" placeholder="16"></td>
+                        <td ><center><input type="number" name="prodl" step="any" placeholder="8"> </td>
                        </tr>
                        <tr>
                         <td ><center><p>Precio Inicial</td>
-                        <td ><center><input type="number" name="preciot" step="any" ></td>
-                        <td ><center><input type="number" name="preciop" step="any" ></td>
-                        <td ><center><input type="number" name="preciol" step="any" > </td>
+                        <td ><center><input type="number" name="preciot" step="any" placeholder="1400"></td>
+                        <td ><center><input type="number" name="preciop" step="any" placeholder="1900"></td>
+                        <td ><center><input type="number" name="preciol" step="any" placeholder="3000"> </td>
                        </tr>
             
             
@@ -248,9 +248,9 @@
                 
                        <tr>
                         <td ><center><p>Agua Total</center> </td>
-                        <td ><input type="number" name="agua_total" step="any" > </td>
+                        <td ><input type="number" name="agua_total" step="any" placeholder="1600"> </td>
                         <td ><center><p>Cantidad máxima jugadores</center> </td>
-                        <td ><input type="number" name="cant_max" step="any" > </td>
+                        <td ><input type="number" name="cant_max" step="any" placeholder="5"> </td>
                 
                        </tr>
             

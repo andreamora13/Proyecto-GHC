@@ -24,7 +24,7 @@ Route::get('/timer', function () {
     return view('home1');
 });
 Route::get('/tim', function () {
-    return view('espera2');
+    return view('prueba');
 });
 
 

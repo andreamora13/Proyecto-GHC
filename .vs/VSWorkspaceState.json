@@ -7,10 +7,8 @@
     "\\database",
     "\\database\\migrations",
     "\\resources",
-    "\\resources\\views",
-    "\\resources\\views\\auth",
-    "\\resources\\views\\layouts"
+    "\\resources\\views"
   ],
-  "SelectedNode": "\\resources\\views\\home.blade.php",
+  "SelectedNode": "\\app\\Http\\Controllers\\AdmiController.php",
   "PreviewInSolutionExplorer": false
 }

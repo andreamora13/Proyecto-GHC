@@ -173,7 +173,7 @@
                 <div class="col-xl-7 col-lg-7 col-md-7 co-sm-l2"  id="contenido1">
                     <div class="about_box">
                         <center>
-                        <video src="{{ asset('videos/prueba.mp4') }}" controls width="640" height="360"  ></video>
+                        <video src="{{ asset('videos/tutorial.mp4') }}" controls width="640" height="360"  ></video>
                     </div>
                 </div>
                 <div class="col-xl-7 col-lg-7 col-md-7 co-sm-l2" style="display:none" id="contenido2">

@@ -86,6 +86,7 @@ class AdmiController extends Controller
         $planta->alt_max=$request->alt_mxt;
         $planta->agua_re=$request->agua_ret;
         $planta->ab_re=$request->ab_ret;
+        $planta->tasa_cre=0.2;
         $planta->tab_ag=0.02;
         $planta->tab_ab=0.08;
         $planta->prod=$request->prodt;
@@ -101,6 +102,7 @@ class AdmiController extends Controller
         $planta->alt_max=$request->alt_mxp;
         $planta->agua_re=$request->agua_rep;
         $planta->ab_re=$request->ab_rep;
+        $planta->tasa_cre=0.21;
         $planta->tab_ag=0.02;
         $planta->tab_ab=0.08;
         $planta->prod=$request->prodp;
@@ -116,6 +118,7 @@ class AdmiController extends Controller
         $planta->alt_max=$request->alt_mxl;
         $planta->agua_re=$request->agua_rel;
         $planta->ab_re=$request->ab_rel;
+        $planta->tasa_cre=0.24;
         $planta->tab_ag=0.02;
         $planta->tab_ab=0.08;
         $planta->prod=$request->prodl;
@@ -196,21 +199,22 @@ class AdmiController extends Controller
 	    
         $partida= new App\Partida;
         $partida->activa=1;
-        $partida->max_usuarios=10;
+        $partida->max_usuarios=6;
         $partida->save();
 
         $id_partida=App\Partida::select('id_partida')->get()->last();
        
         $planta= new App\Planta;
         $planta->tipo_planta='Tomate';
-        $planta->alt_max=80;
-        $planta->agua_re=14;
-        $planta->ab_re=1.5;
+        $planta->alt_max=250;
+        $planta->agua_re=4.2;
+        $planta->ab_re=70;
+        $planta->tasa_cre=0.27;
         $planta->tab_ag=0.02;
         $planta->tab_ab=0.08;
-        $planta->prod=120;
-        $planta->precio=2500;
-        $planta->cant_riegos=3;
+        $planta->prod=100;
+        $planta->precio=1400;
+        $planta->cant_riegos=2;
         $planta->cant_abonos=1;
         $planta->inv_acumulado=220;
         $planta->id_partida=$id_partida->id_partida;
@@ -218,13 +222,14 @@ class AdmiController extends Controller
 
         $planta= new App\Planta;
         $planta->tipo_planta='Pimenton';
-        $planta->alt_max=60;
-        $planta->agua_re=12;
-        $planta->ab_re=1.5;
+        $planta->alt_max=100;
+        $planta->agua_re=4.2;
+        $planta->ab_re=40;
+        $planta->tasa_cre=0.29;
         $planta->tab_ag=0.02;
         $planta->tab_ab=0.08;
-        $planta->prod=110;
-        $planta->precio=1500;
+        $planta->prod=16;
+        $planta->precio=1900;
         $planta->inv_acumulado=220;
         $planta->cant_riegos=3;
         $planta->cant_abonos=1;
@@ -233,13 +238,14 @@ class AdmiController extends Controller
 
         $planta= new App\Planta;
         $planta->tipo_planta='Lechuga';
-        $planta->alt_max=40;
-        $planta->agua_re=10;
+        $planta->alt_max=25;
+        $planta->agua_re=2.1;
         $planta->ab_re=1.5;
+        $planta->tasa_cre=0.32;
         $planta->tab_ag=0.02;
         $planta->tab_ab=0.08;
-        $planta->prod=95;
-        $planta->precio=1200;
+        $planta->prod=8;
+        $planta->precio=3000;
         $planta->inv_acumulado=220;
         $planta->cant_riegos=3;
         $planta->cant_abonos=1;
@@ -247,7 +253,7 @@ class AdmiController extends Controller
         $planta->save();
 
         $agua= new App\Historico_agua;
-        $agua->agua_total=4500;
+        $agua->agua_total=1600;
         $agua->id_partida=$id_partida->id_partida;
         $agua->save();
 

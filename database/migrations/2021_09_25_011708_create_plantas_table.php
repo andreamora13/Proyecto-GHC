@@ -19,6 +19,7 @@ class CreatePlantasTable extends Migration
             $table->double('alt_max');
             $table->double('agua_re');
             $table->double('ab_re');
+            $table->double('tasa_cre');
             $table->double('tab_ag');
             $table->double('tab_ab');
             $table->double('prod');

@@ -263,9 +263,9 @@
                 <div class="container"  >
             
                         <center>
-                            <h2 id='crono' style="font-weight: bold; color:white">00:00</h2>
+                            <h2 id='crono' style="font-weight: bold; color:black">00:00</h2>
                            
-                            <p style="font-weight: bold; color:white">Espera a que los demás usuarios terminen la partida para observar tus resultados</p>
+                            <p style="font-weight: bold; color:black">Espera a que los demás usuarios terminen la partida para observar tus resultados</p>
                            
                             
                         </center>

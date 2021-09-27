@@ -99,8 +99,9 @@
         var result=LeadingZero(diff.getUTCHours())+":"+LeadingZero(diff.getUTCMinutes())+":"+LeadingZero(diff.getUTCSeconds());
         
         var r= diff.getUTCSeconds();
+       
         document.getElementById('cro').innerHTML = r;
-        if(r == 59)
+        if(r == 30 || r == 59)
         {
            reinicio();
             
@@ -108,8 +109,7 @@
                              url:'{{ action('ProController@semana')}}',
                              
                                  success: function(data) {
-                                    window.location.href = "/principal";
-                                    
+                                     document.body.innerHTML=data;;
                                      
                                   },
                                 error: function() {
@@ -165,11 +165,23 @@
     </style>
     
 </head>
-   
+<?php
+$user=Auth::user()->id;
+$partida=App\Partida::select('id_partida')->get()->last();
+$id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last(); 
+$inicio=App\inicio::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->count();
+?>
 
 
-@if ($semanacount==0) 
+@if ($semanacount==0 and $inicio==0) 
 <body class="main-layout" onload="empezar(this);">
+
+<?php
+    $semanadb= new App\inicio;
+    $semanadb->activa=1;
+    $semanadb->id_partidausu=$id_partidausu->id_partidausu;
+    $semanadb->save();
+?>
 @else
 <body  class="main-layout"  onload="funcionando();">
 @endif
@@ -317,7 +329,7 @@
     <!-- end for_box -->
     <!-- offer -->
     <div class="row">
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3"  style="background-color:#E3E4E5;border:1px black solid">
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3"  style="background-color:#E3E4E5;border:1px black solid;height:700px">
             <div class="offer_box" style="width:104%">
                 <center>
                     <br>
@@ -434,35 +446,40 @@
                                                 <td><center>
                                                 @if($it->estado==0)
                                                    @if($it->tipo_planta=="Tomate")
-                                                     @if($it->altura<=$alt1)
+                                                   
+                                                    @if($it->produccion!=0)
+                                                     <img src="{{ asset('imagenes/t4.png') }}" style="width: 60px; height: 60px">
+                                                     @elseif($it->altura<=$alt1)
                                                          <img src="{{ asset('imagenes/t1.jpeg') }}" style="width: 60px; height: 60px">
                                                          @elseif($it->altura>$alt1 and $it->altura<=$alt2)
                                                          <img src="{{ asset('imagenes/t2.jpeg') }}" style="width: 60px; height: 60px">
                                                          @elseif($it->altura>$alt2 and $it->altura<$alt3)
                                                          <img src="{{ asset('imagenes/t3 .png') }}" style="width: 60px; height: 60px">
-                                                         @elseif($it->altura>=$alt3)
+                                                         @elseif($it->altura>=$alt3 and $it->produccion==0)
                                                          <img src="{{ asset('imagenes/t4.png') }}" style="width: 60px; height: 60px">
                                                      @endif
                                                    @elseif($it->tipo_planta=="Pimenton")
-                                                     @if($it->altura<=$alt1)
+                                                     @if($it->produccion!=0)
+                                                     <img src="{{ asset('imagenes/p4.jpeg') }}" style="width: 60px; height: 60px">
+                                                        @elseif($it->altura<=$alt1)
                                                          <img src="{{ asset('imagenes/p1.jpeg') }}" style="width: 60px; height: 60px">
                                                          @elseif($it->altura>$alt1 and $it->altura<=$alt2)
                                                          <img src="{{ asset('imagenes/p2.jpeg') }}" style="width: 60px; height: 60px">
-                                                         @elseif($it->altura>$alt2 and $it->altura<$alt3)
-                                                         <img src="{{ asset('imagenes/p3.jgep') }}" style="width: 60px; height: 60px">
-                                                         @elseif($it->altura>=$alt3)
-                                                         <img src="{{ asset('imagenes/p4.jpeg') }}" style="width: 60px; height: 60px">
+                                                         @elseif($it->altura>$alt2 and $it->produccion==0)
+                                                        <img src="{{ asset('imagenes/p3.jpeg') }}" style="width: 60px; height: 60px">
                                                      @endif
                                                  
                                                    @elseif($it->tipo_planta=="Lechuga")
-                                                     @if($it->altura<=$alt1)
+
+                                                     @if($it->produccion!=0)
+                                                         <img src="{{ asset('imagenes/l4.jpeg') }}" style="width: 60px; height: 60px">
+                                                         @elseif($it->altura<=$alt1)
                                                          <img src="{{ asset('imagenes/l1.jpeg') }}" style="width: 60px; height: 60px">
                                                          @elseif($it->altura>$alt1 and $it->altura<=$alt2)
                                                          <img src="{{ asset('imagenes/l2.png') }}" style="width: 60px; height: 60px">
-                                                         @elseif($it->altura>$alt2 and $it->altura<$alt3)
+                                                         @elseif($it->altura>$alt2 and $it->produccion==0)
                                                          <img src="{{ asset('imagenes/l3.png') }}" style="width: 60px; height: 60px">
-                                                         @elseif($it->altura>=$alt3)
-                                                         <img src="{{ asset('imagenes/l4.jpeg') }}" style="width: 60px; height: 60px">
+                                                       
                                                      @endif
                                                    @endif
                                                 @else
@@ -485,7 +502,7 @@
                         </center>
                     </div>
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"  style="background-color:#E3E4E5; border:1px black solid">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"  style="background-color:#E3E4E5; border:1px black solid;height:700px">
                     
                     <div class="offer_box" >
                             <br>

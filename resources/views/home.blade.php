@@ -133,7 +133,7 @@
                         <div class="full">
                             <div class="center-desk">
                                 <div class="logo">
-                                    <a href="/"> <img src="{{ asset('imagenes/logo3.png') }}" style=" width: 30%; height: 30%"></a>
+                                    <a href="/"> <img src="{{ asset('imagenes/logo6.png') }}" style=" width: 30%; height: 30%"></a>
                                 </div>
                             </div>
                         </div>

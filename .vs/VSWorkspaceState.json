@@ -6,6 +6,8 @@
     "\\app\\Http\\Controllers",
     "\\database",
     "\\database\\migrations",
+    "\\public",
+    "\\public\\imagenes",
     "\\resources",
     "\\resources\\views"
   ],

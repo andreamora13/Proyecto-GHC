@@ -33,9 +33,9 @@
           <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row" >
 
               <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center" style="background-color:#052501">
-                <a class="navbar-brand brand-logo mr-5" href="/home"><img src="{{ asset('imagenes/logo3.png') }}" style=" width:30%; height: 30%" class="mr-2" alt="logo"  title="Soy un tooltip" translate="no"/></a>
+                <a class="navbar-brand brand-logo mr-5" href="/home"><img src="{{ asset('imagenes/logo6.png') }}" style=" width:30%; height: 30%" class="mr-2" alt="logo"  title="Soy un tooltip" translate="no"/></a>
 
-                <a class="navbar-brand brand-logo-mini" href="/home"><img src="{{ asset('imagenes/logo3.png') }}" style=" width: 70%; height: 70%" alt="logo"/></a>
+                <a class="navbar-brand brand-logo-mini" href="/home"><img src="{{ asset('imagenes/logo6.png') }}" style=" width: 70%; height: 70%" alt="logo"/></a>
         
               </div>
 

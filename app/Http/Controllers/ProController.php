@@ -37,7 +37,7 @@ class ProController extends Controller
        }else{
             $semana=1;
        }
-       if($semana < 58 and $partida->activa == 1)
+       if($semana < 41 and $partida->activa == 1)
        {
            
             $total=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->where('cosecha', '=',  0)->count();
@@ -242,6 +242,7 @@ class ProController extends Controller
         $id_partidaDetcount=App\Cultivo::select("*")
                                     ->where("id_cultivo", "=",$cult)
                                     ->where("cosecha", "=",0)
+                                    ->where("estado", "=",0)
                                     ->count();
         if( $id_partidaDetcount != 0)
         {
@@ -286,6 +287,7 @@ class ProController extends Controller
         $partida = DB::table('partidas')->select('id_partida')->get()->last();
         $id_partidaDetcount=App\Cultivo::select("*")
                                     ->where("id_cultivo", "=",$cult)
+                                    ->where("estado", "=",0)
                                     ->where("cosecha", "=",0)
                                     ->count();
         if( $id_partidaDetcount != 0)
@@ -313,6 +315,7 @@ class ProController extends Controller
    }
    public function Crecimiento()
    {
+        $user=Auth::user()->id;
        $perdida=self::perdida();
        $partida=App\Partida::select('id_partida')->get()->last();
        $id_partidausu=App\Partida_usuario::select('*')->where('id_partida', '=',  $partida->id_partida)->get()->last();
@@ -322,6 +325,7 @@ class ProController extends Controller
                                     ->where("cultivos.cosecha", "=",0)
                                     ->where("cultivos.estado", "=", 0)
                                     ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->where("partida_usuarios.id_usuario", "=",$user)
                                     ->count();
        if( $cultivocount != 0)
        {
@@ -330,6 +334,7 @@ class ProController extends Controller
                                     ->where("cultivos.cosecha", "=",0)
                                     ->where("cultivos.estado", "=", 0)
                                     ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->where("partida_usuarios.id_usuario", "=",$user)
                                     ->get();
        
            foreach($cultivos as $item)
@@ -575,6 +580,7 @@ class ProController extends Controller
                 $precio_ini=$precioplanta->precio;
                 $precio_Inibd=$precio_ini/100;
                 $alcance_cam_precio= $precio_Inibd;
+                $produ=$precioplanta->prod;
                 $mercado_count=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->count();
 
                 if( $mercado_count==0)
@@ -593,31 +599,31 @@ class ProController extends Controller
                     
                 if($precio<=$precio_Inibd-2 )
                 {
-                        $demanda=100;
+                        $demanda= $produ+( $produ*0.75);
                 }
                 else if($precio>$precio_Inibd-2  and $precio<=$precio_Inibd-1 )
                 {
-                        $demanda=73;
+                        $demanda=  $produ+( $produ*0.3);
                 }
                 else if($precio>$precio_Inibd-1  and $precio<=$precio_Inibd)
                 {
-                        $demanda=57;
+                        $demanda= $produ;
                 }
                 else if($precio>$precio_Inibd and $precio<=$precio_Inibd+1)
                 {
-                        $demanda=35;
+                        $demanda=  $produ-( $produ*0.4);
                 }
                 else if($precio>$precio_Inibd+1 and $precio<=$precio_Inibd+2 )
                 {
-                        $demanda=28;
+                        $demanda=  $produ -( $produ*0.5);
                 }
                 else if($precio>$precio_Inibd+2 and $precio<=$precio_Inibd+3)
                 {
-                        $demanda=22;
+                        $demanda=  $produ -( $produ*0.6);
                 }
                 else if($precio>$precio_Inibd+4)
                 {
-                        $demanda=15;
+                        $demanda=  $produ -( $produ*0.7);
                 }
 
                 $inv_deseado=$demanda*$cover_des;
@@ -878,7 +884,7 @@ class ProController extends Controller
         }else{
             $sem=1;
         }
-        if($sem<59)
+        if($sem<41)
         {
                $semanadb= new App\Semana;
                $semanadb->semana=$sem;
@@ -890,6 +896,7 @@ class ProController extends Controller
                                             ->where("cultivos.cosecha", "=",0)
                                             ->where("cultivos.estado", "=", 0)
                                             ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                            ->where("partida_usuarios.id_usuario", "=",$user)
                                             ->count();
                        
                if($cultivoscount != 0)
@@ -899,6 +906,7 @@ class ProController extends Controller
                                             ->where("cultivos.cosecha", "=",0)
                                             ->where("cultivos.estado", "=", 0)
                                             ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                            ->where("partida_usuarios.id_usuario", "=",$user)
                                             ->get();
 
                     foreach($cultivos as $culti)
@@ -924,11 +932,13 @@ class ProController extends Controller
    
    public function perdida()
    {
+        $user=Auth::user()->id;
         $partida=App\Partida::select('id_partida')->get()->last();
         $cultivoscount= App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
                                     ->select("*")
                                     ->where("cultivos.cosecha", "=",0)
                                     ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                     ->where("partida_usuarios.id_usuario", "=",$user)
                                     ->count();
                         
                        
@@ -938,6 +948,7 @@ class ProController extends Controller
                                     ->select("*")
                                     ->where("cultivos.cosecha", "=",0)
                                     ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->where("partida_usuarios.id_usuario", "=",$user)
                                     ->get();
 
              foreach($cultivos as $cult)
@@ -980,12 +991,14 @@ class ProController extends Controller
    }
    public function produccion()
    {
+        $user=Auth::user()->id;
         $partida=App\Partida::select('id_partida')->get()->last();
         $cultivocount=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
                                     ->select("*")
                                     ->where("cultivos.cosecha", "=",0)
                                     ->where("cultivos.estado", "=", 0)
                                     ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->where("partida_usuarios.id_usuario", "=",$user)
                                     ->count();               
         if( $cultivocount != 0)
         {
@@ -994,6 +1007,7 @@ class ProController extends Controller
                                     ->where("cultivos.cosecha", "=",0)
                                     ->where("cultivos.estado", "=", 0)
                                     ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
+                                    ->where("partida_usuarios.id_usuario", "=",$user)
                                     ->get(); 
 
              foreach($cultivos as $cult)

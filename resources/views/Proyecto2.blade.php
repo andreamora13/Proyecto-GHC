@@ -101,7 +101,7 @@
         var r= diff.getUTCSeconds();
        
         document.getElementById('cro').innerHTML = r;
-        if(r == 30 || r == 59)
+        if(r == 59 )
         {
            reinicio();
             
@@ -200,7 +200,7 @@ $inicio=App\inicio::select('*')->where('id_partidausu', '=',  $id_partidausu->id
                             <div class="center-desk">
                                 <div class="logo">
                                 
-                                     &nbsp;&nbsp; &nbsp;&nbsp;<a href="/home"><img src="{{ asset('imagenes/logo3.png') }}" style=" width: 70%; height: 70%"></a>
+                                     &nbsp;&nbsp; &nbsp;&nbsp;<a href="/home"><img src="{{ asset('imagenes/logo6.png') }}" style=" width: 70%; height: 70%"></a>
                                 </div>
                             </div>
                         </div>
@@ -453,10 +453,9 @@ $inicio=App\inicio::select('*')->where('id_partidausu', '=',  $id_partidausu->id
                                                          <img src="{{ asset('imagenes/t1.jpeg') }}" style="width: 60px; height: 60px">
                                                          @elseif($it->altura>$alt1 and $it->altura<=$alt2)
                                                          <img src="{{ asset('imagenes/t2.jpeg') }}" style="width: 60px; height: 60px">
-                                                         @elseif($it->altura>$alt2 and $it->altura<$alt3)
+                                                         @elseif($it->altura>$alt2 and $it->produccion==0)
                                                          <img src="{{ asset('imagenes/t3 .png') }}" style="width: 60px; height: 60px">
-                                                         @elseif($it->altura>=$alt3 and $it->produccion==0)
-                                                         <img src="{{ asset('imagenes/t4.png') }}" style="width: 60px; height: 60px">
+                                                         
                                                      @endif
                                                    @elseif($it->tipo_planta=="Pimenton")
                                                      @if($it->produccion!=0)

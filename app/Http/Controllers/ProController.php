@@ -37,17 +37,17 @@ class ProController extends Controller
        }else{
             $semana=1;
        }
-       if($semana < 41 and $partida->activa == 1)
+       if($semana < 40 and $partida->activa == 1)
        {
            
             $total=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->where('cosecha', '=',  0)->count();
             if($total !=0)
             {
                $detalle=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->where('cosecha', '=',  0)->get();
-               
+               $detalle2=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->get();
 
               
-               foreach($detalle as $item)
+               foreach($detalle2 as $item)
                {
                  $aguacount[]=App\Agua_riego::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->count();
                  if($aguacount !=0)
@@ -884,7 +884,7 @@ class ProController extends Controller
         }else{
             $sem=1;
         }
-        if($sem<41)
+        if($sem<40)
         {
                $semanadb= new App\Semana;
                $semanadb->semana=$sem;
@@ -915,17 +915,15 @@ class ProController extends Controller
                        $act= App\Cultivo::where('id_cultivo',"=",$culti->id_cultivo)->update(array('semana' => $semana->semana+1));
                     }
                }
-                $principal=self::Crecimiento();
+               $principal=self::Crecimiento();
            
 
-                return  $principal;
+                return $principal;    
         }
-        else
-        {
-                $espera = self::espera();
+        
+           
 
-               return $espera; 
-        }
+        return 0;
    }
     
 

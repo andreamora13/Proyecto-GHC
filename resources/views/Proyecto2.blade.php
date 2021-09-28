@@ -240,7 +240,7 @@
                                     <th scope="col"><center>Precio {{$item->tipo_planta}}</center></th>
                                     @endforeach()
                                     @foreach($plantas as $item)
-                                    <th scope="col"><center>Mercado {{$item->tipo_planta}}{</center></th>
+                                    <th scope="col"><center>Mercado {{$item->tipo_planta}}</center></th>
                                     @endforeach()
                                     
                                    </tr>

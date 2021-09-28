@@ -158,30 +158,30 @@
                     <div class="about_box">
                        <br>
                         <?php
-                       $partidacount=App\Partida::select('*')->where('activa', '=', 1)->count();
+                        $part=App\Partida::select('*')->get()->last();
+                         
                        
                        ?>
                      
-                       @if($partidacount!=0)
+                       @if($part->activa==1)
                            <?php
                            $user= Auth::user()->id;
                            $partida=App\Partida::select('*')->get()->last();
                            $partidausu=App\Partida_usuario::select('*')->where('id_partida', '=',  $partida->id_partida)->where('id_usuario', '!=',  $user)->count();
                            ?>
-                           @if($partidausu>$partida->max_usuarios)
-                           <a href="{{ action('ProController@Partida') }}" class="not-active" >
+                               @if($partidausu>$partida->max_usuarios)
+                               <a href="{{ action('ProController@Partida') }}" class="not-active" >
 
-                               <h5 style="color:white; height:20px">Iniciar</h5>
-                            </a>
-                            <p style="color:white"> &nbsp &nbsp   Partida con jugadores completos
-                            @else
-                            <a href="{{ action('ProController@Partida') }}">
+                                   <h5 style="color:white; height:20px">Iniciar</h5>
+                                </a>
+                                <p style="color:white"> &nbsp &nbsp   Partida con jugadores completos
+                                @else
+                                <a href="{{ action('ProController@Partida') }}">
 
-                               <h5 style="color:white; height:20px">Iniciar</h5>
-                            </a>
-                            @endif()
-                             
-                            @else
+                                   <h5 style="color:white; height:20px">Iniciar</h5>
+                                </a>
+                                @endif()
+                       @else
                              <p style="color:white"> &nbsp Espera a que el admin inicie la partida
                             
                         @endif()

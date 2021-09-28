@@ -44,7 +44,7 @@ class ProyectoController extends Controller
                                         ->count();
 
                $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                       ->where('vendido',"=",1)
+                                       
                                        ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                        ->count();
                if($plainv ==0)
@@ -53,14 +53,14 @@ class ProyectoController extends Controller
                }
                else{
                     $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('vendido',"=",1)
+                                                 
                                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                                     ->sum('prod_planta');
                }
                
                   $inventariocount=App\Inventario::select('*')
                                                    ->where('id_planta',"=",$plan->id_planta)
-                                                   ->where('vendido',"=",1)
+                                                   
                                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                                    ->count();
                   if($inventariocount==0)
@@ -70,7 +70,7 @@ class ProyectoController extends Controller
                   else
                   {   $inventario[]=App\Inventario::select('*')
                                                     ->where('id_planta',"=",$plan->id_planta)
-                                                    ->where('vendido',"=",1)
+                                                    
                                                      ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                                     ->sum('prod_planta');
                   
@@ -353,7 +353,7 @@ class ProyectoController extends Controller
               $plainv=App\Inventario::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "inventarios.id_partidausu")
                                     ->select("*")
                                     ->where("inventarios.id_planta", "=", $plan->id_planta)
-                                    ->where("inventarios.vendido", "=", 1)
+                                   
                                     ->where("partida_usuarios.id_partida", "=",$id_partida)
                                     ->count();
                     
@@ -365,7 +365,7 @@ class ProyectoController extends Controller
                     $planta_inventariocount[]=App\Inventario::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "inventarios.id_partidausu")
                                                     ->select("*")
                                                     ->where("inventarios.id_planta", "=", $plan->id_planta)
-                                                    ->where("inventarios.vendido", "=", 1)
+                                                   
                                                     ->where("partida_usuarios.id_partida", "=",$id_partida)
                                                     ->sum('prod_planta');
                }
@@ -472,7 +472,7 @@ class ProyectoController extends Controller
 
                                     
               $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                      ->where('vendido',"=",1)
+                                      
                                       ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                       ->count();
                if($plainv ==0)
@@ -481,7 +481,7 @@ class ProyectoController extends Controller
                }
                else{
                     $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('vendido',"=",1)
+                                                
                                                     ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                                     ->sum('prod_planta');
                }
@@ -595,12 +595,12 @@ class ProyectoController extends Controller
     }
     public function Info()
     {
-        $id_partida=1;
-        $var=1;
+        $partida=App\Partida::select('id_partida')->get()->last();
+        $id_partida=$partida->id_partida;
+        $user="todos";
 
-        $id_planta=1;
-        $id_partida=1;
-        $user= 'todos';
+        $id_planta=15;
+        
         $plantas=App\Planta::where('id_partida','=',$id_partida)->get();
 
         if($user =="todos")
@@ -620,7 +620,7 @@ class ProyectoController extends Controller
               $plainv=App\Inventario::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "inventarios.id_partidausu")
                                     ->select("*")
                                     ->where("inventarios.id_planta", "=", $plan->id_planta)
-                                    ->where("inventarios.vendido", "=", 1)
+                                   
                                     ->where("partida_usuarios.id_partida", "=",$id_partida)
                                     ->count();
                     
@@ -632,7 +632,7 @@ class ProyectoController extends Controller
                     $planta_inventariocount[]=App\Inventario::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "inventarios.id_partidausu")
                                                     ->select("*")
                                                     ->where("inventarios.id_planta", "=", $plan->id_planta)
-                                                    ->where("inventarios.vendido", "=", 1)
+                                                   
                                                     ->where("partida_usuarios.id_partida", "=",$id_partida)
                                                     ->sum('prod_planta');
                }
@@ -739,7 +739,7 @@ class ProyectoController extends Controller
 
                                     
               $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                      ->where('vendido',"=",1)
+                                      
                                       ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                       ->count();
                if($plainv ==0)
@@ -748,7 +748,7 @@ class ProyectoController extends Controller
                }
                else{
                     $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                    ->where('vendido',"=",1)
+                                                
                                                     ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                                     ->sum('prod_planta');
                }
@@ -777,7 +777,7 @@ class ProyectoController extends Controller
        
                 foreach($consultaCultivo as $culti)
                 {
-                       $id_partidaDet[]=$culti->id_partidaDet;
+                       $id_partidaDet[]=$culti->id_cultivo;
                 }
                 $aguascount = DB::table ('agua_riegos')
                              -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))

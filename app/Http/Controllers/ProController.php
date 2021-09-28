@@ -41,7 +41,8 @@ class ProController extends Controller
        {
            
             $total=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->where('cosecha', '=',  0)->count();
-            if($total !=0)
+            $total2=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->count();
+            if($total2 !=0)
             {
                $detalle=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->where('cosecha', '=',  0)->get();
                $detalle2=App\Cultivo::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->get();
@@ -133,6 +134,7 @@ class ProController extends Controller
    {
         $user= Auth::user()->id;
         $partida=App\Partida::select('*')->get()->last();
+        
         if($partida->activa == 1)
         {
             $partidacount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->where('id_usuario',"=",$user)->count();
@@ -144,17 +146,31 @@ class ProController extends Controller
                 $partidausu->id_usuario=$user;
                 $partidausu->save();
             }
-            $partidausuariocount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->count();
-            if($partidausuariocount<2)
+            else
             {
-                return view('espera');
-            }
-            else{
+              $partidausuario=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->get()->last();
+              if($partidausuario->activa==1)
+              {
+                $partidausuariocount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->count();
+                if($partidausuariocount<2)
+                {
+                    return view('espera');
+                }
+                else{
 
-                $principal = self::principal();
+                    $principal = self::principal();
 
-                return  $principal;
+                    return  $principal;
+                }
+              }
+              elseif($partidausuario->activa==0)
+              {
+                 $espera = self::espera();
+                 return  $espera;
+              }
+             
             }
+            
         }
         else{
                 $principal = self::principal();
@@ -920,10 +936,13 @@ class ProController extends Controller
 
                 return $principal;    
         }
-        
-           
+        else{
+            $partidausu_des = App\Partida_usuario::where('id_partidausu', '=', $id_partidausu->id_partidausu)->update(array('activa' => 0));   
 
-        return 0;
+            return 0;
+        }
+        
+         
    }
     
 
@@ -1100,7 +1119,8 @@ class ProController extends Controller
         
          if($users_partida==$users_fin or $partida->activa==0)
          {
-            $info = self::info();
+             $partida_des = App\Partida::where('id_partida', '=', $partida->id_partida)->update(array('activa' => 0));
+             $info = self::info();
 
             return $info;
          }
@@ -1110,6 +1130,7 @@ class ProController extends Controller
             return  view('espera2');
          }
    }
+
    public function terminar()
    {
        $partida=App\Partida::select('id_partida')->get()->last();
@@ -1121,7 +1142,7 @@ class ProController extends Controller
        {
           $partidausu_des = App\Partida_usuario::where('id_partidausu', '=', $item->id_partidausu)->update(array('activa' => 0));
        }
-       $partida_des = App\Partida::where('id_partida', '=', $partida->id_partida)->update(array('activa' => 0));
+       $partida_des = App\Partida::where('id_partida', '=', $partida->id_partida)->update(array('activa' => 0)); $partida_des = App\Partida::where('id_partida', '=', $partida->id_partida)->update(array('activa' => 0));
        $espera = self::espera();
 
        return $espera;                    

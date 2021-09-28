@@ -11,6 +11,6 @@
     "\\resources",
     "\\resources\\views"
   ],
-  "SelectedNode": "\\app\\Http\\Controllers\\AdmiController.php",
+  "SelectedNode": "\\resources\\views\\home.blade.php",
   "PreviewInSolutionExplorer": false
 }

@@ -148,11 +148,15 @@ class ProController extends Controller
             }
             else
             {
-              $partidausuario=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->get()->last();
-              if($partidausuario->activa==1)
+              $partidausuario=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->where('id_usuario',"=",$user)->get()->last();
+              if($partidausuario->activa==0)
               {
-                $partidausuariocount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->count();
-                if($partidausuariocount<2)
+                 $espera = self::espera();
+                 return  $espera;
+              }
+            }
+            $partidausuariocount=App\Partida_usuario::select('*')->where('id_partida',"=",$partida->id_partida)->count();
+            if($partidausuariocount<2)
                 {
                     return view('espera');
                 }
@@ -162,14 +166,6 @@ class ProController extends Controller
 
                     return  $principal;
                 }
-              }
-              elseif($partidausuario->activa==0)
-              {
-                 $espera = self::espera();
-                 return  $espera;
-              }
-             
-            }
             
         }
         else{

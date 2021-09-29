@@ -95,7 +95,7 @@ class ProyectoController extends Controller
 
          $consultaCultivocount = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
-                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->count();
 
          if( $consultaCultivocount != 0)
@@ -121,7 +121,7 @@ class ProyectoController extends Controller
                            $agua[]=0;
                            $semana_ag[]=0;
                            $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                           $agua_Re1[]=$agua_Re->agua_re;
                  }
                  else{
                            $aguas = DB::table ('agua_riegos')
@@ -133,10 +133,10 @@ class ProyectoController extends Controller
 
                            foreach($aguas as $ag)
                            {
-                               $agua[]=$ag->total_sales;
+                               $agua[]=$ag->total_sales/$consultaCultivocount;
                                $semana_ag[]=$ag->semana;
                                $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                               $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                               $agua_Re1[]=$agua_Re->agua_re;
             
                            }
                  }
@@ -152,7 +152,7 @@ class ProyectoController extends Controller
                            $abono[]=0;
                            $semana_ab[]=0;
                            $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                           $abono_Re1[]=$abono_Re->ab_re;
                  }
                  else{
                            $abonos = DB::table ('abono_cants')
@@ -164,10 +164,10 @@ class ProyectoController extends Controller
 
                            foreach($abonos as $ab)
                            {
-                               $abono[]=$ab->total_sal;
+                               $abono[]=$ab->total_sal/$consultaCultivocount;
                                $semana_ab[]=$ab->semana;
                                $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                               $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                               $abono_Re1[]=$abono_Re->ab_re;
                            }
                  }
          }
@@ -175,11 +175,11 @@ class ProyectoController extends Controller
                 $agua[]=0;
                 $semana_ag[]=0;
                 $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                $agua_Re1[]=$agua_Re->agua_re;
                 $abono[]=0;
                 $semana_ab[]=0;
                 $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                $abono_Re1[]=$abono_Re->ab_re;
          }
 
            
@@ -381,11 +381,11 @@ class ProyectoController extends Controller
                  $agua[]=0;
                  $semana_ag[]=0;
                  $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->where('id_partida',"=",$id_partida)->get()->last();
-                 $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                 $agua_Re1[]=$agua_Re->agua_re;
                  $abono[]=0;
                  $semana_ab[]=0;
                  $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                 $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                 $abono_Re1[]=$abono_Re->ab_re;
 
             }else
             {
@@ -422,10 +422,10 @@ class ProyectoController extends Controller
 
                        foreach($aguas as $ag)
                        {
-                           $agua[]=$ag->total_sales;
+                           $agua[]=$ag->total_sales/$consultaCultivocount;
                            $semana_ag[]=$ag->semana;
                            $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                           $agua_Re1[]=$agua_Re->agua_re;
                        }
                 } 
                 $abonoscount = DB::table ('abono_cants')
@@ -439,7 +439,7 @@ class ProyectoController extends Controller
                        $abono[]=0;
                        $semana_ab[]=0;
                        $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                       $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                       $abono_Re1[]=$abono_Re->ab_re;
                 }
                 else{
                        $abonos = DB::table ('abono_cants')
@@ -451,10 +451,10 @@ class ProyectoController extends Controller
 
                        foreach($abonos as $ab)
                        {
-                           $abono[]=$ab->total_sal;
+                           $abono[]=$ab->total_sal/$consultaCultivocount;
                            $semana_ab[]=$ab->semana;
                            $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                           $abono_Re1[]=$abono_Re->ab_re;
                        }
                 }
             }
@@ -495,11 +495,11 @@ class ProyectoController extends Controller
                  $agua[]=0;
                  $semana_ag[]=0;
                  $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->where('id_partida',"=",$id_partida)->get()->last();
-                 $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                 $agua_Re1[]=$agua_Re->agua_re;
                  $abono[]=0;
                  $semana_ab[]=0;
                  $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                 $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                 $abono_Re1[]=$abono_Re->ab_re;
 
             }
             else{
@@ -523,7 +523,7 @@ class ProyectoController extends Controller
                        $agua[]=0;
                        $semana_ag[]=0;
                        $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->where('id_partida',"=",$id_partida)->get()->last();
-                       $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                       $agua_Re1[]=$agua_Re->agua_re;
                 }
                 else{
                        $aguas = DB::table ('agua_riegos')
@@ -535,10 +535,10 @@ class ProyectoController extends Controller
 
                        foreach($aguas as $ag)
                        {
-                           $agua[]=$ag->total_sales;
+                           $agua[]=$ag->total_sales/$consultaCultivocount;
                            $semana_ag[]=$ag->semana;
                            $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                           $agua_Re1[]=$agua_Re->agua_re;
                        }
                 } 
                 $abonoscount = DB::table ('abono_cants')
@@ -552,7 +552,7 @@ class ProyectoController extends Controller
                        $abono[]=0;
                        $semana_ab[]=0;
                        $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                       $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                       $abono_Re1[]=$abono_Re->ab_re;
                 }
                 else{
                        $abonos = DB::table ('abono_cants')
@@ -564,10 +564,10 @@ class ProyectoController extends Controller
 
                        foreach($abonos as $ab)
                        {
-                           $abono[]=$ab->total_sal;
+                           $abono[]=$ab->total_sal/$consultaCultivocount;
                            $semana_ab[]=$ab->semana;
                            $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                           $abono_Re1[]=$abono_Re->ab_re;
                        }
                 }
             }
@@ -597,267 +597,163 @@ class ProyectoController extends Controller
     {
         $partida=App\Partida::select('id_partida')->get()->last();
         $id_partida=$partida->id_partida;
-        $user="todos";
-
-        $id_planta=15;
+        $user=1;
+         $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
         
-        $plantas=App\Planta::where('id_partida','=',$id_partida)->get();
-
-        if($user =="todos")
-        {
+        $id_planta=1;
         
-            foreach($plantas as $plan)
-            {
-              $planta_cultivo[]=$plan->tipo_planta;
-              $planta_cultivocount[]=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
-                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
-                                    ->count();
-
-                                    
-               
-              $plainv=App\Inventario::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "inventarios.id_partidausu")
-                                    ->select("*")
-                                    ->where("inventarios.id_planta", "=", $plan->id_planta)
-                                   
-                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
-                                    ->count();
-                    
-               if($plainv ==0)
-               {
-                   $planta_inventariocount[]=0;
-               }
-               else{
-                    $planta_inventariocount[]=App\Inventario::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "inventarios.id_partidausu")
-                                                    ->select("*")
-                                                    ->where("inventarios.id_planta", "=", $plan->id_planta)
-                                                   
-                                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
-                                                    ->sum('prod_planta');
-               }
-            }
-            $consultaCultivocount = App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
-                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
-                                    ->count();
-
-            if( $consultaCultivocount ==0)
-            {
-                 $agua[]=0;
-                 $semana_ag[]=0;
-                 $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->where('id_partida',"=",$id_partida)->get()->last();
-                 $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
-                 $abono[]=0;
-                 $semana_ab[]=0;
-                 $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                 $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
-
-            }else
-            {
-                $consultaCultivo = App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
-                                    ->select("*")
-                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
-                                    ->where("partida_usuarios.id_partida", "=",$id_partida)
-                                    ->get();
-       
-                foreach($consultaCultivo as $culti)
-                {
-                       $id_partidaDet[]=$culti->id_cultivo;
-                }
-                $aguascount = DB::table ('agua_riegos')
-                             -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
-                             -> groupBy('semana')
-                             ->whereIn("id_cultivo",$id_partidaDet)
-                             ->orderBy('semana')
-                             ->count();
-                if($aguascount == 0)
-                {
-                       $agua[]=0;
-                       $semana_ag[]=0;
-                       $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->where('id_partida',"=",$id_partida)->get()->last();
-                       $agua_Re1[]=$agua_Re->agua_re;
-                }
-                else{
-                       $aguas = DB::table ('agua_riegos')
-                                 -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
-                                 -> groupBy('semana')
-                                 ->whereIn("id_cultivo",$id_partidaDet)
-                                 ->orderBy('semana')
-                                 -> get();
-
-                       foreach($aguas as $ag)
-                       {
-                           $agua[]=$ag->total_sales;
-                           $semana_ag[]=$ag->semana;
-                           $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
-                       }
-                } 
-                $abonoscount = DB::table ('abono_cants')
-                             -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
-                             -> groupBy('semana')
-                             ->whereIn("id_cultivo",$id_partidaDet)
-                             ->orderBy('semana')
-                             ->count();
-                if($abonoscount==0)
-                {
-                       $abono[]=0;
-                       $semana_ab[]=0;
-                       $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                       $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
-                }
-                else{
-                       $abonos = DB::table ('abono_cants')
-                                 -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
-                                 -> groupBy('semana')
-                                 ->whereIn("id_cultivo",$id_partidaDet)
-                                 ->orderBy('semana')
-                                 -> get();
-
-                       foreach($abonos as $ab)
-                       {
-                           $abono[]=$ab->total_sal;
-                           $semana_ab[]=$ab->semana;
-                           $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
-                       }
-                }
-            }
-            
-        }else
+       $plantas=App\Planta::where('id_partida','=',$partida->id_partida)->get();
+        foreach($plantas as $plan)
         {
-            foreach($plantas as $plan)
-            {
-              $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $id_partida)->get()->last();
-              $planta_cultivo[]=$plan->tipo_planta;
-              $planta_cultivocount[]=App\Cultivo::select("*")
+               $planta_cultivo[]=$plan->tipo_planta;
+               $planta_cultivocount[]=App\Cultivo::select("*")
                                         ->where("id_planta", "=",$plan->id_planta)
-                                        ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
+                                        ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                         ->count();
 
-                                    
-              $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                      
-                                      ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
-                                      ->count();
+               $plainv=App\Inventario::where('id_planta',"=",$plan->id_planta)
+                                       
+                                       ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                       ->count();
                if($plainv ==0)
                {
                    $planta_inventariocount[]=0;
                }
                else{
                     $planta_inventariocount[]=App\Inventario::where('id_planta',"=",$plan->id_planta)
-                                                
-                                                    ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
+                                                 
+                                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                                     ->sum('prod_planta');
                }
-            }
-            $consultaCultivocount = App\Cultivo::select("*")
-                                    ->where("id_planta", "=",$id_planta)
-                                    ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
-                                    ->count();
-            if( $consultaCultivocount ==0)
-            {
-                 $agua[]=0;
-                 $semana_ag[]=0;
-                 $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->where('id_partida',"=",$id_partida)->get()->last();
-                 $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
-                 $abono[]=0;
-                 $semana_ab[]=0;
-                 $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                 $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+               
+                  $inventariocount=App\Inventario::select('*')
+                                                   ->where('id_planta',"=",$plan->id_planta)
+                                                   
+                                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                                   ->count();
+                  if($inventariocount==0)
+                  {
+                     $inventario[]=0;
+                  }
+                  else
+                  {   $inventario[]=App\Inventario::select('*')
+                                                    ->where('id_planta',"=",$plan->id_planta)
+                                                    
+                                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                                    ->sum('prod_planta');
+                  
+                  }
 
-            }
-            else{
-                $consultaCultivo = App\Cultivo::select("*")
-                                    ->where("id_planta", "=",$id_planta)
-                                    ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
-                                    ->get();
-       
-                foreach($consultaCultivo as $culti)
-                {
-                       $id_partidaDet[]=$culti->id_cultivo;
-                }
-                $aguascount = DB::table ('agua_riegos')
-                             -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
-                             -> groupBy('semana')
-                             ->whereIn("id_cultivo",$id_partidaDet)
-                             ->orderBy('semana')
-                             ->count();
-                if($aguascount == 0)
-                {
-                       $agua[]=0;
-                       $semana_ag[]=0;
-                       $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->where('id_partida',"=",$id_partida)->get()->last();
-                       $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
-                }
-                else{
-                       $aguas = DB::table ('agua_riegos')
-                                 -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
-                                 -> groupBy('semana')
-                                 ->whereIn("id_cultivo",$id_partidaDet)
-                                 ->orderBy('semana')
-                                 -> get();
-
-                       foreach($aguas as $ag)
-                       {
-                           $agua[]=$ag->total_sales;
-                           $semana_ag[]=$ag->semana;
-                           $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
-                       }
-                } 
-                $abonoscount = DB::table ('abono_cants')
-                             -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
-                             -> groupBy('semana')
-                             ->whereIn("id_cultivo",$id_partidaDet)
-                             ->orderBy('semana')
-                             ->count();
-                if($abonoscount==0)
-                {
-                       $abono[]=0;
-                       $semana_ab[]=0;
-                       $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                       $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
-                }
-                else{
-                       $abonos = DB::table ('abono_cants')
-                                 -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
-                                 -> groupBy('semana')
-                                 ->whereIn("id_cultivo",$id_partidaDet)
-                                 ->orderBy('semana')
-                                 -> get();
-
-                       foreach($abonos as $ab)
-                       {
-                           $abono[]=$ab->total_sal;
-                           $semana_ab[]=$ab->semana;
-                           $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
-                       }
-                }
-            }
-            
-        }
-
-        
-        $mercado_count=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$id_partida)->count();
-        if($mercado_count==0)
-        {
+              
+         }
+         $mercado_count=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$partida->id_partida)->count();
+         if($mercado_count==0)
+         {
               $precio_p[]=0;
               $semana_p[]=0;
-        }
-        else{
-                $mercado=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$id_partida)->get();
+         }
+         else{
+                $mercado=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$partida->id_partida)->get();
                 foreach($mercado as $pre)
                 {
                      $precio_p[]=$pre->precio;
                      $semana_p[]=$pre->semana;
                 }
-        }
+         }
 
-        $array=array($planta_cultivo,$planta_cultivocount,$planta_inventariocount,$precio_p,$semana_p,$agua,$semana_ag,$agua_Re1,$abono,$semana_ab,$abono_Re1);
+         $consultaCultivocount = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                    ->count();
+
+         if( $consultaCultivocount != 0)
+         {
+                 $consultaCultivo = App\Cultivo::select("*")
+                                    ->where("id_planta", "=",$id_planta)
+                                    ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
+                                    ->get();
+       
+                 foreach($consultaCultivo as $culti)
+                 {
+                           $id_partidaDet[]=$culti->id_cultivo;
+                 }
+                 $aguascount = DB::table ('agua_riegos')
+                                 -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
+                                 -> groupBy('semana')
+                                 ->whereIn("id_cultivo",$id_partidaDet)
+                                 ->orderBy('semana')
+                                 ->count();
+
+                 if($aguascount == 0)
+                 {
+                           $agua[]=0;
+                           $semana_ag[]=0;
+                           $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
+                           $agua_Re1[]=$agua_Re->agua_re;
+                 }
+                 else{
+                           $aguas = DB::table ('agua_riegos')
+                                     -> select ('semana' , DB::raw ('SUM(agua_riego) as total_sales'))
+                                     -> groupBy('semana')
+                                     ->whereIn("id_cultivo",$id_partidaDet)
+                                     ->orderBy('semana')
+                                     -> get();
+
+                           foreach($aguas as $ag)
+                           {
+                               $agua[]=$ag->total_sales/$consultaCultivocount;
+                               $semana_ag[]=$ag->semana;
+                               $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
+                               $agua_Re1[]=$agua_Re->agua_re;
+            
+                           }
+                 }
+           
+                 $abonoscount = DB::table ('abono_cants')
+                                 -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
+                                 -> groupBy('semana')
+                                 ->whereIn("id_cultivo",$id_partidaDet)
+                                 ->orderBy('semana')
+                                 ->count();
+                 if($abonoscount==0)
+                 {
+                           $abono[]=0;
+                           $semana_ab[]=0;
+                           $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
+                           $abono_Re1[]=$abono_Re->ab_re;
+                 }
+                 else{
+                           $abonos = DB::table ('abono_cants')
+                                     -> select ('semana' , DB::raw ('SUM(abono_cant) as total_sal'))
+                                     -> groupBy('semana')
+                                     ->whereIn("id_cultivo",$id_partidaDet)
+                                     ->orderBy('semana')
+                                     -> get();
+
+                           foreach($abonos as $ab)
+                           {
+                               $abono[]=$ab->total_sal/$consultaCultivocount;
+                               $semana_ab[]=$ab->semana;
+                               $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
+                               $abono_Re1[]=$abono_Re->ab_re;
+                           }
+                 }
+         }
+         else{
+                $agua[]=0;
+                $semana_ag[]=0;
+                $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
+                $agua_Re1[]=$agua_Re->agua_re;
+                $abono[]=0;
+                $semana_ab[]=0;
+                $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
+                $abono_Re1[]=$abono_Re->ab_re;
+         }
+
+           
+          
+
+        $array=array($planta_cultivo,$planta_cultivocount,$semana_ag,$agua,$planta_inventariocount,$semana_ab,$abono,$agua_Re1,$abono_Re1,$precio_p,$semana_p);
         return  $array;
        }
 
@@ -943,11 +839,11 @@ class ProyectoController extends Controller
                  $agua[]=0;
                  $semana_ag[]=0;
                  $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->where('id_partida',"=",$id_partida)->get()->last();
-                 $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                 $agua_Re1[]=$agua_Re->agua_re;
                  $abono[]=0;
                  $semana_ab[]=0;
                  $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                 $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                 $abono_Re1[]=$abono_Re->ab_re;
         }
         else{
                 $consultaCultivo = App\Cultivo::select("*")
@@ -972,7 +868,7 @@ class ProyectoController extends Controller
                        $agua[]=0;
                        $semana_ag[]=0;
                        $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->where('id_partida',"=",$id_partida)->get()->last();
-                       $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                       $agua_Re1[]=$agua_Re->agua_re;
                 }
                 else{
                        $aguas = DB::table ('agua_riegos')
@@ -984,10 +880,10 @@ class ProyectoController extends Controller
 
                        foreach($aguas as $ag)
                        {
-                           $agua[]=$ag->total_sales;
+                           $agua[]=$ag->total_sales/$consultaCultivocount;
                            $semana_ag[]=$ag->semana;
                            $agua_Re= App\Planta::select('agua_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $agua_Re1[]=$agua_Re->agua_re*$consultaCultivocount;
+                           $agua_Re1[]=$agua_Re->agua_re;
                        }
                 } 
                 $abonoscount = DB::table ('abono_cants')
@@ -1001,7 +897,7 @@ class ProyectoController extends Controller
                        $abono[]=0;
                        $semana_ab[]=0;
                        $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                       $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                       $abono_Re1[]=$abono_Re->ab_re;
                 }
                 else{
                        $abonos = DB::table ('abono_cants')
@@ -1013,10 +909,10 @@ class ProyectoController extends Controller
 
                        foreach($abonos as $ab)
                        {
-                           $abono[]=$ab->total_sal;
+                           $abono[]=$ab->total_sal/$consultaCultivocount;
                            $semana_ab[]=$ab->semana;
                            $abono_Re= App\Planta::select('ab_re')->where("id_planta","=",$id_planta)->get()->last();
-                           $abono_Re1[]=$abono_Re->ab_re*$consultaCultivocount;
+                           $abono_Re1[]=$abono_Re->ab_re;
                        }
                 }
         }

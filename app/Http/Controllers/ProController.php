@@ -570,6 +570,7 @@ class ProController extends Controller
                 if($item != $token)
                 {
                     $id_plantasel[]=$item;
+                    
                 
                 }
             }
@@ -633,11 +634,10 @@ class ProController extends Controller
                 {
                         $demanda=  $produ -( $produ*0.6);
                 }
-                else if($precio>$precio_Inibd+4)
+                else if($precio>$precio_Inibd+3)
                 {
                         $demanda=  $produ -( $produ*0.7);
                 }
-
                 $inv_deseado=$demanda*$cover_des;
                 $inventarios=$inv_acum+$sum_Prod-$demanda;
 
@@ -683,43 +683,42 @@ class ProController extends Controller
                 $cambio_precio=($precio_deseado-$precio)/$alcance_cam_precio;
                 $new_precio=$precio+$cambio_precio;
 
-                
-                     $mercado=new App\Mercado;
-                     $mercado->precio=$new_precio*100;
-                     $mercado->ventas=$demanda;
-                     $mercado->inv_deseado=$inv_deseado;
-                     $mercado->inv_acumulado= $inventario;
-                     $mercado->radio_inv= $radio_inv;
-                     $mercado->efecto_precio=$efecto_precio;
-                     $mercado->precio_deseado=$precio_deseado*100;
-                     $mercado->cambio_precio=$cambio_precio;
-                     $mercado->semana=$sema->semana;
-                     $mercado->id_planta=$id_planta;
-                     $mercado->id_partida=$partida->id_partida;
-                     $mercado->save();
-
-                     
+                $mercado=new App\Mercado;
+                $mercado->precio=$new_precio*100;
+                $mercado->ventas=$demanda;
+                $mercado->inv_deseado=$inv_deseado;
+                $mercado->inv_acumulado= $inventario;
+                $mercado->radio_inv= $radio_inv;
+                $mercado->efecto_precio=$efecto_precio;
+                $mercado->precio_deseado=$precio_deseado*100;
+                $mercado->cambio_precio=$cambio_precio;
+                $mercado->semana=$sema->semana;
+                $mercado->id_planta=$id_planta;
+                $mercado->id_partida=$partida->id_partida;
+                $mercado->save();
+               
             }
             foreach($plantasel as $item)
             {
                 if($item != $token)
                 {
-                     $cap= $sum_Prod*$precio;
+                     $sum_Produ=App\Inventario::where('id_planta',"=",$item)->where('vendido',"=",0)->where('id_partidausu','=',$id_partidausu->id_partidausu)->sum('prod_planta');
+                     $preci=App\Mercado::where('id_planta',"=",$item)->get()->last();
+                     $cap= $sum_Produ*$preci->precio;
 
                      $capital=new App\Capital;
                      $capital->capital=$cap;
                      $capital->id_partidausu=$id_partidausu->id_partidausu;
                      $capital->save();
-               
-                     $vendido= App\Inventario::where('id_planta',"=",$item)->update(array('vendido' => 1));
-                
+
+                     $vendido= App\Inventario::where('id_planta',"=",$item)->where('id_partidausu','=',$id_partidausu->id_partidausu)->update(array('vendido' => 1));
                 }
             }
-
+            
         }
         
         $principal = self::principal();
-        return   $principal;
+        return  $principal;
    }
 
    public function Seleccion(Request $request)

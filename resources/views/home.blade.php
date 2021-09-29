@@ -158,12 +158,22 @@
                     <div class="about_box">
                        <br>
                         <?php
-                        $part=App\Partida::select('*')->get()->last();
+                        $partcount=App\Partida::select('*')->count();
+                        if($partcount != 0)
+                        {
+                            $part=App\Partida::select('*')->get()->last();
+                            $parti=$part->activa;
+                        }
+                        else
+                        {
+                            $parti=0;
+                        }
+                        
                          
                        
                        ?>
                      
-                       @if($part->activa==1)
+                       @if($parti==1)
                            <?php
                            $user= Auth::user()->id;
                            $partida=App\Partida::select('*')->get()->last();

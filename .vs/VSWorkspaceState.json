@@ -5,12 +5,13 @@
     "\\app\\Http",
     "\\app\\Http\\Controllers",
     "\\database",
-    "\\database\\migrations",
     "\\public",
     "\\public\\imagenes",
+    "\\public\\tabla",
+    "\\public\\tabla\\css",
     "\\resources",
     "\\resources\\views"
   ],
-  "SelectedNode": "\\app\\Http\\Controllers\\AdmiController.php",
+  "SelectedNode": "\\public\\tabla\\css\\style.css",
   "PreviewInSolutionExplorer": false
 }

@@ -328,19 +328,19 @@ class ProController extends Controller
    public function Crecimiento()
    {
         $user=Auth::user()->id;
-       $perdida=self::perdida();
-       $partida=App\Partida::select('id_partida')->get()->last();
-       $id_partidausu=App\Partida_usuario::select('*')->where('id_partida', '=',  $partida->id_partida)->get()->last();
+        $perdida=self::perdida();
+        $partida=App\Partida::select('id_partida')->get()->last();
+        $id_partidausu=App\Partida_usuario::select('*')->where('id_partida', '=',  $partida->id_partida)->get()->last();
 
-       $cultivocount=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
+        $cultivocount=App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
                                     ->select("*")
                                     ->where("cultivos.cosecha", "=",0)
                                     ->where("cultivos.estado", "=", 0)
                                     ->where("partida_usuarios.id_partida", "=",$partida->id_partida)
                                     ->where("partida_usuarios.id_usuario", "=",$user)
                                     ->count();
-       if( $cultivocount != 0)
-       {
+        if( $cultivocount != 0)
+        {
            $cultivos= App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
                                     ->select("*")
                                     ->where("cultivos.cosecha", "=",0)
@@ -379,6 +379,7 @@ class ProController extends Controller
                     if( $agua_count != 0)
                     {
                      $aguab=App\Agua_registro::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->get()->last();
+
                      $aguabd=$aguab->agua;
                      $cob_abd=$aguab->cob_a;
                      $absorbd=$aguab->absor;
@@ -447,6 +448,7 @@ class ProController extends Controller
                         $ab_absbd=0;
                         $m_tc_abbd=0;
                     }
+
                     $ca=$abono_cant/$ab_re;
                     $ab_abs=$abonobd*$tab_ab;
                     $abono=$abonobd+$abono_cant-$ab_abs;
@@ -499,14 +501,20 @@ class ProController extends Controller
                     
                }
             }
-       }               
+        }               
                    
-       $produccion=self::produccion();
+        $produccion=self::produccion();
        
-       $principal = self::principal();
+        $principal = self::principal();
        
-       return   $principal;
+        return   $principal;
    }
+
+
+
+
+
+
    public function Inventario($cult)
    {
        $cult;
@@ -640,16 +648,13 @@ class ProController extends Controller
                 }
                 $inv_deseado=$demanda*$cover_des;
                 $inventarios=$inv_acum+$sum_Prod-$demanda;
-
                 if($inventarios < 0)
                 {
                         $inventario= $inv_acum+$sum_Prod;
                 }else{
                         $inventario=$inventarios;
                 }
-
                 $radio_inv=$inv_acum/$inv_deseado;
-
                 if($radio_inv<=0.5)
                 {
                       $efecto_precio=2;
@@ -678,7 +683,6 @@ class ProController extends Controller
                 {
                       $efecto_precio=0.3;
                 }
-
                 $precio_deseado=$efecto_precio*$precio;
                 $cambio_precio=($precio_deseado-$precio)/$alcance_cam_precio;
                 $new_precio=$precio+$cambio_precio;

@@ -193,9 +193,9 @@
                                     <td> <center>Capital</center></td>
                                      @foreach($suma as $item4)
                                       <?php
-                                       $suma=number_format($item4,2)
-                                    ?>
-                                      <td> <center>{{$suma}}</center></td>
+                                       $suma=number_format($item4,0)
+                                      ?>
+                                    <td> <center>{{$suma}}</center></td>
                               
                                      @endforeach()
                                  </tr>

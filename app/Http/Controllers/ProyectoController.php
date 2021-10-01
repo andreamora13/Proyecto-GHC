@@ -85,11 +85,18 @@ class ProyectoController extends Controller
               $semana_p[]=0;
          }
          else{
-                $mercado=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$partida->id_partida)->get();
-                foreach($mercado as $pre)
+                $mercadosss=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$partida->id_partida)->get();
+                $mercado= DB::table ('mercados')
+                                     -> select ('semana' , DB::raw ('AVG(precio) as total_sales'))
+                                     -> groupBy('semana')
+                                     ->where("id_planta","=",$id_planta)
+                                     ->where('id_partida',"=",$partida->id_partida)
+                                     ->orderBy('semana')
+                                     -> get();
+                foreach($mercado as $me)
                 {
-                     $precio_p[]=$pre->precio;
-                     $semana_p[]=$pre->semana;
+                    $precio_p[]=$me->total_sales;
+                    $semana_p[]=$me->semana;
                 }
          }
 
@@ -582,11 +589,19 @@ class ProyectoController extends Controller
               $semana_p[]=0;
         }
         else{
-                $mercado=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$id_partida)->get();
-                foreach($mercado as $pre)
+               
+                $mercadosss=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$id_partida)->get();
+                $mercado= DB::table ('mercados')
+                                     -> select ('semana' , DB::raw ('AVG(precio) as total_sales'))
+                                     -> groupBy('semana')
+                                     ->where("id_planta","=",$id_planta)
+                                     ->where('id_partida',"=",$id_partida)
+                                     ->orderBy('semana')
+                                     -> get();
+                foreach($mercado as $me)
                 {
-                     $precio_p[]=$pre->precio;
-                     $semana_p[]=$pre->semana;
+                    $precio_p[]=$me->total_sales;
+                    $semana_p[]=$me->semana;
                 }
         }
 
@@ -924,12 +939,20 @@ class ProyectoController extends Controller
               $semana_p[]=0;
         }
         else{
-                $mercado=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$id_partida)->get();
-                foreach($mercado as $pre)
+                $mercadosss=App\Mercado::select('*')->where('id_planta',"=",$id_planta)->where('id_partida',"=",$id_partida)->get();
+                $mercado= DB::table ('mercados')
+                                     -> select ('semana' , DB::raw ('AVG(precio) as total_sales'))
+                                     -> groupBy('semana')
+                                     ->where("id_planta","=",$id_planta)
+                                     ->where('id_partida',"=",$id_partida)
+                                     ->orderBy('semana')
+                                     -> get();
+                foreach($mercado as $me)
                 {
-                     $precio_p[]=$pre->precio;
-                     $semana_p[]=$pre->semana;
+                    $precio_p[]=$me->total_sales;
+                    $semana_p[]=$me->semana;
                 }
+                
         }  
 
         $array=array($planta_cultivo,$planta_cultivocount,$planta_inventariocount,$precio_p,$semana_p,$agua,$semana_ag,$agua_Re1,$abono,$semana_ab,$abono_Re1);

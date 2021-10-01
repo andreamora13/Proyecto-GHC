@@ -326,7 +326,7 @@ class ProController extends Controller
    public function Crecimiento()
    {
         $user=Auth::user()->id;
-        $perdida=self::perdida();
+        
         $partida=App\Partida::select('id_partida')->get()->last();
         $id_partidausu=App\Partida_usuario::select('*')->where('id_partida', '=',  $partida->id_partida)->get()->last();
 
@@ -512,7 +512,7 @@ class ProController extends Controller
                }
             }
         }               
-                   
+        $perdida=self::perdida();          
         $produccion=self::produccion();
         $principal = self::principal();
         return   $principal;

@@ -17,11 +17,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- bootstrap css -->
-   
-      <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/bootstrap.min.css') }}">
-       <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/style.css') }}">
-       <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/responsive.css') }}">
-           <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/bootstrap.min.css') }}">
+    <link rel="shortcut icon" href="{{ asset('imagenes/logo6.png') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/responsive.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/bootstrap.min.css') }}">
     <!-- Style -->
     
     <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/style.css') }}">
@@ -159,7 +159,7 @@
                     <div class="about_box">
                        <br>
                         <?php
-                            $partidacount=App\Partida::select('*')->where('activa', '=', 1)->count();
+                            $partidacount=App\Partida::select('*')->count();
                        
                         ?>
                         <center><p style="color:white">Espera por otros usuarios</p>
@@ -183,8 +183,13 @@
                             <?php
                             $partidas=array();
                             $user=Auth::user()->id;
-                            $partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('activa', '=',  0)->get();
+                            $partidausucount=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('activa', '=',  0)->count();
+                            
                         
+                            ?>
+                            @if($partidausucount != 0)
+                            <?php
+                                $partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('activa', '=',  0)->get();
                             ?>
                             <table class="table custom-table" >
                                 <thead>
@@ -234,6 +239,9 @@
                                 </tbody>
                   
                             </table>
+                            @else
+                             <p style="color:white">No tiene partidas realizadas</p>
+                            @endif()
                         </div>
                          </center>
                         <br><br>

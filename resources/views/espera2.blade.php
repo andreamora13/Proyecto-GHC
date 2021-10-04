@@ -17,11 +17,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- bootstrap css -->
-   
-      <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/bootstrap.min.css') }}">
-       <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/style.css') }}">
-       <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/responsive.css') }}">
-           <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/bootstrap.min.css') }}">
+    <link rel="shortcut icon" href="{{ asset('imagenes/logo6.png') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/responsive.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/bootstrap.min.css') }}">
     <!-- Style -->
     
     <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/style.css') }}">

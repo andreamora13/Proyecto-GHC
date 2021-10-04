@@ -1,195 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <!-- basic -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- mobile metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- site metas -->
-    <title>Partida</title>
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- bootstrap css -->
-    <link href="{{asset('css/stylesPrueba.css')}}" rel="stylesheet" text="text/css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/Check.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/responsive.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/style.css') }}">
-    <!-- fevicon -->
+    <head>
+        <!-- basic -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- mobile metas -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <!-- site metas -->
+        <title>Partida</title>
+        <meta name="keywords" content="">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <!-- bootstrap css -->
+
+        <link href="{{asset('css/stylesPrueba.css')}}" rel="stylesheet" text="text/css">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/Check.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('moon/css/responsive.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/style.css') }}">
+        <link rel="shortcut icon" href="{{ asset('imagenes/logo6.png') }}">
+        <!-- fevicon -->
  
-    <!-- Tweaks for older IEs-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-<!-- body -->
-    <script src="{{ asset('moon/js/jquery.min.js') }}"></script>
-     <script src="{{ asset('moon/js/custom.js') }}"></script>
-     <script src="{{ asset('tabla/js/jquery-3.3.1.min.js') }}"></script>
-     <script src="{{ asset('tabla/js/main.js') }}"></script>
-<!-- body -->
+        <!-- Tweaks for older IEs-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <!-- body -->
+         <script src="{{ asset('moon/js/jquery.min.js') }}"></script>
+         <script src="{{ asset('moon/js/custom.js') }}"></script>
+         <script src="{{ asset('tabla/js/jquery-3.3.1.min.js') }}"></script>
+         <script src="{{ asset('tabla/js/main.js') }}"></script>
+    <!-- body -->
 
     
-        <script type="text/javascript">
-        var inicio=0;
-        var timeout=0;
+         <script type="text/javascript">
+            var inicio=0;
+            var timeout=0;
    
-        function empezar(elemento)
-        {
+            function empezar(elemento)
+            {
         
  
-                // Obtenemos el valor actual
-                inicio=new Date().getTime();
+                    // Obtenemos el valor actual
+                    inicio=new Date().getTime();
  
-                // Guardamos el valor inicial en la base de datos del navegador
-                localStorage.setItem("inicio",inicio);
+                    // Guardamos el valor inicial en la base de datos del navegador
+                    localStorage.setItem("inicio",inicio);
             
-                // iniciamos el proceso
-                funcionando();
+                    // iniciamos el proceso
+                    funcionando();
         
-        }
+            }
     
-        function reinicio(elemento)
-        {
+            function reinicio(elemento)
+            {
        
-                // detener el cronometro
+                    // detener el cronometro
  
-                clearTimeout(timeout);
+                    clearTimeout(timeout);
  
-                // Eliminamos el valor inicial guardado
-                localStorage.removeItem("inicio");
-                timeout=0;
+                    // Eliminamos el valor inicial guardado
+                    localStorage.removeItem("inicio");
+                    timeout=0;
             
-                empezar();
+                    empezar();
         
-        }
-         function Detener(elemento)
-        {
+            }
+             function Detener(elemento)
+            {
        
-                // detener el cronometro
+                    // detener el cronometro
  
-                clearTimeout(timeout);
+                    clearTimeout(timeout);
  
-                // Eliminamos el valor inicial guardado
-                localStorage.removeItem("inicio");
-                timeout=0;
+                    // Eliminamos el valor inicial guardado
+                    localStorage.removeItem("inicio");
+                    timeout=0;
            
         
-        }
+            }
  
  
-        function funcionando()
-        {
-            // obteneos la fecha actual
-            var actual = new Date().getTime();
- 
-            // obtenemos la diferencia entre la fecha actual y la de inicio
-            var diff=new Date(actual-inicio);
- 
-            // mostramos la diferencia entre la fecha actual y la inicial
-            var result=LeadingZero(diff.getUTCHours())+":"+LeadingZero(diff.getUTCMinutes())+":"+LeadingZero(diff.getUTCSeconds());
-        
-            var r= diff.getUTCSeconds();
-       
-            document.getElementById('cro').innerHTML = r;
-            if(r == 59 )
+            function funcionando()
             {
-               reinicio();
+                // obteneos la fecha actual
+                var actual = new Date().getTime();
+ 
+                // obtenemos la diferencia entre la fecha actual y la de inicio
+                var diff=new Date(actual-inicio);
+ 
+                // mostramos la diferencia entre la fecha actual y la inicial
+                var result=LeadingZero(diff.getUTCHours())+":"+LeadingZero(diff.getUTCMinutes())+":"+LeadingZero(diff.getUTCSeconds());
+        
+                var r= diff.getUTCSeconds();
+       
+                document.getElementById('cro').innerHTML = r;
+                if(r == 59 )
+                {
+                   reinicio();
             
-               $.ajax({
+                   $.ajax({
 
                     
-                                 url:'{{ action('ProController@semana')}}',
+                                     url:'{{ action('ProController@semana')}}',
                              
-                                     success: function(data) {
-                                       var s = data;
-                                         if(s == 0)
-                                         {
-                                            window.location.href = "/espera";
-                                         }
-                                         else{
-                                            document.body.innerHTML=s;
-                                         }
+                                         success: function(data) {
+                                           var s = data;
+                                             if(s == 0)
+                                             {
+                                                window.location.href = "/espera";
+                                             }
+                                             else{
+                                                document.body.innerHTML=s;
+                                             }
                                          
                                      
-                                      },
-                                    error: function() {
-                                        alert('There was some error performing the AJAX call!');
-                                     }
-                                  }
-                            );
+                                          },
+                                        error: function() {
+                                            alert('There was some error performing the AJAX call!');
+                                         }
+                                      }
+                                );
             
             
+                }
+        
+                // Indicamos que se ejecute esta función nuevamente dentro de 1 segundo
+                timeout=setTimeout("funcionando()",1000);
             }
-        
-            // Indicamos que se ejecute esta función nuevamente dentro de 1 segundo
-            timeout=setTimeout("funcionando()",1000);
-        }
  
-        /* Funcion que pone un 0 delante de un valor si es necesario */
-        function LeadingZero(Time)
-        {
-            return (Time < 10) ? "0" + Time : + Time;
-        }
-        function fin( )
-        {
-        
-            window.location.href = "/espera";
-        
-        }
-
- 
-        window.onload=function()
-        {
-            if(localStorage.getItem("inicio")!=null)
+            /* Funcion que pone un 0 delante de un valor si es necesario */
+            function LeadingZero(Time)
             {
-                // Si al iniciar el navegador, la variable inicio que se guarda
-                // en la base de datos del navegador tiene valor, cargamos el valor
-                // y iniciamos el proceso.
-                inicio=localStorage.getItem("inicio");
-           
-                funcionando();
+                return (Time < 10) ? "0" + Time : + Time;
             }
-        }
+            function fin( )
+            {
+        
+                window.location.href = "/espera";
+        
+            }
 
-        </script>
+ 
+            window.onload=function()
+            {
+                if(localStorage.getItem("inicio")!=null)
+                {
+                    // Si al iniciar el navegador, la variable inicio que se guarda
+                    // en la base de datos del navegador tiene valor, cargamos el valor
+                    // y iniciamos el proceso.
+                    inicio=localStorage.getItem("inicio");
+           
+                    funcionando();
+                }
+            }
+
+         </script>
     
-    <style>
-    html, body {
-     background-color: #fff;
-     font-family: sans-serif;
+         <style>
+             html, body {
+             background-color: #fff;
+             font-family: sans-serif;
    
-    }
-    #circulo{
-       height:10px;
-       width:10px;
+             }
+             #circulo{
+             height:10px;
+             width:10px;
       
-       -moz-border-radius:50px;
+             -moz-border-radius:50px;
 
-       -webkit-border-radius:50px;
-       border-radius:50px;
-    }
-  
-    </style>
+             -webkit-border-radius:50px;
+             border-radius:50px;
+             }
+         </style>
     
-</head>
-<?php
-    $user=Auth::user()->id;
-    $partida=App\Partida::select('id_partida')->get()->last();
-     $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last(); 
-    $inicio=App\inicio::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->count();
-?>
+    </head>
+    <?php
+        $user=Auth::user()->id;
+        $partida=App\Partida::select('id_partida')->get()->last();
+        $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last(); 
+        $inicio=App\inicio::select('*')->where('id_partidausu', '=',  $id_partidausu->id_partidausu)->count();
+    ?>
 
 
 
@@ -306,9 +307,6 @@
                           &nbsp;&nbsp;&nbspCultivos:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$total}}">
                           Agua utilizada:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$agua}}">
                           Abono utilizado:&nbsp;<input class="sinborde" type="text" readonly="readonly" name="number" style="width: 70px;background: transparent;" value="{{$abono}}">
-                          
-                          
-                                       
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6" style="color:white; vertical-align: middle; border: 1px solid white">
                         <center>

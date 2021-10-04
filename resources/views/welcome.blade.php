@@ -17,6 +17,7 @@
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&amp;display=swap" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+        <link rel="shortcut icon" href="{{ asset('imagenes/logo6.png') }}">
     </head>
     <body>
         <!-- Background Video-->

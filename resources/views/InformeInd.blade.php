@@ -13,6 +13,7 @@
   <!-- plugin css for this page -->
   <!-- End plugin css for this page -->
   <!-- inject:css -->
+  <link rel="shortcut icon" href="{{ asset('imagenes/logo6.png') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('dashboard/css/style.css') }}">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="{{ asset('tabla/css/bootstrap.min.css') }}">

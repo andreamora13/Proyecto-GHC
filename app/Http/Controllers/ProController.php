@@ -451,9 +451,9 @@ class ProController extends Controller
                     {
                      $abonob=App\Abono_registro::select('*')->where('id_cultivo', '=',  $item->id_cultivo)->get()->last();
                      $abonobd=$abonob->abono;
-                     $cabd=$abonob->ca;
-                     $ab_absbd=$abonob->ab_abs;
-                     $m_tc_abbd=$abonob->m_tc_ab;
+                     $cabd=$abonob->ca;                                      //Cobertura de Abonode la planta
+                     $ab_absbd=$abonob->ab_abs;                              //Absorción de Abono por la planta.
+                     $m_tc_abbd=$abonob->m_tc_ab;                            //Tasa de Crecimiento de la planta
                     }else
                     {
                         $abonobd=0;
@@ -462,11 +462,11 @@ class ProController extends Controller
                         $m_tc_abbd=0;
                     }
 
-                    $ca=$abono_cant/$ab_re;
-                    $ab_abs=$abonobd*$tab_ab;
-                    $abono=$abonobd+$abono_cant-$ab_abs;
+                    $ca=$abono_cant/$ab_re;                                 //Cálculo de la Cobertura del Abono requerida por la planta
+                    $ab_abs=$abonobd*$tab_ab;                               //Cálculo de la Absorción de Abono por la planta.
+                    $abono=$abonobd+$abono_cant-$ab_abs;                    //Cálculo de Abono disponible para la planta.
 
-                    if($ca<=0)
+                    if($ca<=0)                                             //Tasa de Crecimiento de la planta según la cobertura de abono
                     {$M_tc_ab=0.001;}
                     else if($ca>0 and $ca<=0.5){
                     $M_tc_ab=0.4333;
@@ -558,37 +558,37 @@ class ProController extends Controller
        return  $principal;
    }
 
-   public function Mercado(Request $request)
+   public function Mercado()
    {
 
-        $plantasel= $request->all();
-        $token = $request->input('_token');
+        //$plantasel= $request->all();
+        //$token = $request->input('_token');
+
         $user=Auth::user()->id;
         $partida=App\Partida::select('id_partida')->get()->last();
         $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+
         $plantas= App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get();
         $cover_des=4;
         $sema=App\Semana::select('*')->where('id_partidausu','=',$id_partidausu->id_partidausu)->get()->last();
-       
-        if( count($plantasel)> 1)
+        $inventariocount=App\Inventario::select('*')->where('vendido','=',1)->count();
+
+
+
+
+        if( $inventariocount != 0)
         {
-            foreach($plantasel as $item)
-            {
-                if($item != $token)
-                {
-                    $id_plantasel[]=$item;
-                }
-            }
+       
             foreach($plantas as $item)
             {
             
                 $id_planta= $item->id_planta;
-                $vende=in_array ( $id_planta,  $id_plantasel);
-                $invcount=App\Inventario::select('*')->where('id_planta','=',$id_planta)->where('vendido','=',0)->where('id_partidausu','=',$id_partidausu->id_partidausu)->count();
+                //$vende=in_array ( $id_planta,  $id_plantasel);
+                $invcount=App\Inventario::select('*')->where('id_planta','=',$id_planta)->where('vendido','=',1)->count();
             
-                if($vende==true)
+                if($invcount !=0)
                 {
-                    $sum_Prod=App\Inventario::where('id_planta',"=",$id_planta)->where('vendido',"=",0)->where('id_partidausu','=',$id_partidausu->id_partidausu)->sum('prod_planta');
+                    $sum_Prod=App\Inventario::where('id_planta',"=",$id_planta)->where('vendido',"=",1)->sum('prod_planta');
                 }
                 else
                 {
@@ -700,26 +700,21 @@ class ProController extends Controller
                 $mercado->id_planta=$id_planta;
                 $mercado->id_partida=$partida->id_partida;
                 $mercado->save();
-               
-            }
-            foreach($plantasel as $item)
-            {
-                if($item != $token)
-                {
-                     $sum_Produ=App\Inventario::where('id_planta',"=",$item)->where('vendido',"=",0)->where('id_partidausu','=',$id_partidausu->id_partidausu)->sum('prod_planta');
-                     $preci=App\Mercado::where('id_planta',"=",$item)->get()->last();
-                     $cap= $sum_Produ*$preci->precio;
 
-                     $capital=new App\Capital;
-                     $capital->capital=$cap;
-                     $capital->id_partidausu=$id_partidausu->id_partidausu;
-                     $capital->save();
+                $sum_Produ=App\Inventario::where('id_planta',"=",$id_planta)->where('id_partidausu','=',$id_partidausu->id_partidausu)->where('vendido',"=",1)->sum('prod_planta');
+                $preci=App\Mercado::where('id_planta',"=",$id_planta)->get()->last();
+                $cap= $sum_Produ*$preci->precio;              //Cálculo capital obtenido por el usuario
 
-                     $vendido= App\Inventario::where('id_planta',"=",$item)->where('id_partidausu','=',$id_partidausu->id_partidausu)->update(array('vendido' => 1));
-                }
+                $capital=new App\Capital;                
+                $capital->capital=$cap;
+                $capital->id_partidausu=$id_partidausu->id_partidausu;
+                $capital->save();
+
+                $vendido= App\Inventario::where('id_planta',"=",$id_planta)->where('vendido',"=",1)->update(array('vendido' => 2));
             }
+        }   
             
-        }
+        //}
         
         $principal = self::principal();
         return  $principal;
@@ -929,7 +924,7 @@ class ProController extends Controller
                     }
                }
                $principal=self::Crecimiento();
-           
+               $mercado=self::Mercado();
 
                 return $principal;    
         }
@@ -1143,6 +1138,31 @@ class ProController extends Controller
        $espera = self::espera();
 
        return $espera;                    
+   }
+
+   public function venta(Request $request)
+   {
+        $plantasel= $request->all();
+        $token = $request->input('_token');
+        $user=Auth::user()->id;
+        $partida=App\Partida::select('id_partida')->get()->last();
+        $id_partidausu=App\Partida_usuario::select('*')->where('id_usuario', '=',  $user)->where('id_partida', '=',  $partida->id_partida)->get()->last();
+        $plantas= App\Planta::select('*')->where('id_partida','=',$partida->id_partida)->get();
+        if( count($plantasel)> 1)
+        {
+            foreach($plantasel as $item)
+            {
+                if($item != $token)
+                {
+                    
+                         $vendido= App\Inventario::where('id_planta',"=",$item)->where('vendido',"=",0)->where('id_partidausu','=',$id_partidausu->id_partidausu)->update(array('vendido' => 1));
+                }
+            }
+        }
+        $principal=self::principal();
+           
+
+        return    $principal;                   
    }
 
   

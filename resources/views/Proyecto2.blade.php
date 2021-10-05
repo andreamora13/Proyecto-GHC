@@ -310,7 +310,7 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6" style="color:white; vertical-align: middle; border: 1px solid white">
                         <center>
-                        <form action="{{action('ProController@Mercado')}}" method="POST" >
+                        <form action="{{action('ProController@venta')}}" method="POST" >
                           @csrf  
                           
                           &nbsp;&nbsp;&nbsp;&nbsp;<p >Inventario:&nbsp;&nbsp;&nbsp;

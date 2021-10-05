@@ -102,6 +102,7 @@ class ProyectoController extends Controller
 
          $consultaCultivocount = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
+                                     ->where("estado", "=",0)
                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->count();
 
@@ -109,6 +110,7 @@ class ProyectoController extends Controller
          {
                  $consultaCultivo = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
+                                    ->where("estado", "=",0)
                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->get();
        
@@ -379,7 +381,8 @@ class ProyectoController extends Controller
             }
             $consultaCultivocount = App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
                                     ->select("*")
-                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
+                                    ->where("cultivos.id_planta", "=", $id_planta)
+                                    ->where("cultivos.estado", "=",0)
                                     ->where("partida_usuarios.id_partida", "=",$id_partida)
                                     ->count();
 
@@ -398,7 +401,8 @@ class ProyectoController extends Controller
             {
                 $consultaCultivo = App\Cultivo::join("partida_usuarios","partida_usuarios.id_partidausu", "=", "cultivos.id_partidausu")
                                     ->select("*")
-                                    ->where("cultivos.id_planta", "=", $plan->id_planta)
+                                    ->where("cultivos.id_planta", "=", $id_planta)
+                                    ->where("cultivos.estado", "=",0)
                                     ->where("partida_usuarios.id_partida", "=",$id_partida)
                                     ->get();
        
@@ -495,6 +499,7 @@ class ProyectoController extends Controller
             }
             $consultaCultivocount = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
+                                    ->where("estado", "=",0)
                                     ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                     ->count();
             if( $consultaCultivocount ==0)
@@ -512,6 +517,7 @@ class ProyectoController extends Controller
             else{
                 $consultaCultivo = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
+                                    ->where("estado", "=",0)
                                     ->where("id_partidausu", "=",  $id_partidausu->id_partidausu)
                                     ->get();
        
@@ -847,6 +853,7 @@ class ProyectoController extends Controller
         }
         $consultaCultivocount = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
+                                    ->where("estado", "=",0)
                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->count();
         if( $consultaCultivocount ==0)
@@ -863,6 +870,7 @@ class ProyectoController extends Controller
         else{
                 $consultaCultivo = App\Cultivo::select("*")
                                     ->where("id_planta", "=",$id_planta)
+                                    ->where("estado", "=",0)
                                     ->where("id_partidausu", "=", $id_partidausu->id_partidausu)
                                     ->get();
        

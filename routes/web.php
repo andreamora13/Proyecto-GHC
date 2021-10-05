@@ -44,8 +44,8 @@ Route::get('/abono', 'ProController@Abono');
 Route::get('/crecimiento', 'ProController@Crecimiento');
 Route::get('/inv', 'ProController@Inventario');
 
-Route::post('/mercado', 'ProController@Mercado');
-
+Route::get('/mercado', 'ProController@Mercado');
+Route::post('/venta', 'ProController@venta');
 
 Route::post('/seleccion', 'ProController@Seleccion');
 

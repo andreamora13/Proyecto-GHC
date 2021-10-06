@@ -573,9 +573,6 @@ class ProController extends Controller
         $sema=App\Semana::select('*')->where('id_partidausu','=',$id_partidausu->id_partidausu)->get()->last();
         $inventariocount=App\Inventario::select('*')->where('vendido','=',1)->count();
 
-
-
-
         if( $inventariocount != 0)
         {
        
@@ -685,7 +682,7 @@ class ProController extends Controller
                 }
                 $precio_deseado=$efecto_precio*$precio;        //Cálculo del precio deseado
                 $cambio_precio=($precio_deseado-$precio)/$alcance_cam_precio;        //Cálculo del cambio del precio
-                $new_precio=$precio+$cambio_precio;           //Cálculo del precio 
+                $new_precio=$precio+$cambio_precio;           //Cálculo del precio
 
                 $mercado=new App\Mercado;
                 $mercado->precio=$new_precio*100;
@@ -701,14 +698,26 @@ class ProController extends Controller
                 $mercado->id_partida=$partida->id_partida;
                 $mercado->save();
 
-                $sum_Produ=App\Inventario::where('id_planta',"=",$id_planta)->where('id_partidausu','=',$id_partidausu->id_partidausu)->where('vendido',"=",1)->sum('prod_planta');
-                $preci=App\Mercado::where('id_planta',"=",$id_planta)->get()->last();
-                $cap= $sum_Produ*$preci->precio;              //Cálculo capital obtenido por el usuario
+                $usua= App\Partida_usuario::where('id_partida', '=',  $partida->id_partida)->get();
 
-                $capital=new App\Capital;                
-                $capital->capital=$cap;
-                $capital->id_partidausu=$id_partidausu->id_partidausu;
-                $capital->save();
+                foreach($usua as $us)
+                {
+                    $inventariocountusu=App\Inventario::select('*')->where('id_partidausu','=',$us->id_partidausu)->where('vendido','=',1)->count();
+
+                    if($inventariocountusu !=0)
+                    {
+                        $sum_Produ=App\Inventario::where('id_planta',"=",$id_planta)->where('id_partidausu','=',$us->id_partidausu)->where('vendido',"=",1)->sum('prod_planta');
+                        $preci=App\Mercado::where('id_planta',"=",$id_planta)->get()->last();
+                        $cap= $sum_Produ*$preci->precio;              //Cálculo capital obtenido por el usuario
+
+                        $capital=new App\Capital;                
+                        $capital->capital=$cap;
+                        $capital->id_partidausu=$us->id_partidausu;
+                        $capital->save();
+                    }
+                    
+                }
+
 
                 $vendido= App\Inventario::where('id_planta',"=",$id_planta)->where('vendido',"=",1)->update(array('vendido' => 2));
             }

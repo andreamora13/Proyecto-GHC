@@ -4,13 +4,11 @@
     "\\app",
     "\\app\\Http",
     "\\app\\Http\\Controllers",
-    "\\database",
-    "\\public",
     "\\resources",
     "\\resources\\views",
     "\\resources\\views\\auth",
     "\\resources\\views\\layouts"
   ],
-  "SelectedNode": "\\resources\\views\\Proyecto2.blade.php",
+  "SelectedNode": "\\app\\Http\\Controllers\\AdmiController.php",
   "PreviewInSolutionExplorer": false
 }

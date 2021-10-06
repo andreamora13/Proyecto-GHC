@@ -87,4 +87,4 @@ Route::get('/prod', 'ProController@produccion');
 
 Route::get('/parti', 'ProController@partidaDet');
 
-
+Route::get('/prueba', 'ProController@prueba');

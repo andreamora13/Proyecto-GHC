@@ -252,6 +252,8 @@
                             <td ><input type="number" name="agua_total" step="any" placeholder="1600" min="0" max="15000"> </td>
                             <td ><center><p>Cantidad máxima jugadores</center> </td>
                             <td ><input type="number" name="cant_max" step="any" placeholder="5" min="2" max="10"> </td>
+                            <td ><center><p>fecha</center> </td>
+                            <td ><input type="number" name="cant_max" step="any" placeholder="5" min="2" max="10"> </td>
                 
                            </tr>
             

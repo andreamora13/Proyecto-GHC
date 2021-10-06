@@ -1164,7 +1164,16 @@ class ProController extends Controller
 
         return    $principal;                   
    }
+   public function prueba(Request $request)
+   {
+        
+        $user=Auth::user()->id;
+        $partida=App\Partida::select('created_at')->get()->last();
+        $hoy = date(DATE_RFC2822);
+           
 
+        return    $hoy;                   
+   }
   
  }
 

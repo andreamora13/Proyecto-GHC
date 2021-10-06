@@ -200,8 +200,8 @@ class AdmiController extends Controller
         $partida= new App\Partida;
         $partida->activa=1;
         $partida->max_usuarios=6;
-        $partida->created_at="2021-09-29 01:55:51";
-        $partida->updated_at="2021-09-29 01:55:51";
+        $partida->created_at="2021-09-30 00:44:00";
+        $partida->updated_at="2021-09-30 00:44:00";
         $partida->save();
 
         $id_partida=App\Partida::select('id_partida')->get()->last();

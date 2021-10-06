@@ -17,15 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/progress', function () {
-    return view('welcome2');
-});
-Route::get('/timer', function () {
-    return view('home1');
-});
-Route::get('/tim', function () {
-    return view('prueba');
-});
+
+
 
 
 /*Route::post('form', 'ProController@store');*/
@@ -71,10 +64,6 @@ Route::post('/Asigna', 'AdmiController@Asignacion');
 Route::get('/semana', 'ProController@semana');
 
 
-Route::post('/dosd', 'AdmiController@pruebacheck');
-Route::get('/time', 'AdmiController@Time');
-
-
 
 Route::post('/all', 'ProyectoController@all');
 Route::get('/sera', 'ProyectoController@destroy');
@@ -99,9 +88,3 @@ Route::get('/prod', 'ProController@produccion');
 Route::get('/parti', 'ProController@partidaDet');
 
 
-
-Route::get('/proyect', 'GraController@principal');
-Route::post('/crea', 'GraController@CrearCultivo');
-Route::post('/sele', 'GraController@Seleccion');
-Route::post('/mer', 'GraController@Mercado');
-Route::get('/dat', 'ProyectoController@datd');

@@ -129,9 +129,9 @@
                     <div class="card-body">
                       <h4 class="card-title">Producción</h4>
                       <center>
-                        <div style=" width:400px; height:200px">
+                        
                            <canvas id="myCha" width="400" height="280"> 
-                        </div> 
+                       
                       </center>
                     </div>
                   </div>
@@ -214,11 +214,11 @@
                   <div class="card">
                     <div class="card-body">
                       <h4 class="card-title">Agua utilizada por planta {{$tipo_planta}}
-                            <br> <br><br>
+                      <br> <br><br>
                        <center>
-                           <div style=" width:400px; height:200px">
+                          
                             <canvas id="myChart" width="400" height="200"></canvas>
-                        </div> 
+                        
                        </center>
                   
                     </div>
@@ -230,9 +230,9 @@
                       <h4 class="card-title">Abono utilizado por planta {{$tipo_planta}}
                       <br> <br><br>
                        <center>
-                        <div style=" width:400px; height:200px">
+                        
                             <canvas id="myCha3" width="400" height="200"></canvas>
-                        </div> 
+                       
                            
                        </center>
                    
@@ -245,9 +245,9 @@
                       <h4 class="card-title">Variación Precio por Planta {{$tipo_planta}}</h4>
                        <br> 
                        <center>
-                           <div style=" width:400px; height:200px">
+                          
                             <canvas id="myCha4" width="400" height="200"></canvas>
-                           </div> 
+                          
                        </center>
                    
                     </div>

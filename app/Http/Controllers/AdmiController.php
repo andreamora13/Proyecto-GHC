@@ -76,7 +76,7 @@ class AdmiController extends Controller
 	      $error='Datos guardados';
           $partida= new App\Partida;
           $partida->activa=1;
-          $partida->max_usuarios=$request->cant_max-1;
+          $partida->max_usuarios=$request->cant_max+1;
           $partida->save();
           $id_partida=App\Partida::select('id_partida')->get()->last();
           
@@ -153,24 +153,7 @@ class AdmiController extends Controller
         return view('home');
     }
 
-    public function pruebacheck(Request $request)
-    {
-
-         
-
-        return $request->all();
-    }
-
-    public function Time()
-    {
-
-         
-
-        return view('Timer2');
-          
-
-      
-    }
+  
     public function Asignacion(Request $request)
     {
         
@@ -200,8 +183,6 @@ class AdmiController extends Controller
         $partida= new App\Partida;
         $partida->activa=1;
         $partida->max_usuarios=6;
-        $partida->created_at="2021-10-02 01:45:18";
-        $partida->updated_at="2021-10-02 01:45:18";
         $partida->save();
 
         $id_partida=App\Partida::select('id_partida')->get()->last();

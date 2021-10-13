@@ -270,17 +270,17 @@ class ProController extends Controller
             $aguaTotal = App\Historico_agua::select('agua_total')->where('id_partida','=',$partida->id_partida)->get()->last();
             if($aguaTotal->agua_total>$agua_riego)
             {
-                           $aguat = $aguaTotal->agua_total - $agua_riego;
-                           $totaldb= new App\Historico_agua;
-                           $totaldb->agua_total=$aguat;
-                           $totaldb->id_partida=$partida->id_partida;
-                           $totaldb->save();
-             $aguad= new App\Agua_riego;
-             $aguad->agua_riego=$agua_riego;
-             $aguad->semana=$id_partidaDet->semana;
-             $aguad->crecimiento=0;
-             $aguad->id_cultivo=$cult;
-             $aguad->save();
+                 $aguat = $aguaTotal->agua_total - $agua_riego;
+                 $totaldb= new App\Historico_agua;
+                 $totaldb->agua_total=$aguat;
+                 $totaldb->id_partida=$partida->id_partida;
+                 $totaldb->save();
+                 $aguad= new App\Agua_riego;
+                 $aguad->agua_riego=$agua_riego;
+                 $aguad->semana=$id_partidaDet->semana;
+                 $aguad->crecimiento=0;
+                 $aguad->id_cultivo=$cult;
+                 $aguad->save();
              }
         }
         

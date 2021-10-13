@@ -5,9 +5,8 @@
     "\\app\\Http",
     "\\app\\Http\\Controllers",
     "\\resources",
-    "\\resources\\views",
-    "\\resources\\views\\auth",
-    "\\resources\\views\\layouts"
+    "\\resources\\views"
   ],
+  "SelectedNode": "\\app\\Http\\Controllers\\AdmiController.php",
   "PreviewInSolutionExplorer": false
 }

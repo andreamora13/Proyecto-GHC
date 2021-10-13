@@ -395,7 +395,7 @@
  
          <script src="{{ asset('moon/js/jquery.min.js') }}"></script>
          <script src="{{ asset('moon/js/custom.js') }}"></script>
-             <script src="{{ asset('tabla/js/jquery-3.3.1.min.js') }}"></script>
+         <script src="{{ asset('tabla/js/jquery-3.3.1.min.js') }}"></script>
         <script src="{{ asset('tabla/js/main.js') }}"></script>
         <!-- sidebar -->
     

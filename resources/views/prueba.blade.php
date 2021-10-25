@@ -44,8 +44,7 @@
 	            });
             });
         </script>
-       
-        
+    </head>
 @section('content')
 
 
@@ -56,16 +55,15 @@
             
                        
                         <h3 class="mb-5 text-center heading">   Registro</h3>
-                         <form method="POST" action="{{ route('register') }}">
+                         <form method="POST" action="{{ route('register') }}" >
                         @csrf
 
-                        <div class="form-group row">
+                        <div class="form-group row" >
                             <label for="name" class="col-md-4 col-form-label text-md-right">Nombre</label>
                             <br>
                             <div class="col-md-6">
-                                <input id="name" type="text"  class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
                                 <br>
-
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -78,7 +76,7 @@
                             <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
                             <br>
                             <div class="col-md-6">
-                                <input id="email" type="email"  pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Formato: ejemplo@gmail.com" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -88,15 +86,15 @@
                             </div>
                         </div>
                         <br>
-                        <div class="form-group row">
+                        <div class="form-group row"  >
                             <label for="password" class="col-md-4 col-form-label text-md-right">Contraseña</label>
                             <br>
-                            <div class="col-md-6">
+                            <div class="col-md-6" >
                                 <div class="input-group">
                                     <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" >
                                  
                                           <center>
-                                            <span class="fa fa-eye-slash icon" onclick="mostrarPassword()" style=" width: 30px; height: 30px;  vertical-align:sub">
+                                            <span class="fa fa-eye-slash icon" onclick="mostrarPassword()" style=" width: 30px; height: 30px;">
                                             </span>
                                           </center>
                                       
@@ -113,10 +111,10 @@
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-right">Confirmar contraseña</label>
                             <br>
                             <div class="col-md-6">
-                                <div class="input-group">
+                             <div class="input-group">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                                  <center>
-                                            <span class="fa fa-eye-slash icon2" onclick="mostrarPasswordt()" style=" width: 30px; height: 30px;  vertical-align:sub">
+                                            <span class="fa fa-eye-slash icon2" onclick="mostrarPasswordt()" style=" width: 30px; height: 30px;">
                                             </span>
                                  </center>
                              </div>

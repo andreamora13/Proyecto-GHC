@@ -196,45 +196,45 @@
                            <tr>
              
                             <td ><center><p>Altura Máxima</p></center> </td>
-                            <td ><center><input class="entrada" type="number" name="alt_mxt" step="any" placeholder="80" max="1000" min="0" ></td>
-                            <td ><center><input type="number" name="alt_mxp" step="any" placeholder="100" min="0" max="1000"> </td>
-                            <td ><center><input type="number" name="alt_mxl"step="any"  placeholder="25" min="0" max="1000"> </td>
+                            <td ><center><input class="entrada" type="number" name="alt_mxt" step="any" placeholder="80" max="1000" min="0" title="Altura en cm"></td>
+                            <td ><center><input type="number" name="alt_mxp" step="any" placeholder="100" min="0" max="1000"  title="Altura en cm"> </td>
+                            <td ><center><input type="number" name="alt_mxl"step="any"  placeholder="25" min="0" max="1000"  title="Altura en cm"> </td>
                            </tr>
                            <tr>
                             <td ><center><p>Agua Requerida</td>
-                            <td ><center><input type="number" name="agua_ret" step="any" placeholder="4.2" min="0" max="50"> </td>
-                            <td ><center><input type="number" name="agua_rep" step="any" placeholder="4.2" min="0" max="50"> </td>
-                            <td ><center><input type="number" name="agua_rel" step="any" placeholder="2.1" min="0" max="50"> </td>
+                            <td ><center><input type="number" name="agua_ret" step="any" placeholder="4.2" min="0" max="50"  title="Agua requerida semanalmente en L"> </td>
+                            <td ><center><input type="number" name="agua_rep" step="any" placeholder="4.2" min="0" max="50"  title="Agua requerida semanalmente en L"> </td>
+                            <td ><center><input type="number" name="agua_rel" step="any" placeholder="2.1" min="0" max="50"  title="Agua requerida semanalmente en L"> </td>
                            </tr>
                            <tr>
                             <td ><center><p>Cantidad Requerida</td>
-                            <td ><center><input type="number" name="cant_riegot" step="any" placeholder="2" min="0" max="10"> </td>
-                            <td ><center><input type="number" name="cant_riegop" step="any" placeholder="3" min="0" max="10"> </td>
-                            <td ><center><input type="number" name="cant_riegol" step="any" placeholder="3" min="0" max="10"> </td>
+                            <td ><center><input type="number" name="cant_riegot" step="any" placeholder="2" min="0" max="10"  title="Número de veces a regar semanalmente"> </td>
+                            <td ><center><input type="number" name="cant_riegop" step="any" placeholder="3" min="0" max="10" title="Número de veces a regar semanalmente"> </td>
+                            <td ><center><input type="number" name="cant_riegol" step="any" placeholder="3" min="0" max="10" title="Número de veces a regar semanalmente"> </td>
                            </tr>
                            <tr>
                             <td ><center><p>Abono Requerido</td>
-                            <td ><center><input type="number" name="ab_ret" step="any" placeholder="70" min="0" max="100"> </td>
-                            <td ><center><input type="number" name="ab_rep" step="any" placeholder="40" min="0" max="100"> </td>
-                            <td ><center><input type="number" name="ab_rel" step="any" placeholder="1.5" min="0" max="100"> </td>
+                            <td ><center><input type="number" name="ab_ret" step="any" placeholder="70" min="0" max="100" title="Abono requerido semanalmente en g"> </td>
+                            <td ><center><input type="number" name="ab_rep" step="any" placeholder="40" min="0" max="100" title="Abono requerido semanalmente en g"> </td>
+                            <td ><center><input type="number" name="ab_rel" step="any" placeholder="1.5" min="0" max="100" title="Abono requerido semanalmente en g"> </td>
                            </tr>
                             <tr>
                             <td ><center><p>Cantidad Requerida</td>
-                            <td ><center><input type="number" name="cant_abonot" step="any" placeholder="1" min="0" max="10"> </td>
-                            <td ><center><input type="number" name="cant_abonop" step="any" placeholder="1" min="0" max="10"> </td>
-                            <td ><center><input type="number" name="cant_abonol" step="any" placeholder="1" min="0" max="10"> </td>
+                            <td ><center><input type="number" name="cant_abonot" step="any" placeholder="1" min="0" max="10" title="Número de veces a abonar semanalmente"> </td>
+                            <td ><center><input type="number" name="cant_abonop" step="any" placeholder="1" min="0" max="10" title="Número de veces a abonar semanalmente"> </td>
+                            <td ><center><input type="number" name="cant_abonol" step="any" placeholder="1" min="0" max="10" title="Número de veces a abonar semanalmente"> </td>
                            </tr>
                            <tr>
                             <td ><center><p>Producción</td>
-                            <td ><center><input type="number" name="prodt" step="any" placeholder="100" min="0" max="1000"></td>
-                            <td ><center><input type="number" name="prodp" step="any" placeholder="16" min="0" max="1000"></td>
-                            <td ><center><input type="number" name="prodl" step="any" placeholder="8" min="0" max="1000"> </td>
+                            <td ><center><input type="number" name="prodt" step="any" placeholder="100" min="0" max="1000" title="Producción máxima en Kg"></td>
+                            <td ><center><input type="number" name="prodp" step="any" placeholder="16" min="0" max="1000" title="Producción máxima en Kg"></td>
+                            <td ><center><input type="number" name="prodl" step="any" placeholder="8" min="0" max="1000" title="Producción máxima en Kg"> </td>
                            </tr>
                            <tr>
                             <td ><center><p>Precio Inicial</td>
-                            <td ><center><input type="number" name="preciot" step="any" placeholder="1400" min="0" max="50000"></td>
-                            <td ><center><input type="number" name="preciop" step="any" placeholder="1900" min="0" max="50000"></td>
-                            <td ><center><input type="number" name="preciol" step="any" placeholder="3000" min="0" max="50000"> </td>
+                            <td ><center><input type="number" name="preciot" step="any" placeholder="1400" min="0" max="50000" title="Precio inicial por Kg en pesos"></td>
+                            <td ><center><input type="number" name="preciop" step="any" placeholder="1900" min="0" max="50000" title="Precio inicial por Kg en pesos"></td>
+                            <td ><center><input type="number" name="preciol" step="any" placeholder="3000" min="0" max="50000" title="Precio inicial por Kg en pesos"> </td>
                            </tr>
             
             
@@ -249,11 +249,10 @@
                 
                            <tr>
                             <td ><center><p>Agua Total</center> </td>
-                            <td ><input type="number" name="agua_total" step="any" placeholder="1600" min="0" max="15000"> </td>
+                            <td ><input type="number" name="agua_total" step="any" placeholder="1600" min="0" max="15000" title="Agua total para todos los usuarios en L"> </td>
                             <td ><center><p>Cantidad máxima jugadores</center> </td>
                             <td ><input type="number" name="cant_max" step="any" placeholder="5" min="2" max="10"> </td>
-                            <td ><center><p>fecha</center> </td>
-                            <td ><input type="number" name="cant_max" step="any" placeholder="5" min="2" max="10"> </td>
+                            
                 
                            </tr>
             

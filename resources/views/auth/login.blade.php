@@ -15,6 +15,27 @@
         
 
         <link rel="stylesheet" type="text/css" href="{{ asset('css/estilo.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            function mostrarPassword(){
+		            var cambio = document.getElementById("password");
+		            if(cambio.type == "password"){
+			            cambio.type = "text";
+			            $('.icon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+		            }else{
+			            cambio.type = "password";
+			            $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+		            }
+	        }
+            
+	            $(document).ready(function () {
+	            //CheckBox mostrar contraseña
+	            $('#ShowPassword').click(function () {
+		            $('#Password').attr('type', $(this).is(':checked') ? 'text' : 'password');
+	            });
+            });
+        </script>
         <!-- Styles -->
     </head>
 
@@ -50,8 +71,15 @@
                                     <label for="password" class="col-md-4 col-form-label text-md-right" translate="no">Contraseña</label>
 
                                     <div class="col-md-6">
-                                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
+                                        <div class="input-group">
+                                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" >
+                                 
+                                                  <center>
+                                                    <span class="fa fa-eye-slash icon" onclick="mostrarPassword()" style=" width: 30px; height: 30px; vertical-align:sub">
+                                                    </span>
+                                                  </center>
+                                      
+                                        </div>
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -82,7 +110,7 @@
                                         <br><br>
                                         @if (Route::has('password.request'))
                                             <a  href="{{ route('password.request') }}">
-                                                
+                                                <small>{{ __('Olvidaste tu contraseña?') }}</small>
                                             </a>
                                         @endif
                                     </div>

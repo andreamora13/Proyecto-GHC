@@ -318,7 +318,7 @@
 
                         labels: plantas,
                         datasets: [{
-                            label: 'Producción',
+                            label: 'Producción Kg',
                             data: produccion,
                             backgroundColor: [
                                 'rgb(255, 159, 64, 0.2)',
@@ -349,7 +349,7 @@
 
                             labels: semana_p,
                             datasets: [{
-                                label: 'precio',
+                                label: 'Precio pesos',
                                 data: precio,
                                 backgroundColor: [
                                     'rgba(255,255, 255, 0.2)'
@@ -377,7 +377,7 @@
 
                             labels: semana_a,
                             datasets: [{
-                                label: 'agua usada',
+                                label: 'Agua usada L',
                                 data: agua,
                                 backgroundColor: [
                                     'rgba(255,255, 255, 0.2)'
@@ -388,7 +388,7 @@
                                 borderWidth: 1
                             },
                             {
-                                label: 'agua requerida',
+                                label: 'Agua requerida L',
                                 data: agua_re,
                                 backgroundColor: [
                                     'rgba(255,255, 255, 0.2)'
@@ -417,7 +417,7 @@
 
                             labels: semana_b,
                             datasets: [{
-                                label: 'abono usado',
+                                label: 'Abono usado g',
                                 data: abono,
                                 backgroundColor: [
                                     'rgba(255,255, 255, 0.2)'
@@ -428,7 +428,7 @@
                                 borderWidth: 1
                             },
                             {
-                                label: 'abono requerido',
+                                label: 'Abono requerido g',
                                 data: abono_Re,
                                 backgroundColor: [
                                     'rgba(255,255, 255, 0.2)'

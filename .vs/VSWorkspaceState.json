@@ -2,12 +2,13 @@
   "ExpandedNodes": [
     "",
     "\\app",
+    "\\app\\Http",
     "\\app\\Http\\Controllers",
     "\\resources",
     "\\resources\\views",
     "\\resources\\views\\auth",
     "\\resources\\views\\auth\\passwords"
   ],
-  "SelectedNode": "\\resources\\views\\auth\\passwords\\reset.blade.php",
+  "SelectedNode": "\\app\\Http\\Controllers\\ProyectoController.php",
   "PreviewInSolutionExplorer": false
 }
